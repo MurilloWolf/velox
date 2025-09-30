@@ -18,48 +18,48 @@ export default function Footer() {
               <a
                 href="https://github.com/MurilloWolf"
                 target="_blank"
-                className="hover:text-primary transition-colors"
+                className="hover:text-[#d5fe46] transition-colors"
               >
                 <Github className="h-5 w-5" />
               </a>
               <a
                 href="https://twitter.com/RunningVelox"
                 target="_blank"
-                className="hover:text-primary transition-colors"
+                className="hover:text-[#d5fe46] transition-colors"
               >
                 <Twitter className="h-5 w-5" />
               </a>
               <a
                 href="https://www.instagram.com/runningvelox/"
                 target="_blank"
-                className="hover:text-primary transition-colors"
+                className="hover:text-[#d5fe46] transition-colors"
               >
                 <Instagram className="h-5 w-5" />
               </a>
             </div>
           </div>
           <div>
-            <h4 className="mb-4 font-semibold">Links Rápidos</h4>
+            <h4 className="mb-4 font-semibold text-[#d5fe46]">Links Rápidos</h4>
             <ul className="space-y-2 text-sm text-background/80">
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="#" className="hover:text-[#d5fe46] transition-colors">
                   Sobre o Bot
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="#" className="hover:text-[#d5fe46] transition-colors">
                   Como Funciona
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="#" className="hover:text-[#d5fe46] transition-colors">
                   Adicionar Corrida
                 </a>
               </li>
               <li>
                 <a
                   href="#contato"
-                  className="hover:text-primary transition-colors"
+                  className="hover:text-[#d5fe46] transition-colors"
                 >
                   Contato
                 </a>
@@ -67,15 +67,15 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="mb-4 font-semibold">Legal</h4>
+            <h4 className="mb-4 font-semibold text-[#d5fe46]">Legal</h4>
             <ul className="space-y-2 text-sm text-background/80">
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="#" className="hover:text-[#d5fe46] transition-colors">
                   Política de Privacidade
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="#" className="hover:text-[#d5fe46] transition-colors">
                   FAQ
                 </a>
               </li>

@@ -15,8 +15,8 @@ export default function Home() {
       <Header />
       <main className="min-h-screen">
         <Hero />
-        <PlatformFeatures />
         <BotShowcase />
+        <PlatformFeatures />
         <CtaSection />
         <DonationSection />
         <ContactSection />

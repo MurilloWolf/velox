@@ -20,7 +20,7 @@ export default function ContactSection() {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-4xl">
           <div className="mb-12 text-center">
-            <MessageSquare className="mx-auto mb-4 h-12 w-12 text-primary" />
+            <MessageSquare className="mx-auto mb-4 h-20 w-20 text-[#d5fe46] bg-[#121212]/70 rounded-full p-4" />
             <h2 className="mb-4 text-balance font-sans text-3xl font-bold text-foreground md:text-4xl">
               Entre em Contato
             </h2>
