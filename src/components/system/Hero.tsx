@@ -1,31 +1,38 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Zap, Sparkles } from "lucide-react";
+import { Zap, ChevronDown } from "lucide-react";
 
 export default function Hero() {
-  return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-primary via-[#121212] to-[#212121] py-24 md:py-32">
-      <div className="absolute inset-0 bg-[url('/abstract-running-pattern.png')] opacity-5 bg-cover bg-center" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
+  const [showScroll, setShowScroll] = useState(true);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    setShowScroll(window.scrollY <= 30);
+
+    const onScroll = () => {
+      setShowScroll(window.scrollY <= 30);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <section className="min-h-screen relative overflow-hidden bg-gradient-to-br from-black via-[#121212] to-transparent py-24 md:py-32">
       <div className="container relative z-10 mx-auto px-4">
         <div className="flex flex-col sm:flex-row justify-evenly items-center text-center">
-          <div className="flex flex-col items-center max-w-3xl">
+          <div className="flex flex-col items-center max-w-3xl sm:mr-10">
             <div className="mb-8 flex h-32 w-32 md:h-40 md:w-40 items-center justify-center rounded-3xl bg-white shadow-2xl">
               <Zap
                 className="h-20 w-20 md:h-24 md:w-24 text-primary"
                 strokeWidth={2.5}
               />
             </div>
-
             <h1 className="mb-6 text-balance font-sans text-5xl font-bold text-white md:text-7xl lg:text-8xl">
               VELOX
             </h1>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#d5fe46] backdrop-blur-sm px-4 py-2">
-              <Sparkles className="h-4 w-4 text-black" />
-              <span className="text-sm font-medium text-black">
-                Plataforma Completa para Corredores
-              </span>
-            </div>
           </div>
           <div>
             <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
@@ -71,9 +78,28 @@ export default function Hero() {
           </div>
         </div>
       </div>
-
-      {/* Decorative wave */}
-      <div className="absolute -bottom-1 left-0 right-0 h-2 bg-gradient-to-t from-background  to-[#d5fe46]" />
+      <div
+        className={`hidden sm:block absolute left-1/2 bottom-24 -translate-x-1/2 z-20 transition-opacity duration-500 ${
+          showScroll ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        aria-hidden={!showScroll}
+      >
+        <div className="flex flex-col items-center">
+          <span className="mb-2 text-sm md:text-base text-white/90 uppercase tracking-widest">
+            Scroll
+          </span>
+          <div className="flex flex-col items-center -space-y-2">
+            {[0, 1, 2].map((i) => (
+              <ChevronDown
+                key={i}
+                size={28}
+                className="text-white/90 animate-bounce"
+                style={{ animationDelay: `${i * 200}ms` }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

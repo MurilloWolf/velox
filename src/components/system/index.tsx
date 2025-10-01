@@ -5,7 +5,7 @@ import DonationSection from "./DonationSection";
 import ContactSection from "./ContactSection";
 import Footer from "./Footer";
 import BotShowcase from "./BotShowCase";
-import PlatformFeatures from "./PlatformFeatures";
+import PlatformFeatures from "./Features/PlatformHero";
 export {
   Header,
   Hero,

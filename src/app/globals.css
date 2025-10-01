@@ -126,4 +126,122 @@
   .bg-abstract-pattern {
     background-image: url('/abstract-running-pattern.png');
   }
+
+  /* Animated hero bottom gradient: cria uma transição suave do preto do hero para um tom mais claro
+     com um overlay de cores sutis em movimento para um visual profissional/futurista. */
+  .hero-gradient-animated {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 12rem; /* altura maior para presença visual */
+    pointer-events: none;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(18,18,18,0) 0%, rgba(18,18,18,0.55) 45%, rgba(34,34,34,1) 100%);
+  }
+
+  .hero-gradient-animated::before {
+    content: "";
+    position: absolute;
+    left: -25%;
+    top: -30%;
+    width: 150%;
+    height: 160%;
+    /* um gradiente horizontal de cores sutis (verde neon -> laranja suave) */
+    background: linear-gradient(90deg, rgba(213,254,70,0.06) 0%, rgba(240,90,36,0.06) 50%, rgba(213,254,70,0.04) 100%);
+    filter: blur(48px);
+    transform: translateX(0);
+    animation: hero-gradient-slide 10s ease-in-out infinite;
+    mix-blend-mode: screen; /* mistura com o fundo para um efeito etéreo */
+    opacity: 0.95;
+    will-change: transform, opacity;
+  }
+
+  /* uma segunda camada sutil que pulsa em opacidade para dar vida */
+  .hero-gradient-animated::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+    pointer-events: none;
+    animation: hero-gradient-pulse 6s ease-in-out infinite;
+    mix-blend-mode: overlay;
+  }
+
+  @keyframes hero-gradient-slide {
+    0% { transform: translateX(-18%); }
+    50% { transform: translateX(18%); }
+    100% { transform: translateX(-18%); }
+  }
+
+  @keyframes hero-gradient-pulse {
+    0% { opacity: 0.08; }
+    50% { opacity: 0.16; }
+    100% { opacity: 0.08; }
+  }
+}
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Background animado */
+@keyframes move-bg {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes move-bg-2 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(-40px, 30px) scale(1.2);
+  }
+  66% {
+    transform: translate(20px, -40px) scale(0.8);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-bg-1 {
+  animation: move-bg 20s ease-in-out infinite;
+}
+
+.animate-bg-2 {
+  animation: move-bg-2 25s ease-in-out infinite;
+}
+
+.animate-rotate {
+  animation: rotate 30s linear infinite;
 }

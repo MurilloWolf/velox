@@ -51,9 +51,9 @@ export default function Header() {
 
           <Button
             size="sm"
-            className="text-[#000c5a] bg-[#d5fe46] hover:bg-[#d5fe46]/100 hover:opacity-80  cursor-pointer"
+            className="text-black bg-[#d5fe46] hover:bg-[#d5fe46]/100 hover:opacity-80  cursor-pointer uppercase font-bold"
           >
-            <Zap className="mr-2 h-4 w-4" />
+            <Zap className=" h-4 w-4" />
             Começar Agora
           </Button>
         </div>

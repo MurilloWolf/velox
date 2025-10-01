@@ -1,4 +1,5 @@
 import { Heart, Github, Twitter, Instagram } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -70,9 +71,12 @@ export default function Footer() {
             <h4 className="mb-4 font-semibold text-[#d5fe46]">Legal</h4>
             <ul className="space-y-2 text-sm text-background/80">
               <li>
-                <a href="#" className="hover:text-[#d5fe46] transition-colors">
+                <Link
+                  href="/privacy"
+                  className="hover:text-[#d5fe46] transition-colors"
+                >
                   Política de Privacidade
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="hover:text-[#d5fe46] transition-colors">
@@ -84,8 +88,9 @@ export default function Footer() {
         </div>
         <div className="mt-12 pt-8 border-t border-background/20 text-center text-sm text-background/60">
           <p className="flex items-center justify-center gap-2">
-            Feito com <Heart className="h-4 w-4 text-primary fill-primary" />{" "}
-            para a comunidade de corredores
+            Feito com{" "}
+            <Heart className="h-4 w-4 text-[#d5fe46] fill-[#d5fe46]" /> para a
+            comunidade de corredores
           </p>
           <p className="mt-2">© 2025 VELOX. Todos os direitos reservados.</p>
         </div>

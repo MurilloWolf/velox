@@ -1,0 +1,67 @@
+import { Card } from "@/components/ui";
+import { ChevronRight } from "lucide-react";
+
+export interface IFeatureProps {
+  feature: {
+    title: string;
+    description: string;
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+    gradient: string;
+  };
+  index: number;
+  scrollNext: () => void;
+  showScroll: boolean;
+}
+
+export default function FeatureCard(props: IFeatureProps) {
+  const { feature, index, scrollNext, showScroll } = props;
+  const Icon = feature.icon;
+  return (
+    <Card
+      key={index}
+      className="gap-0 snap-center flex-shrink-0 w-[calc(100vw-6vw)] sm:w-[calc(80vw)] md:w-1/4 md:min-h-[500px] md:h-[600px] md:min-w-[320px] lg:min-w-[360px] h-[calc(100vh-1rem)] sm:h-[520px] overflow-hidden rounded-3xl transition-all duration-300 border-0 bg-transparent mx-2"
+    >
+      <div
+        className={`relative h-[80%] bg-gradient-to-br ${feature.gradient} flex items-end p-6 rounded-t-2xl`}
+      >
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={scrollNext}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              scrollNext();
+            }
+          }}
+          className={`block sm:hidden absolute right-6 top-1/2 -translate-y-1/2 z-20 transition-opacity duration-500 ${
+            showScroll ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
+          aria-hidden={!showScroll}
+        >
+          <div className="flex items-center space-x-1">
+            {[0, 1, 2].map((i) => (
+              <ChevronRight
+                key={i}
+                size={32}
+                className="text-white/90 animate-bounce font-bold"
+                style={{ animationDelay: `${i * 160}ms` }}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="absolute top-5 left-5 inline-flex items-center justify-center h-14 w-14 rounded-xl bg-white/20 backdrop-blur">
+          <Icon className="h-7 w-7 text-white" />
+        </div>
+        <h3 className="text-white text-3xl font-extrabold z-10 ml-4">
+          {feature.title}
+        </h3>
+      </div>
+      <div className="h-[20%] sm:h-min-48 overflow-hidden p-6 bg-white/10 rounded-b-2xl backdrop-blur-md border border-white/10 shadow-lg">
+        <p className="text-base md:text-sm text-white/85 leading-relaxed">
+          {feature.description}
+        </p>
+      </div>
+    </Card>
+  );
+}
