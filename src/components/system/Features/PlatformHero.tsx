@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Calendar,
   Lightbulb,
@@ -91,6 +91,9 @@ export default function PlatformFeatures() {
     let currentVelocity = 0;
     const friction = 0.98; // Menos fricção = scroll mais rápido
 
+    // Check if device is mobile based on screen width
+    const isMobile = window.innerWidth < 768;
+
     const updateScroll = () => {
       if (Math.abs(currentVelocity) < 0.5) {
         isScrolling = false;
@@ -173,12 +176,18 @@ export default function PlatformFeatures() {
     throttledShowScroll();
     el.addEventListener("scroll", throttledShowScroll, { passive: true });
     window.addEventListener("resize", throttledShowScroll, { passive: true });
-    el.addEventListener("wheel", onWheel, { passive: false });
+
+    // Only add wheel event listener on desktop
+    if (!isMobile) {
+      el.addEventListener("wheel", onWheel, { passive: false });
+    }
 
     return () => {
       el.removeEventListener("scroll", throttledShowScroll);
       window.removeEventListener("resize", throttledShowScroll);
-      el.removeEventListener("wheel", onWheel);
+      if (!isMobile) {
+        el.removeEventListener("wheel", onWheel);
+      }
       if (rafId) {
         cancelAnimationFrame(rafId);
       }
@@ -212,7 +221,7 @@ export default function PlatformFeatures() {
 
         <div
           ref={containerRef}
-          className="flex flex-nowrap gap-6 overflow-x-auto py-4 -mx-4 px-4 overscroll-contain will-change-scroll"
+          className="flex flex-nowrap gap-6 overflow-x-auto py-4 -mx-4 px-4 snap-x snap-mandatory lg:snap-none scrollbar-hidden md:overscroll-contain will-change-scroll"
         >
           {features.map((feature, index) => {
             return (
