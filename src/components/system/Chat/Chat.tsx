@@ -48,14 +48,19 @@ export default function FAQChat() {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [inputValue, setInputValue] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const shouldAutoScrollRef = useRef(true);
 
-  const scrollToBottom = (
-    options: ScrollIntoViewOptions = { behavior: "smooth" }
-  ) => {
-    messagesEndRef.current?.scrollIntoView(options);
+  const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
+    const node = chatContainerRef.current;
+    if (!node) {
+      return;
+    }
+
+    node.scrollTo({
+      top: node.scrollHeight,
+      behavior,
+    });
   };
 
   useEffect(() => {
@@ -65,10 +70,9 @@ export default function FAQChat() {
     }
 
     const handleScroll = () => {
-      console.log("Scroll event detected");
       const { scrollTop, scrollHeight, clientHeight } = node;
       const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
-      shouldAutoScrollRef.current = distanceFromBottom > 120;
+      shouldAutoScrollRef.current = distanceFromBottom < 120;
     };
 
     handleScroll();
@@ -207,7 +211,6 @@ export default function FAQChat() {
                   <MessageBubble message={message} />
                 </div>
               ))}
-              <div ref={messagesEndRef} />
             </div>
           </div>
           <ChatInput
