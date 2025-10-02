@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Zap, ChevronDown } from "lucide-react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import veloxLogo from "../../../public/velox-low-ql.png";
 
 export default function Hero() {
   const [showScroll, setShowScroll] = useState(true);
@@ -23,16 +25,14 @@ export default function Hero() {
     <section className="min-h-screen relative overflow-hidden bg-gradient-to-br from-black via-[#121212] to-transparent py-24 md:py-32">
       <div className="container relative z-10 mx-auto px-4">
         <div className="flex flex-col sm:flex-row justify-evenly items-center text-center">
-          <div className="flex flex-col items-center max-w-3xl sm:mr-10">
-            <div className="mb-8 flex h-32 w-32 md:h-40 md:w-40 items-center justify-center rounded-3xl bg-white shadow-2xl">
-              <Zap
-                className="h-20 w-20 md:h-24 md:w-24 text-primary"
-                strokeWidth={2.5}
-              />
-            </div>
-            <h1 className="mb-6 text-balance font-sans text-5xl font-bold text-white md:text-7xl lg:text-8xl">
-              VELOX
-            </h1>
+          <div className="flex flex-col items-center max-w-4xl sm:mr-10">
+            <Image
+              src={veloxLogo}
+              alt="Logo do CorridaGPT"
+              width={400}
+              height={400}
+              className="mb-6 object-cover xl:min-w-96 xl:min-h-96 xl:h-[600px] xl:w-[600px]"
+            />
           </div>
           <div>
             <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">

@@ -1,18 +1,25 @@
 import { Heart, Github, Twitter, Instagram } from "lucide-react";
 import Link from "next/link";
-
+import Image from "next/image";
+import veloxLogo from "../../../public/Velox.png";
 export default function Footer() {
   return (
     <footer className="bg-foreground text-background py-12">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="md:col-span-2">
-            <h3 className="mb-4 text-xl font-bold">VELOX</h3>
-            <p className="text-sm text-background/80 leading-relaxed ">
-              ⚡ Seu assistente de corridas no Telegram. Encontre, gerencie e
-              receba notificações de corridas.
+            <Image
+              src={veloxLogo}
+              alt="VELOX"
+              width={120}
+              height={40}
+              className="mb-4"
+            />
+            <p className="text-xs text-background/80 leading-relaxed ">
+              ⚡ Seu assistente de corridas no Telegram.
+              <br /> Encontre, gerencie e receba notificações de corridas.
             </p>
-            <p className="text-sm text-background/80 leading-relaxed mb-4">
+            <p className="text-xs text-background/80 leading-relaxed mb-4">
               Tudo de forma rápida, fácil e gratuita!
             </p>
             <div className="flex gap-4">
