@@ -357,7 +357,7 @@
     "response_format": {
       "type": "json",
       "properties": {
-        "message_to_send": "string",
+        "message_to_send": "string[] - array de mensagens para enviar ao usuário, cada mensagen deve ter no maximo 200 caracteres e formatadas em html destacando a parte mais importante da mensagem, e links devem vir formatados em formato de link",
         "tokens_used": "integer",
         "confidence": "number (0-1)"
       }

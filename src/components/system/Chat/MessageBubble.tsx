@@ -5,6 +5,8 @@ export interface IMessageBubbleProps {
 
 export default function MessageBubble(props: IMessageBubbleProps) {
   const { message } = props;
+  const isHtml = message.format === "html" && message.sender === "bot";
+
   return (
     <div
       className={`flex max-w-[70%] rounded-lg px-1 py-2 flex-col bg-black/20 text-white ${
@@ -18,13 +20,22 @@ export default function MessageBubble(props: IMessageBubbleProps) {
             : "bg-[var(--user-message)] text-foreground"
         }`}
       >
-        <p
-          className={`text-md leading-relaxed ${
-            message.sender === "user" ? "text-white/60" : "text-white"
-          }`}
-        >
-          {message.text}
-        </p>
+        {isHtml ? (
+          <p
+            className={`text-md leading-relaxed ${
+              message.sender === "user" ? "text-white/60" : "text-white"
+            }`}
+            dangerouslySetInnerHTML={{ __html: message.text }}
+          />
+        ) : (
+          <p
+            className={`text-md leading-relaxed ${
+              message.sender === "user" ? "text-white/60" : "text-white"
+            }`}
+          >
+            {message.text}
+          </p>
+        )}
       </div>
       <span
         className={`text-xs px-2 pt-0 pb-1 ${

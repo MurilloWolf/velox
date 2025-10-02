@@ -8,42 +8,44 @@ import Avatar from "./Avatar";
 import ChatInput from "./ChatInput";
 import MessageBubble from "./MessageBubble";
 import MeshGradient from "../MashGradiant";
+import type { Message } from "./types";
+import {
+  sendChatCompletion,
+  type ChatHistoryItem,
+} from "@/server/actions/chat";
 
-type Message = {
-  id: string;
-  text: string;
-  sender: "bot" | "user";
-  timestamp: Date;
+const DEFAULT_USER_NAME = "Visitante";
+const INITIAL_MESSAGE: Message = {
+  id: "welcome",
+  text: "Olá! 👋 Bem-vindo ao nosso FAQ. Como posso ajudá-lo hoje?",
+  sender: "bot",
+  timestamp: new Date(),
 };
 
-const FAQ_RESPONSES: Record<string, string> = {
-  "o que é":
-    "Sou um assistente virtual de FAQ. Estou aqui para responder suas perguntas frequentes sobre nossos serviços e produtos.",
-  horário: "Nosso horário de atendimento é de segunda a sexta, das 9h às 18h.",
-  contato:
-    "Você pode entrar em contato conosco pelo email contato@exemplo.com ou pelo telefone (11) 1234-5678.",
-  preço:
-    "Nossos preços variam de acordo com o plano escolhido. Temos opções a partir de R$ 29,90/mês.",
-  suporte:
-    "Oferecemos suporte técnico 24/7 para todos os nossos clientes através do chat, email e telefone.",
-  cancelamento:
-    "Você pode cancelar seu plano a qualquer momento sem multas. O cancelamento é processado em até 48 horas.",
-  pagamento:
-    "Aceitamos cartão de crédito, débito, PIX e boleto bancário como formas de pagamento.",
-  entrega:
-    "O prazo de entrega varia de 3 a 7 dias úteis dependendo da sua localização.",
+const createMessageId = () =>
+  typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+
+const getTimeOfDay = () => {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) return "manhã";
+  if (hour >= 12 && hour < 18) return "tarde";
+  return "noite";
 };
+
+const buildHistoryPayload = (entries: Message[]): ChatHistoryItem[] =>
+  entries.slice(-20).map((entry) => ({
+    role: entry.sender === "bot" ? "assistant" : "user",
+    message: entry.text,
+  }));
+
+const isHtmlContent = (value: string) => /<\/?[a-z][\s\S]*>/i.test(value.trim());
 
 export default function FAQChat() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      text: "Olá! 👋 Bem-vindo ao nosso FAQ. Como posso ajudá-lo hoje?",
-      sender: "bot",
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [inputValue, setInputValue] = useState("");
+  const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -55,43 +57,83 @@ export default function FAQChat() {
     scrollToBottom();
   }, [messages]);
 
-  const findResponse = (userMessage: string): string => {
-    const lowerMessage = userMessage.toLowerCase();
-
-    for (const [key, response] of Object.entries(FAQ_RESPONSES)) {
-      if (lowerMessage.includes(key)) {
-        return response;
-      }
+  const handleSendMessage = async () => {
+    const trimmedInput = inputValue.trim();
+    if (!trimmedInput || isSending) {
+      return;
     }
 
-    return "Desculpe, não encontrei uma resposta específica para sua pergunta. Você pode reformular ou perguntar sobre: horários, contato, preços, suporte, cancelamento, pagamento ou entrega.";
-  };
-
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
-
     const userMessage: Message = {
-      id: Date.now().toString(),
-      text: inputValue,
+      id: createMessageId(),
+      text: trimmedInput,
       sender: "user",
       timestamp: new Date(),
     };
 
+    const previousMessages = [...messages];
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
+    setIsSending(true);
 
-    setTimeout(() => {
-      const botResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        text: findResponse(inputValue),
+    try {
+      const data = await sendChatCompletion({
+        userName: DEFAULT_USER_NAME,
+        timeOfDay: getTimeOfDay(),
+        currentQuestion: trimmedInput,
+        history: buildHistoryPayload(previousMessages),
+      });
+
+      const assistantMessages = Array.isArray(data?.messages)
+        ? data.messages
+        : [data?.message ?? "Desculpe, não consegui gerar uma resposta agora."];
+
+      const formattedMessages = assistantMessages
+        .map((raw) => {
+          if (raw == null) {
+            return null;
+          }
+
+          const text = String(raw);
+          return {
+            id: createMessageId(),
+            text,
+            sender: "bot" as const,
+            timestamp: new Date(),
+            format: isHtmlContent(text) ? "html" : "text",
+          } satisfies Message;
+        })
+        .filter(Boolean) as Message[];
+
+      if (!formattedMessages.length) {
+        formattedMessages.push({
+          id: createMessageId(),
+          text: "Desculpe, não consegui gerar uma resposta agora.",
+          sender: "bot",
+          timestamp: new Date(),
+          format: "text",
+        });
+      }
+
+      setMessages((prev) => [...prev, ...formattedMessages]);
+    } catch (error) {
+      console.error("Erro ao conversar com o assistente:", error);
+      const fallbackMessage: Message = {
+        id: createMessageId(),
+        text:
+          error instanceof Error
+            ? `Desculpe, ocorreu um erro: ${error.message}`
+            : "Desculpe, não consegui obter uma resposta no momento. Tente novamente em instantes.",
         sender: "bot",
         timestamp: new Date(),
+        format: "text",
       };
-      setMessages((prev) => [...prev, botResponse]);
-    }, 800);
+      setMessages((prev) => [...prev, fallbackMessage]);
+    } finally {
+      setIsSending(false);
+    }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -145,6 +187,7 @@ export default function FAQChat() {
             setInputValue={setInputValue}
             handleSendMessage={handleSendMessage}
             handleKeyPress={handleKeyPress}
+            disabled={isSending}
           />
         </div>
       </div>
