@@ -1,7 +1,7 @@
 "use server";
 
-import promptTemplate from "@/components/system/Chat/prompt.json";
-
+import promptTemplate from "@/components/system/Chat/prompts/prompt.json";
+import { ASSISTANT_FALLBACK_MESSAGE } from "@/components/system/Chat/constants";
 type HistoryItem = {
   role: "user" | "assistant";
   message: string;
@@ -291,7 +291,7 @@ const collectMessages = (parsed: Record<string, unknown>, fallback: string) => {
   }
 
   if (!messages.length) {
-    messages.push("Desculpe, não encontrei uma resposta adequada.");
+    messages.push(ASSISTANT_FALLBACK_MESSAGE);
   }
 
   return messages;
@@ -392,8 +392,11 @@ export async function sendChatCompletion(
     }
   }
 
-  const assistantMessages = collectMessages(parsed, assistantRaw);
-  const [messageToSend] = assistantMessages;
+  const assistantMessages = collectMessages(
+    parsed,
+    assistantRaw || ASSISTANT_FALLBACK_MESSAGE
+  );
+  const [messageToSend = ASSISTANT_FALLBACK_MESSAGE] = assistantMessages;
 
   const tokensUsed = Number(
     parsed?.tokens_used ??

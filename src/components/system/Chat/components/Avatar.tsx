@@ -1,5 +1,7 @@
+import Image from "next/image";
 import { Bot, User } from "lucide-react";
-import { Message } from "./types";
+import { Message } from "../types";
+import botImage from "../assets/bot-img.png";
 
 interface IAvatarProps {
   message: Message;
@@ -13,7 +15,11 @@ export default function Avatar(props: IAvatarProps) {
       }`}
     >
       {message.sender === "bot" ? (
-        <Bot className="h-5 w-5 text-black font-bold stroke-2" />
+        <Image
+          src={botImage}
+          alt="Velox, assistente virtual de FAQs"
+          className="h-full w-full rounded-full object-cover"
+        />
       ) : (
         <User className="h-5 w-5 text-black font-bold stroke-2" />
       )}

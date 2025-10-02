@@ -2,54 +2,37 @@
 
 import type React from "react";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Image from "next/image";
+import MeshGradient from "../../MashGradiant";
+import {
+  buildHistoryPayload,
+  createMessageId,
+  isHtmlContent,
+} from "../utils/message";
+import { getTimeOfDay } from "../utils/time";
+import { createRateLimitState, evaluateRateLimit } from "../utils/rate-limit";
 import Avatar from "./Avatar";
 import ChatInput from "./ChatInput";
 import MessageBubble from "./MessageBubble";
-import MeshGradient from "../MashGradiant";
-import type { Message } from "./types";
+import TypingIndicator from "./TypingIndicator";
+import type { Message } from "../types";
+import { sendChatCompletion } from "@/server/actions/chat";
 import {
-  sendChatCompletion,
-  type ChatHistoryItem,
-} from "@/server/actions/chat";
-
-const DEFAULT_USER_NAME = "Visitante";
-const INITIAL_MESSAGE: Message = {
-  id: "welcome",
-  text: "Olá! 👋 Bem-vindo ao nosso FAQ. Como posso ajudá-lo hoje?",
-  sender: "bot",
-  timestamp: new Date(),
-  format: "text",
-};
-
-const createMessageId = () =>
-  typeof crypto !== "undefined" && "randomUUID" in crypto
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
-
-const getTimeOfDay = () => {
-  const hour = new Date().getHours();
-  if (hour >= 5 && hour < 12) return "manhã";
-  if (hour >= 12 && hour < 18) return "tarde";
-  return "noite";
-};
-
-const buildHistoryPayload = (entries: Message[]): ChatHistoryItem[] =>
-  entries.slice(-20).map((entry) => ({
-    role: entry.sender === "bot" ? "assistant" : "user",
-    message: entry.text,
-  }));
-
-const isHtmlContent = (value: string) =>
-  /<\/?[a-z][\s\S]*>/i.test(value.trim());
+  ASSISTANT_FALLBACK_MESSAGE,
+  DEFAULT_USER_NAME,
+  RATE_LIMIT_MESSAGES,
+  INITIAL_MESSAGE,
+} from "@/components/system/Chat/constants";
 
 export default function FAQChat() {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [inputValue, setInputValue] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [, startTransition] = useTransition();
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const shouldAutoScrollRef = useRef(true);
+  const rateLimitStateRef = useRef(createRateLimitState());
 
   const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
     const node = chatContainerRef.current;
@@ -89,9 +72,41 @@ export default function FAQChat() {
     }
   }, [messages]);
 
+  const pushWarning = (warning: string) => {
+    const fallback: Message = {
+      id: createMessageId(),
+      text: warning,
+      sender: "bot",
+      timestamp: new Date(),
+      format: "text",
+    };
+
+    shouldAutoScrollRef.current = true;
+    startTransition(() => {
+      setMessages((prev) => [...prev, fallback]);
+    });
+  };
+
+  const passesRateLimitGuards = (message: string) => {
+    const result = evaluateRateLimit(message, rateLimitStateRef.current);
+    rateLimitStateRef.current = result.state;
+
+    if (!result.allowed && result.reason) {
+      pushWarning(RATE_LIMIT_MESSAGES[result.reason]);
+      return false;
+    }
+
+    return result.allowed;
+  };
+
   const handleSendMessage = async () => {
     const trimmedInput = inputValue.trim();
     if (!trimmedInput || isSending) {
+      return;
+    }
+
+    if (!passesRateLimitGuards(trimmedInput)) {
+      setInputValue("");
       return;
     }
 
@@ -105,7 +120,10 @@ export default function FAQChat() {
 
     const previousMessages = [...messages];
     shouldAutoScrollRef.current = true;
-    setMessages((prev) => [...prev, userMessage]);
+
+    startTransition(() => {
+      setMessages((prev) => [...prev, userMessage]);
+    });
     setInputValue("");
     setIsSending(true);
 
@@ -119,7 +137,7 @@ export default function FAQChat() {
 
       const assistantMessages = Array.isArray(data?.messages)
         ? data.messages
-        : [data?.message ?? "Desculpe, não consegui gerar uma resposta agora."];
+        : [data?.message ?? ASSISTANT_FALLBACK_MESSAGE];
 
       const formattedMessages = assistantMessages
         .map((raw) => {
@@ -138,30 +156,26 @@ export default function FAQChat() {
         })
         .filter(Boolean) as Message[];
 
-      if (!formattedMessages.length) {
-        formattedMessages.push({
-          id: createMessageId(),
-          text: "Desculpe, não consegui gerar uma resposta agora.",
-          sender: "bot",
-          timestamp: new Date(),
-          format: "text",
-        });
-      }
-
-      setMessages((prev) => [...prev, ...formattedMessages]);
+      startTransition(() => {
+        setMessages((prev) => [...prev, ...formattedMessages]);
+      });
     } catch (error) {
       console.error("Erro ao conversar com o assistente:", error);
+
       const fallbackMessage: Message = {
         id: createMessageId(),
         text:
           error instanceof Error
             ? `Desculpe, ocorreu um erro: ${error.message}`
-            : "Desculpe, não consegui obter uma resposta no momento. Tente novamente em instantes.",
+            : ASSISTANT_FALLBACK_MESSAGE,
         sender: "bot",
         timestamp: new Date(),
         format: "text",
       };
-      setMessages((prev) => [...prev, fallbackMessage]);
+
+      startTransition(() => {
+        setMessages((prev) => [...prev, fallbackMessage]);
+      });
     } finally {
       setIsSending(false);
     }
@@ -211,6 +225,7 @@ export default function FAQChat() {
                   <MessageBubble message={message} />
                 </div>
               ))}
+              {isSending ? <TypingIndicator /> : null}
             </div>
           </div>
           <ChatInput

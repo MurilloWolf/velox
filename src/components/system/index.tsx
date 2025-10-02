@@ -6,7 +6,7 @@ import ContactSection from "./ContactSection";
 import Footer from "./Footer";
 import BotShowcase from "./BotShowCase";
 import PlatformFeatures from "./Features/PlatformHero";
-import Chat from "./Chat/Chat";
+import Chat from "./Chat/components/Chat";
 
 export {
   Header,
