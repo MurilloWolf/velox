@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Avatar from "./Avatar";
 import ChatInput from "./ChatInput";
@@ -20,6 +20,7 @@ const INITIAL_MESSAGE: Message = {
   text: "Olá! 👋 Bem-vindo ao nosso FAQ. Como posso ajudá-lo hoje?",
   sender: "bot",
   timestamp: new Date(),
+  format: "text",
 };
 
 const createMessageId = () =>
@@ -40,7 +41,8 @@ const buildHistoryPayload = (entries: Message[]): ChatHistoryItem[] =>
     message: entry.text,
   }));
 
-const isHtmlContent = (value: string) => /<\/?[a-z][\s\S]*>/i.test(value.trim());
+const isHtmlContent = (value: string) =>
+  /<\/?[a-z][\s\S]*>/i.test(value.trim());
 
 export default function FAQChat() {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
@@ -48,13 +50,39 @@ export default function FAQChat() {
   const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const shouldAutoScrollRef = useRef(true);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (
+    options: ScrollIntoViewOptions = { behavior: "smooth" }
+  ) => {
+    messagesEndRef.current?.scrollIntoView(options);
   };
 
   useEffect(() => {
-    scrollToBottom();
+    const node = chatContainerRef.current;
+    if (!node) {
+      return;
+    }
+
+    const handleScroll = () => {
+      console.log("Scroll event detected");
+      const { scrollTop, scrollHeight, clientHeight } = node;
+      const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+      shouldAutoScrollRef.current = distanceFromBottom > 120;
+    };
+
+    handleScroll();
+    node.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      node.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (shouldAutoScrollRef.current) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   const handleSendMessage = async () => {
@@ -68,9 +96,11 @@ export default function FAQChat() {
       text: trimmedInput,
       sender: "user",
       timestamp: new Date(),
+      format: "text",
     };
 
     const previousMessages = [...messages];
+    shouldAutoScrollRef.current = true;
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     setIsSending(true);
@@ -142,26 +172,25 @@ export default function FAQChat() {
 
   return (
     <MeshGradient>
-      <div className="flex h-screen flex-col">
-        {/* Header */}
-        <div className="w-full h-full min-h-[700px] mx-auto my-10 flex max-w-3xl flex-col overflow-hidden rounded-2xl border border-white/20 bg-white/5 shadow-2xl backdrop-blur-xl">
-          <header className="flex items-center gap-4 border-b border-white/10 bg-white/10 px-6 py-4 backdrop-blur-xl">
+      <div className="p-2 flex h-[calc(100vh-4rem)] md:h-screen flex-col">
+        <div className="w-full h-full min-h-[400px] md:min-h-[700px] mx-auto my-2 md:my-10 flex max-w-3xl flex-col overflow-hidden rounded-lg md:rounded-2xl border border-white/20 bg-white/5 shadow-2xl backdrop-blur-xl">
+          <header className="flex items-center gap-4 border-b border-white/10 bg-white/10 px-2 py-1 md:px-6 md:py-4 backdrop-blur-xl">
             <Image
               src="/velox_x.png"
               alt="Velox"
-              className="h-12 w-12 rounded-full object-contain"
+              className="h-8 w-8 md:h-12 md:w-12 rounded-full object-contain"
               width={60}
               height={60}
             />
             <div className="flex flex-col text-center">
-              <h1 className="text-2xl text-left font-semibold text-white">
+              <h1 className="text-lg sm:text-xl md:text-2xl text-left font-semibold text-white">
                 Velox
               </h1>
-              <p className="text-sm text-white/80">Assistente Virtual</p>
+              <p className="text-xs md:text-sm text-white/80">
+                Assistente Virtual
+              </p>
             </div>
           </header>
-
-          {/* Chat Container */}
           <div
             ref={chatContainerRef}
             className="glass-scrollbar flex-1 overflow-y-auto bg-white/5 px-4 py-6 backdrop-blur-lg"
@@ -181,7 +210,6 @@ export default function FAQChat() {
               <div ref={messagesEndRef} />
             </div>
           </div>
-
           <ChatInput
             inputValue={inputValue}
             setInputValue={setInputValue}

@@ -22,14 +22,14 @@ export default function MessageBubble(props: IMessageBubbleProps) {
       >
         {isHtml ? (
           <p
-            className={`text-md leading-relaxed ${
+            className={`text-sm md:text-md leading-relaxed ${
               message.sender === "user" ? "text-white/60" : "text-white"
             }`}
             dangerouslySetInnerHTML={{ __html: message.text }}
           />
         ) : (
           <p
-            className={`text-md leading-relaxed ${
+            className={`text-sm md:text-md leading-relaxed ${
               message.sender === "user" ? "text-white/60" : "text-white"
             }`}
           >
