@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+/** esliont-disable no-ts-ignore */
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -36,7 +40,6 @@ function throttle<T extends (...args: any[]) => void>(
 export default function PlatformFeatures() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [showScroll, setShowScroll] = useState(false);
-  const lastScrollPosition = useRef(0);
   const features = [
     {
       icon: Calendar,

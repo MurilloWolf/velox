@@ -1,0 +1,41 @@
+import { Message } from "./types";
+export interface IMessageBubbleProps {
+  message: Message;
+}
+
+export default function MessageBubble(props: IMessageBubbleProps) {
+  const { message } = props;
+  return (
+    <div
+      className={`flex max-w-[70%] rounded-lg px-1 py-2 flex-col bg-black/20 text-white ${
+        message.sender === "user" ? "items-end" : "items-start"
+      }`}
+    >
+      <div
+        className={`rounded-2xl text-md px-2 ${
+          message.sender === "bot"
+            ? "bg-[var(--bot-message)] text-foreground"
+            : "bg-[var(--user-message)] text-foreground"
+        }`}
+      >
+        <p
+          className={`text-md leading-relaxed ${
+            message.sender === "user" ? "text-white/60" : "text-white"
+          }`}
+        >
+          {message.text}
+        </p>
+      </div>
+      <span
+        className={`text-xs px-2 pt-0 pb-1 ${
+          message.sender === "user" ? "text-white/60" : "text-white"
+        }`}
+      >
+        {message.timestamp.toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      </span>
+    </div>
+  );
+}
