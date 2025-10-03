@@ -7,6 +7,7 @@ import Footer from "./Footer";
 import BotShowcase from "./BotShowCase";
 import PlatformFeatures from "./Features/PlatformHero";
 import Chat from "./Chat/components/Chat";
+import ChatWidget from "./Chat/components/ChatWidget";
 
 export {
   Header,
@@ -18,4 +19,5 @@ export {
   BotShowcase,
   PlatformFeatures,
   Chat,
+  ChatWidget,
 };
