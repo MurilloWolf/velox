@@ -217,7 +217,7 @@ export default function ChatPanel({
   );
 
   const contentClasses = cn(
-    "glass-scrollbar flex-1 overflow-y-auto bg-white/5 backdrop-blur-lg",
+    "glass-scrollbar flex-1 overflow-y-auto overflow-x-hidden touch-pan-y bg-white/5 backdrop-blur-lg",
     isWidget ? "px-3 py-3 sm:px-3.5" : "px-4 py-4",
     contentClassName,
   );

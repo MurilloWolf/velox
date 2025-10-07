@@ -9,7 +9,7 @@ export default function MessageBubble(props: IMessageBubbleProps) {
 
   return (
     <div
-      className={`flex max-w-[70%] rounded-lg px-1 py-2 flex-col bg-black/20 text-white ${
+      className={`flex max-w-[70%] rounded-lg px-1 py-2 flex-col bg-black/20 text-white break-words overflow-hidden ${
         message.sender === "user" ? "items-end" : "items-start"
       }`}
     >
@@ -21,15 +21,15 @@ export default function MessageBubble(props: IMessageBubbleProps) {
         }`}
       >
         {isHtml ? (
-          <p
-            className={`text-sm md:text-md leading-relaxed ${
+          <div
+            className={`chat-html text-sm md:text-md leading-relaxed whitespace-pre-wrap break-words ${
               message.sender === "user" ? "text-white/60" : "text-white"
             }`}
             dangerouslySetInnerHTML={{ __html: message.text }}
           />
         ) : (
           <p
-            className={`text-sm md:text-md leading-relaxed ${
+            className={`text-sm md:text-md leading-relaxed whitespace-pre-wrap break-words ${
               message.sender === "user" ? "text-white/60" : "text-white"
             }`}
           >
