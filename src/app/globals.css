@@ -214,6 +214,17 @@
   .glass-scrollbar::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.15));
   }
+
+  .chat-html {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .chat-html pre,
+  .chat-html code {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
 }
 
 

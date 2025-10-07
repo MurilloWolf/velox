@@ -32,7 +32,6 @@ export default function FlurryBackground() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Color palette inspired by classic Mac Flurry + requested neons
     const colors = [
       "rgba(255, 100, 150, 0.8)", // Pink
       "rgba(100, 150, 255, 0.8)", // Blue
@@ -40,7 +39,6 @@ export default function FlurryBackground() {
       "rgba(255, 200, 100, 0.8)", // Orange
       "rgba(200, 100, 255, 0.8)", // Purple
       "rgba(100, 255, 255, 0.8)", // Cyan
-      // Neon additions
       "rgba(0, 12, 90, 0.95)", // #000c5a - deep neon blue
       "rgba(240, 90, 36, 0.95)", // #f05a24 - neon orange
       "rgba(213, 254, 70, 0.95)", // #d5fe46 - neon lime
@@ -48,16 +46,12 @@ export default function FlurryBackground() {
 
     const particles: Particle[] = [];
 
-    // Create initial particles
     const createParticle = (): Particle => {
       const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 1.5 + 0.6; // slightly varied base speed
-
+      const speed = Math.random() * 1.5 + 0.6;
       return {
-        // Spawn at a random position across the canvas
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        // Velocity points in a random direction
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         life: 0,
@@ -68,30 +62,26 @@ export default function FlurryBackground() {
       };
     };
 
-    // Initialize particles
-    for (let i = 0; i < 12; i++) {
+    const NUMBER_OF_PARTICLES = 12;
+    for (let i = 0; i < NUMBER_OF_PARTICLES; i++) {
       particles.push(createParticle());
     }
 
     let animationId: number;
 
     const animate = () => {
-      // Fade effect for trails
       ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach((particle, index) => {
-        // Update position
         particle.x += particle.vx;
         particle.y += particle.vy;
         particle.life++;
 
-        // Add smooth curves to movement
         const time = Date.now() * 0.001;
         particle.vx += Math.sin(time + index) * 0.02;
         particle.vy += Math.cos(time + index) * 0.02;
 
-        // Limit velocity
         const maxSpeed = 4;
         const speed = Math.sqrt(particle.vx ** 2 + particle.vy ** 2);
         if (speed > maxSpeed) {
@@ -99,19 +89,16 @@ export default function FlurryBackground() {
           particle.vy = (particle.vy / speed) * maxSpeed;
         }
 
-        // Add to trail
         particle.trail.push({
           x: particle.x,
           y: particle.y,
           alpha: 1,
         });
 
-        // Limit trail length
         if (particle.trail.length > 50) {
           particle.trail.shift();
         }
 
-        // Draw trail
         particle.trail.forEach((point, i) => {
           const alpha =
             (i / particle.trail.length) *
