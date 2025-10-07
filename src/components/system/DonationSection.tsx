@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import MashGradient from "./MashGradiant";
 import {
   Card,
   CardContent,
@@ -15,7 +14,6 @@ export default function DonationSection() {
       id="apoie"
       className="py-16 md:py-24  bg-[#121212] relative overflow-hidden"
     >
-      {/* <div className="absolute top-0 left-0 w-96 h-96 bg-[#d5fe46]/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" /> */}
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
 
       <div className="container mx-auto px-4 relative z-10">

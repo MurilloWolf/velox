@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Bot, User } from "lucide-react";
+import { User } from "lucide-react";
 import { Message } from "../types";
 import botImage from "../assets/bot-img.png";
 

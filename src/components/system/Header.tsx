@@ -55,8 +55,8 @@ export default function Header() {
               Recursos
             </Link>
             <Link
-              href="/#corridas"
-              onClick={(event) => handleSmoothNavigation(event, "#corridas")}
+              href="/calendar"
+              onClick={(event) => handleSmoothNavigation(event, "/calendar")}
               className="text-sm font-medium text-white transition-colors hover:text-[#d5fe46]"
             >
               Corridas

@@ -1,29 +1,26 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-/** esliont-disable no-ts-ignore */
-
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import {
-  Calendar,
-  Lightbulb,
-  Dumbbell,
-  Droplets,
-  Send,
-  TrendingUp,
-} from "lucide-react";
+import { Calendar, Dumbbell, Droplets, Send, TrendingUp } from "lucide-react";
 
 import FeatureCard from "./FeatureCard";
+import training from "../../../../public/running-bg.jpg";
+import nutrition from "../../../../public/nutrition.jpg";
+import womanPhone from "../../../../public/woman-telephone.jpg";
+import calendar from "../../../../public/calendar.jpg";
+import airunning from "../../../../public/AiRunning.png";
 
-function throttle<T extends (...args: any[]) => void>(
+function throttle<T extends (this: unknown, ...args: unknown[]) => void>(
   func: T,
   limit: number
 ): T {
   let inThrottle = false;
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-  const throttled = function (this: any, ...args: Parameters<T>) {
+  const throttled = function (
+    this: ThisParameterType<T>,
+    ...args: Parameters<T>
+  ) {
     if (!inThrottle) {
       func.apply(this, args);
       inThrottle = true;
@@ -46,42 +43,35 @@ export default function PlatformFeatures() {
       title: "Calendário de Corridas",
       description:
         "Encontre corridas de 5km, 10km, meia maratona e maratona completa em todo o Brasil. Filtros por distância, cidade e data.",
-      gradient: "from-blue-500 to-cyan-500",
+      img: calendar,
     },
     {
       icon: Send,
       title: "Bot no Telegram",
       description:
         "Acesse todas as funcionalidades direto no Telegram. Notificações de novas corridas, lembretes e muito mais.",
-      gradient: "from-primary to-accent",
-    },
-    {
-      icon: Lightbulb,
-      title: "Dicas Personalizadas",
-      description:
-        "Receba dicas de corrida baseadas no seu nível, objetivos e histórico. Conselhos sobre técnica, equipamentos e nutrição.",
-      gradient: "from-amber-500 to-orange-500",
+      img: womanPhone,
     },
     {
       icon: Dumbbell,
       title: "Planos de Treino",
       description:
         "Treinos estruturados para iniciantes e avançados. Prepare-se para sua próxima corrida com orientação profissional.",
-      gradient: "from-purple-500 to-pink-500",
+      img: training,
     },
     {
       icon: Droplets,
-      title: "Guia de Hidratação",
+      title: "Guia de Nutrição",
       description:
         "Aprenda quando e quanto beber antes, durante e depois das corridas. Dicas para diferentes distâncias e climas.",
-      gradient: "from-cyan-500 to-blue-500",
+      img: nutrition,
     },
     {
       icon: TrendingUp,
-      title: "Acompanhamento",
+      title: "IA Prompts",
       description:
-        "Salve suas corridas favoritas, acompanhe seu progresso e receba recomendações personalizadas.",
-      gradient: "from-green-500 to-emerald-500",
+        "Gere planos de treino, dicas de nutrição e estratégias de corrida com prompts personalizados.",
+      img: airunning,
     },
   ];
 
@@ -92,9 +82,8 @@ export default function PlatformFeatures() {
     let rafId: number;
     let isScrolling = false;
     let currentVelocity = 0;
-    const friction = 0.98; // Menos fricção = scroll mais rápido
+    const friction = 0.98;
 
-    // Check if device is mobile based on screen width
     const isMobile = window.innerWidth < 768;
 
     const updateScroll = () => {
@@ -106,14 +95,11 @@ export default function PlatformFeatures() {
       const node = containerRef.current;
       if (!node) return;
 
-      // Aplicar fricção e movimento
       currentVelocity *= friction;
 
-      // Verificar limites
       const maxScroll = node.scrollWidth - node.clientWidth;
       let nextScroll = node.scrollLeft + currentVelocity;
 
-      // Ajustar para os limites exatos
       if (nextScroll <= 0) {
         nextScroll = 0;
         currentVelocity = 0;
@@ -138,29 +124,35 @@ export default function PlatformFeatures() {
       setShowScroll(canOverflow && canScrollRight);
     }, 100);
 
-    const onWheel = throttle((e: WheelEvent) => {
+    const onWheel = throttle((...args: unknown[]) => {
+      const e = args[0] as WheelEvent;
       const node = containerRef.current;
       if (!node) return;
 
       const delta = e.deltaY;
       if (Math.abs(delta) < 5) return;
 
-      e.preventDefault();
       const maxScroll = node.scrollWidth - node.clientWidth;
       const toTheRight = delta > 0;
       const toTheLeft = delta < 0;
-      if (
-        (node.scrollLeft >= maxScroll - 1 && toTheRight) ||
-        (node.scrollLeft <= 1 && toTheLeft)
-      ) {
-        window.scrollBy({
-          top: delta,
-          behavior: "smooth",
-        });
+      const canScrollHorizontally =
+        (toTheRight && node.scrollLeft < maxScroll - 1) ||
+        (toTheLeft && node.scrollLeft > 1);
+
+      if (!canScrollHorizontally) {
+        window.scrollBy({ top: delta });
+        throttledShowScroll();
         return;
       }
-      const multiplier = 1.2;
-      const speed = Math.min(Math.abs(delta) * multiplier, 60);
+
+      e.preventDefault();
+
+      const multiplier = 1.1;
+      const speed = Math.min(Math.abs(delta) * multiplier, 48);
+
+      // Keep page movement responsive while still animating the horizontal carousel.
+      window.scrollBy({ top: delta * 0.85 });
+
       if (
         (toTheRight && node.scrollLeft > maxScroll - 100) ||
         (toTheLeft && node.scrollLeft < 100)
@@ -169,6 +161,7 @@ export default function PlatformFeatures() {
       } else {
         currentVelocity = delta > 0 ? speed : -speed;
       }
+
       if (!isScrolling) {
         isScrolling = true;
         rafId = requestAnimationFrame(updateScroll);
