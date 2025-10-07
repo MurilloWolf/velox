@@ -47,7 +47,6 @@ export default function EventDetailsModal({
         className="absolute inset-0 bg-gradient-to-br from-black/90 via-black/80 to-black/85 backdrop-blur"
         onClick={onClose}
       />
-
       <div className="relative w-full max-w-3xl max-h-[82vh] overflow-hidden rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-2xl shadow-[0_30px_90px_-25px_rgba(0,0,0,0.85)]">
         <div className="sticky top-0 border-b border-white/10 bg-gradient-to-r from-primary/30 via-black/35 to-transparent px-8 py-6">
           <div className="flex items-start justify-between gap-6">
@@ -69,7 +68,6 @@ export default function EventDetailsModal({
             </Button>
           </div>
         </div>
-
         <div className="max-h-[calc(82vh-132px)] overflow-y-auto px-8 pb-9 pt-7 text-white">
           <div className="space-y-5">
             <div className="grid gap-4 md:grid-cols-[minmax(0,160px)_minmax(0,1fr)]">
@@ -86,7 +84,6 @@ export default function EventDetailsModal({
                   </p>
                 </div>
               </div>
-
               <div className="rounded-2xl border border-white/10 bg-white/[0.08] px-5 py-4 backdrop-blur">
                 <div className="flex items-start gap-3">
                   <div className="rounded-xl p-2.5 text-[#d5fe46]">
@@ -107,7 +104,6 @@ export default function EventDetailsModal({
                     </Link>
                   </div>
                 </div>
-
                 {event.distances && event.distances.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {event.distances.map((distance, index) => (
@@ -131,7 +127,6 @@ export default function EventDetailsModal({
                 {event.description}
               </p>
             </div>
-
             {event.link && (
               <div className="rounded-2xl border border-[#d5fe46]/40 bg-[#d5fe46]/10 p-5 backdrop-blur">
                 <p className="text-xs uppercase tracking-wide text-[#d5fe46]/80">
