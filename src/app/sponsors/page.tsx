@@ -29,36 +29,38 @@ export default function SponsorsPage() {
     ...card,
     icon: differentiatorIconMap[card.icon],
   }));
-
-  const handleWhatsApp = () => {
-    const phoneNumber = "5518997708504";
-    const message = "Olá, gostaria de saber mais sobre o patrocínio da Velox.";
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
-    )}`;
-    window.open(url, "_blank");
-  };
-
-  const handleMediaKit = () => {
-    const mediaKitUrl = "";
-    window.open(mediaKitUrl, "_blank");
-  };
+  const phoneNumber = "5518997708504";
+  const message = "Olá, gostaria de saber mais sobre o patrocínio da Velox.";
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+    message
+  )}`;
+  const mediaKitUrl = "";
+  const isMediaKitAvailable = Boolean(mediaKitUrl);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-[#050807] to-black text-white">
       <Header />
 
-      <main className="container mx-auto px-4 py-16 md:py-24 space-y-24">
-        <section className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-black via-slate-950 to-emerald-950/40 px-6 py-16 md:px-12 shadow-[0_0_45px_rgba(18,255,120,0.12)]">
+      <main
+        id="conteudo-principal"
+        className="container mx-auto px-4 py-16 md:py-24 space-y-24"
+      >
+        <section
+          aria-labelledby="sponsors-hero"
+          className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-black via-slate-950 to-emerald-950/40 px-6 py-16 md:px-12 shadow-[0_0_45px_rgba(18,255,120,0.12)]"
+        >
           <div className="pointer-events-none absolute -left-36 top-0 h-64 w-64 rounded-full bg-[#d5fe46]/20 blur-3xl" />
           <div className="pointer-events-none absolute -right-28 -bottom-16 h-56 w-56 rounded-full bg-emerald-500/20 blur-3xl" />
 
           <div className="relative z-10 mx-auto max-w-4xl text-center">
             <div className="inline-flex items-center gap-3 rounded-full border border-[#d5fe46]/40 bg-[#d5fe46]/10 px-5 py-2 text-xs uppercase tracking-[0.35em] text-[#d5fe46]/90">
-              <Sparkles className="h-4 w-4" />
+              <Sparkles aria-hidden className="h-4 w-4" />
               {hero.badgeLabel}
             </div>
-            <h1 className="mt-6 text-4xl font-bold leading-tight text-white md:text-5xl">
+            <h1
+              id="sponsors-hero"
+              className="mt-6 text-4xl font-bold leading-tight text-white md:text-5xl"
+            >
               {hero.title}
             </h1>
             <p className="mt-6 text-lg text-white/80 md:text-xl">
@@ -66,17 +68,37 @@ export default function SponsorsPage() {
             </p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
               <Button
+                asChild
                 variant="outline"
                 className="cursor-pointer h-12 px-6 text-base font-semibold text-[#d5fe46] border-[#d5fe46]/60 bg-transparent hover:bg-[#d5fe46] hover:text-black"
               >
-                {hero.primaryCta}
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Iniciar conversa com a equipe VELOX pelo WhatsApp"
+                >
+                  {hero.primaryCta}
+                </a>
               </Button>
               <Button
-                onClick={() => handleMediaKit()}
+                asChild={isMediaKitAvailable}
                 variant="secondary"
-                className="cursor-pointer h-12 px-6 text-base font-semibold border border-[#d5fe46]/30 bg-[#d5fe46]/15 text-white hover:bg-[#d5fe46]/25"
+                className="cursor-pointer h-12 px-6 text-base font-semibold border border-[#d5fe46]/30 bg-[#d5fe46]/15 text-white hover:bg-[#d5fe46]/25 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={!isMediaKitAvailable}
               >
-                {hero.secondaryCta}
+                {isMediaKitAvailable ? (
+                  <a
+                    href={mediaKitUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Baixar o media kit do VELOX"
+                  >
+                    {hero.secondaryCta}
+                  </a>
+                ) : (
+                  <span aria-live="polite">{hero.secondaryCta}</span>
+                )}
               </Button>
             </div>
           </div>
@@ -101,9 +123,12 @@ export default function SponsorsPage() {
           </div>
         </section>
 
-        <section className="space-y-12">
+        <section className="space-y-12" aria-labelledby="sponsors-diferenciais">
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-3xl font-bold text-white md:text-4xl">
+            <h2
+              id="sponsors-diferenciais"
+              className="text-3xl font-bold text-white md:text-4xl"
+            >
               {differentiatorsSection.title}
             </h2>
             <p className="mt-4 text-base text-white/70 md:text-lg">
@@ -121,7 +146,7 @@ export default function SponsorsPage() {
                 >
                   <CardHeader className="space-y-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#d5fe46]/15 text-[#d5fe46]">
-                      <Icon className="h-6 w-6" />
+                      <Icon aria-hidden className="h-6 w-6" />
                     </div>
                     <CardTitle className="text-xl text-white">
                       {item.title}
@@ -141,13 +166,13 @@ export default function SponsorsPage() {
           </div>
         </section>
 
-        <section>
+        <section aria-labelledby="sponsors-contato">
           <Card className="relative overflow-hidden border border-[#d5fe46]/30 bg-gradient-to-r from-emerald-900 via-black to-slate-950">
             <div className="pointer-events-none absolute -right-44 top-0 h-72 w-72 rounded-full bg-[#d5fe46]/20 blur-3xl" />
             <div className="pointer-events-none absolute -left-24 bottom-0 h-56 w-56 rounded-full bg-emerald-500/15 blur-3xl" />
             <CardContent className="relative z-10 flex flex-col gap-8 px-6 py-12 text-center md:flex-row md:items-center md:justify-between md:text-left md:px-12">
               <div className="mx-auto max-w-2xl md:mx-0">
-                <h2 className="text-3xl font-bold text-white md:text-4xl">
+                <h2 id="sponsors-contato" className="text-3xl font-bold text-white md:text-4xl">
                   {ctaCard.title}
                 </h2>
                 <p className="mt-4 text-base text-white/75 md:text-lg">
@@ -156,11 +181,18 @@ export default function SponsorsPage() {
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Button
-                  onClick={() => handleWhatsApp()}
+                  asChild
                   className="cursor-pointer h-12 px-6 text-base font-semibold bg-[#d5fe46] text-black hover:bg-[#c6f542]"
                 >
-                  <Send className="mr-2 h-4 w-4" />
-                  {ctaCard.secondaryCta}
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Enviar mensagem via WhatsApp para o VELOX"
+                  >
+                    <Send className="mr-2 h-4 w-4" />
+                    {ctaCard.secondaryCta}
+                  </a>
                 </Button>
               </div>
             </CardContent>

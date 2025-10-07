@@ -5,7 +5,11 @@ import { Send, MessageSquare, Bell, Star } from "lucide-react";
 
 export default function BotShowcase() {
   return (
-    <section className="py-20 md:py-28 bg-black/80">
+    <section
+      id="bot-telegram"
+      aria-labelledby="botshowcase-title"
+      className="py-20 md:py-28 bg-black/80"
+    >
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
@@ -16,7 +20,10 @@ export default function BotShowcase() {
               </span>
               <FlurryBackground />
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-white bg-clip-text text-transparent leading-normal">
+            <h2
+              id="botshowcase-title"
+              className="text-4xl md:text-5xl font-bold mb-6 bg-white bg-clip-text text-transparent leading-normal"
+            >
               Acesse direto no Telegram
             </h2>
             <p className="text-lg  mb-8 leading-relaxed text-[#eee]/90">
@@ -69,10 +76,18 @@ export default function BotShowcase() {
 
             <Button
               size="lg"
+              asChild
               className="w-full font-semibold sm:w-2/4 uppercase bg-[#d5fe46] brightness-90 hover:bg-[#d5fe46]/90 text-black  hover:opacity-80 cursor-pointer"
             >
-              <Send className="mr-2 h-5 w-5" />
-              Abrir Bot no Telegram
+              <a
+                href="https://t.me/veloxsupport"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Abrir o VELOX Bot no Telegram em uma nova aba"
+              >
+                <Send className="mr-2 h-5 w-5" />
+                Abrir bot no Telegram
+              </a>
             </Button>
           </div>
 

@@ -202,11 +202,15 @@ export default function PlatformFeatures() {
   return (
     <section
       id="recursos"
+      aria-labelledby="recursos-title"
       className="relative py-20 md:py-28 from-transparent via-[#121212] to-black bg-gradient-to-b"
     >
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="mt-20 text-5xl md:text-5xl font-bold mb-4 bg-white bg-clip-text text-transparent">
+          <h2
+            id="recursos-title"
+            className="mt-20 text-5xl md:text-5xl font-bold mb-4 bg-white bg-clip-text text-transparent"
+          >
             Tudo que você precisa para correr melhor
           </h2>
           <p className="text-lg text-white/90 max-w-2xl mx-auto text-pretty">

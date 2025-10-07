@@ -12,6 +12,7 @@ export default function DonationSection() {
   return (
     <section
       id="apoie"
+      aria-labelledby="apoie-title"
       className="py-16 md:py-24  bg-[#121212] relative overflow-hidden"
     >
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
@@ -22,7 +23,10 @@ export default function DonationSection() {
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-[#d5fe46] to-[#121212] mb-6 shadow-xl">
               <Heart className="h-10 w-10 text-white fill-white animate-pulse" />
             </div>
-            <h2 className="mb-4 text-balance font-sans text-4xl font-bold text-[#d5fe46] md:text-5xl">
+            <h2
+              id="apoie-title"
+              className="mb-4 text-balance font-sans text-4xl font-bold text-[#d5fe46] md:text-5xl"
+            >
               Apoie a VELOX
             </h2>
             <p className="text-pretty text-xl text-white/80 leading-relaxed max-w-2xl mx-auto font-medium">

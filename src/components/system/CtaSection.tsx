@@ -5,7 +5,10 @@ import MashGradiant from "./MashGradiant";
 export default function CTASection() {
   return (
     <MashGradiant>
-      <section className="relative overflow-hidden py-20 md:py-28">
+      <section
+        aria-labelledby="cta-title"
+        className="relative overflow-hidden py-20 md:py-28"
+      >
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/10" />
           <div className="absolute -top-32 right-[-10%] h-72 w-72 rounded-full bg-[#d5fe46]/25 blur-3xl" />
@@ -20,7 +23,10 @@ export default function CTASection() {
             </div>
 
             <div className="space-y-6">
-              <h2 className="text-balance font-sans text-3xl font-bold text-white md:text-5xl">
+              <h2
+                id="cta-title"
+                className="text-balance font-sans text-3xl font-bold text-white md:text-5xl"
+              >
                 O assistente definitivo para corredores
               </h2>
               <p className="mx-auto max-w-2xl text-pretty text-base text-white/80 md:text-lg">
@@ -51,10 +57,18 @@ export default function CTASection() {
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button
                 size="lg"
+                asChild
                 className="cursor-pointer h-auto w-full bg-[#d5fe46] px-8 py-4 text-base font-semibold uppercase text-black hover:bg-[#d5fe46]/90 sm:w-auto"
               >
-                <Send className="mr-2 h-5 w-5" />
-                Acessar Bot no Telegram
+                <a
+                  href="https://t.me/veloxsupport"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Acessar o VELOX Bot no Telegram"
+                >
+                  <Send className="mr-2 h-5 w-5" />
+                  Acessar bot no Telegram
+                </a>
               </Button>
             </div>
 

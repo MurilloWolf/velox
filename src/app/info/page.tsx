@@ -78,7 +78,7 @@ export default function InfoPage() {
     <div className="min-h-screen bg-[#050505] text-slate-100">
       <Header />
 
-      <main className="relative overflow-hidden">
+      <main className="relative overflow-hidden" id="conteudo-principal">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -left-36 top-24 h-72 w-72 rounded-full bg-[#d5fe46]/10 blur-3xl" />
           <div className="absolute -right-48 top-1/3 h-80 w-80 rounded-full bg-[#2b1d05]/40 blur-[110px]" />

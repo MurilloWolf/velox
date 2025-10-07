@@ -1,6 +1,22 @@
+import type { Metadata } from "next";
+
 import { Header, Footer } from "@/components/system";
 import { privacyPageContent } from "@/presentation";
 import { Shield } from "lucide-react";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Política de Privacidade - VELOX Corridas",
+  description:
+    "Saiba como o VELOX Bot trata dados pessoais, solicita consentimento e protege a privacidade da comunidade de corredores.",
+  keywords: [
+    "privacidade velox",
+    "lgpd corridas",
+    "dados pessoais bot",
+  ],
+  path: "/privacy",
+  image: "/velox_x.png",
+});
 
 export default function PrivacyPage() {
   const { hero, lastUpdate, sections, contact, footer } = privacyPageContent;
@@ -8,7 +24,8 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-[#000] ">
       <Header />
-      <section className="relative py-16 ">
+      <main id="conteudo-principal">
+        <section className="relative py-16 ">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary to-[#d5fe46] mb-6">
@@ -23,13 +40,13 @@ export default function PrivacyPage() {
             </p>
           </div>
         </div>
-      </section>
+        </section>
 
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="prose prose-lg max-w-none">
-              <div className="bg-[#121212]/70 backdrop-blur-lg rounded-t-xl p-8 md:p-12 shadow-sm space-y-8 ">
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="prose prose-lg max-w-none">
+                <div className="bg-[#121212]/70 backdrop-blur-lg rounded-t-xl p-8 md:p-12 shadow-sm space-y-8 ">
                 {sections.map((section) => (
                   <div key={section.id}>
                     <h2 className="text-2xl font-bold text-white mb-4">
@@ -95,13 +112,14 @@ export default function PrivacyPage() {
                   </div>
                 ))}
               </div>
-              <div className="rounded-b-xl p-4 bg-[#121212]">
-                <p className="text-sm text-white/50 text-center">{footer}</p>
+                <div className="rounded-b-xl p-4 bg-[#121212]">
+                  <p className="text-sm text-white/50 text-center">{footer}</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
       <Footer />
     </div>

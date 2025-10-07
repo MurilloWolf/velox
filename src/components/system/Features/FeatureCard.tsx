@@ -27,7 +27,7 @@ export default function FeatureCard(props: IFeatureProps) {
         <Image
           src={feature.img || runningBg}
           className="absolute inset-0 object-cover w-full h-full rounded-t-2xl opacity-60"
-          alt="Running background"
+          alt={feature.title}
         />
         <div
           role="button"
@@ -43,6 +43,7 @@ export default function FeatureCard(props: IFeatureProps) {
             showScroll ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           aria-hidden={!showScroll}
+          aria-label="Ver mais recursos"
         >
           <div className="flex items-center space-x-1">
             {[0, 1, 2].map((i) => (

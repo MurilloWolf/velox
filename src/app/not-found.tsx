@@ -18,7 +18,7 @@ export default function NotFound() {
   return (
     <div className="relative min-h-screen bg-[#050505] text-slate-100">
       <Header />
-      <main className="relative overflow-hidden">
+      <main className="relative overflow-hidden" id="conteudo-principal">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -left-32 top-20 h-80 w-80 rounded-full bg-[#d5fe46]/10 blur-3xl" />
           <div className="absolute right-[-20%] top-1/3 h-[26rem] w-[26rem] rounded-full bg-[#1b1605]/60 blur-[140px]" />

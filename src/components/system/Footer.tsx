@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="md:col-span-2">
             <Image
               src={veloxLogo}
-              alt="VELOX"
+              alt="Logotipo do VELOX Corridas"
               width={120}
               height={40}
               className="mb-4"
@@ -26,6 +26,8 @@ export default function Footer() {
               <a
                 href="https://github.com/MurilloWolf"
                 target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub do VELOX"
                 className="hover:text-[#d5fe46] transition-colors"
               >
                 <Github className="h-5 w-5" />
@@ -33,6 +35,8 @@ export default function Footer() {
               <a
                 href="https://twitter.com/RunningVelox"
                 target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Perfil do VELOX no X"
                 className="hover:text-[#d5fe46] transition-colors"
               >
                 <Twitter className="h-5 w-5" />
@@ -40,6 +44,8 @@ export default function Footer() {
               <a
                 href="https://www.instagram.com/runningvelox/"
                 target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram do VELOX"
                 className="hover:text-[#d5fe46] transition-colors"
               >
                 <Instagram className="h-5 w-5" />
@@ -50,19 +56,28 @@ export default function Footer() {
             <h4 className="mb-4 font-semibold text-[#d5fe46]">Links Rápidos</h4>
             <ul className="space-y-2 text-sm text-background/80">
               <li>
-                <a href="#" className="hover:text-[#d5fe46] transition-colors">
+                <Link
+                  href="/info"
+                  className="hover:text-[#d5fe46] transition-colors"
+                >
                   Sobre o Bot
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-[#d5fe46] transition-colors">
+                <Link
+                  href="/#recursos"
+                  className="hover:text-[#d5fe46] transition-colors"
+                >
                   Como Funciona
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-[#d5fe46] transition-colors">
+                <Link
+                  href="/#contato"
+                  className="hover:text-[#d5fe46] transition-colors"
+                >
                   Adicionar Corrida
-                </a>
+                </Link>
               </li>
               <li>
                 <a
@@ -86,9 +101,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-[#d5fe46] transition-colors">
+                <Link
+                  href="/faq"
+                  className="hover:text-[#d5fe46] transition-colors"
+                >
                   FAQ
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

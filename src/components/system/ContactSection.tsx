@@ -1,27 +1,30 @@
 "use client";
 
-import type React from "react";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, MessageSquare, Instagram } from "lucide-react";
 
 export default function ContactSection() {
-  const handleInstagram = () => {
-    window.open("https://www.instagram.com/runningvelox/", "_blank");
-  };
-
-  const handleMailTo = () => {
-    window.location.href = "mailto:velox.running.app@gmail.com";
-  };
+  const instagramUrl = "https://www.instagram.com/runningvelox/";
+  const emailAddress = "velox.running.app@gmail.com";
 
   return (
-    <section id="contato" className="py-16 md:py-24 bg-black/60">
+    <section
+      id="contato"
+      aria-labelledby="contato-title"
+      className="py-16 md:py-24 bg-black/60"
+    >
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-4xl">
           <div className="mb-12 text-center">
-            <MessageSquare className="mx-auto mb-4 h-20 w-20 text-[#d5fe46]   shadow-lg p-2 " />
-            <h2 className="mb-4 text-balance font-sans text-3xl font-bold  text-white text-shadow-[0_0_8px_#d5fe46] md:text-4xl">
+            <MessageSquare
+              aria-hidden
+              className="mx-auto mb-4 h-20 w-20 text-[#d5fe46]   shadow-lg p-2 "
+            />
+            <h2
+              id="contato-title"
+              className="mb-4 text-balance font-sans text-3xl font-bold  text-white text-shadow-[0_0_8px_#d5fe46] md:text-4xl"
+            >
               Entre em Contato
             </h2>
             <p className="text-pretty text-lg text-white/90 leading-relaxed">
@@ -49,11 +52,18 @@ export default function ContactSection() {
                   Envie uma mensagem direta para nosso perfil
                 </p>
                 <Button
+                  asChild
                   variant="outline"
                   className="w-full bg-transparent cursor-pointer text-white border-white/20 hover:border-white/40 hover:text-black"
-                  onClick={handleInstagram}
                 >
-                  @RunningVelox
+                  <a
+                    href={instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Abrir o Instagram do VELOX em nova aba"
+                  >
+                    @RunningVelox
+                  </a>
                 </Button>
               </CardContent>
             </Card>
@@ -76,11 +86,16 @@ export default function ContactSection() {
                   Prefere e-mail? Envie sua mensagem para:
                 </p>
                 <Button
+                  asChild
                   variant="outline"
                   className="w-full bg-transparent cursor-pointer text-white border-white/20 hover:border-white/40 hover:text-black"
-                  onClick={handleMailTo}
                 >
-                  velox.running.app@gmail.com
+                  <a
+                    href={`mailto:${emailAddress}`}
+                    aria-label="Enviar um e-mail para o VELOX"
+                  >
+                    {emailAddress}
+                  </a>
                 </Button>
               </CardContent>
             </Card>
