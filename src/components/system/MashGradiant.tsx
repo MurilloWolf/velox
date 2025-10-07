@@ -27,7 +27,7 @@ export default function MeshGradient({
     // Colors from user
     const colors = ["#121212", "#212121", "#000c5a", "#d5fe46", "#f05a24"];
 
-    const points = colors.map((color, i) => {
+    const points = colors.map((color) => {
       const speed = 0.3 + Math.random() * 1.2; // Random speed between 0.3 and 1.5
       const angle = Math.random() * Math.PI * 2; // Random initial direction
 
