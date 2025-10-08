@@ -13,15 +13,25 @@ export interface IFeatureProps {
   index: number;
   scrollNext: () => void;
   showScroll: boolean;
+  onSelect: () => void;
 }
 
 export default function FeatureCard(props: IFeatureProps) {
-  const { feature, index, scrollNext, showScroll } = props;
+  const { feature, index, scrollNext, showScroll, onSelect } = props;
   const Icon = feature.icon;
   return (
     <Card
       key={index}
       className="hover:scale-110 cursor-pointer gap-0 snap-center flex-shrink-0 w-[calc(100vw-6vw)] sm:w-[calc(80vw)] md:w-1/4 md:min-h-[500px] md:h-[600px] md:min-w-[320px] lg:min-w-[360px] h-[calc(100vh-1rem)] sm:h-[520px] overflow-hidden rounded-3xl transition-all duration-150 border-0 bg-transparent mx-2"
+      onClick={onSelect}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onSelect();
+        }
+      }}
     >
       <div className={`relative h-[80%] flex items-end p-6 rounded-t-2xl`}>
         <Image
@@ -32,10 +42,14 @@ export default function FeatureCard(props: IFeatureProps) {
         <div
           role="button"
           tabIndex={0}
-          onClick={scrollNext}
+          onClick={(event) => {
+            event.stopPropagation();
+            scrollNext();
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
+              e.stopPropagation();
               scrollNext();
             }
           }}

@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { ComponentType, SVGProps } from "react";
+import { useRouter } from "next/navigation";
 import { Calendar, Dumbbell, Droplets, Send, TrendingUp } from "lucide-react";
 
 import FeatureCard from "./FeatureCard";
+import type { StaticImageData } from "next/image";
 import training from "../../../../../public/running-bg.jpg";
 import nutrition from "../../../../../public/nutrition.jpg";
 import womanPhone from "../../../../../public/woman-telephone.jpg";
@@ -34,16 +37,30 @@ function throttle<T extends (this: unknown, ...args: unknown[]) => void>(
   return throttled;
 }
 
+type CoachRootSection = "nutrition" | "training" | "prompts";
+
+type FeatureItem = {
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+  title: string;
+  description: string;
+  img: StaticImageData;
+  section?: CoachRootSection;
+  href?: string;
+  externalUrl?: string;
+};
+
 export default function PlatformFeatures() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [showScroll, setShowScroll] = useState(false);
-  const features = [
+  const router = useRouter();
+  const features: FeatureItem[] = [
     {
       icon: Calendar,
       title: "Calendário de Corridas",
       description:
         "Encontre corridas de 5km, 10km, meia maratona e maratona completa em todo o Brasil. Filtros por distância, cidade e data.",
       img: calendar,
+      href: "/calendar",
     },
     {
       icon: Send,
@@ -51,6 +68,7 @@ export default function PlatformFeatures() {
       description:
         "Acesse todas as funcionalidades direto no Telegram. Notificações de novas corridas, lembretes e muito mais.",
       img: womanPhone,
+      externalUrl: "https://t.me/VeloxBot",
     },
     {
       icon: Dumbbell,
@@ -58,6 +76,7 @@ export default function PlatformFeatures() {
       description:
         "Treinos estruturados para iniciantes e avançados. Prepare-se para sua próxima corrida com orientação profissional.",
       img: training,
+      section: "training",
     },
     {
       icon: Droplets,
@@ -65,6 +84,7 @@ export default function PlatformFeatures() {
       description:
         "Aprenda quando e quanto beber antes, durante e depois das corridas. Dicas para diferentes distâncias e climas.",
       img: nutrition,
+      section: "nutrition",
     },
     {
       icon: TrendingUp,
@@ -72,8 +92,25 @@ export default function PlatformFeatures() {
       description:
         "Gere planos de treino, dicas de nutrição e estratégias de corrida com prompts personalizados.",
       img: airunning,
+      section: "prompts",
     },
   ];
+
+  const handleFeatureSelect = (feature: FeatureItem) => {
+    if (feature.section) {
+      router.push(`/coach?section=${feature.section}`);
+      return;
+    }
+
+    if (feature.href) {
+      router.push(feature.href);
+      return;
+    }
+
+    if (feature.externalUrl) {
+      window.open(feature.externalUrl, "_blank", "noopener,noreferrer");
+    }
+  };
 
   useEffect(() => {
     const el = containerRef.current;
@@ -231,6 +268,7 @@ export default function PlatformFeatures() {
                 index={index}
                 scrollNext={scrollNext}
                 showScroll={showScroll}
+                onSelect={() => handleFeatureSelect(feature)}
               />
             );
           })}
