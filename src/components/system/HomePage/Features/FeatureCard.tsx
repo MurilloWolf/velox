@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui";
 import { ChevronRight } from "lucide-react";
 import Image, { StaticImageData } from "next/image";
-import runningBg from "../../../../public/running-bg.jpg";
+import runningBg from "../../../../../public/running-bg.jpg";
 
 export interface IFeatureProps {
   feature: {
@@ -21,7 +21,7 @@ export default function FeatureCard(props: IFeatureProps) {
   return (
     <Card
       key={index}
-      className="gap-0 snap-center flex-shrink-0 w-[calc(100vw-6vw)] sm:w-[calc(80vw)] md:w-1/4 md:min-h-[500px] md:h-[600px] md:min-w-[320px] lg:min-w-[360px] h-[calc(100vh-1rem)] sm:h-[520px] overflow-hidden rounded-3xl transition-all duration-300 border-0 bg-transparent mx-2"
+      className="hover:scale-110 cursor-pointer gap-0 snap-center flex-shrink-0 w-[calc(100vw-6vw)] sm:w-[calc(80vw)] md:w-1/4 md:min-h-[500px] md:h-[600px] md:min-w-[320px] lg:min-w-[360px] h-[calc(100vh-1rem)] sm:h-[520px] overflow-hidden rounded-3xl transition-all duration-150 border-0 bg-transparent mx-2"
     >
       <div className={`relative h-[80%] flex items-end p-6 rounded-t-2xl`}>
         <Image

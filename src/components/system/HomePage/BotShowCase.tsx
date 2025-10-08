@@ -73,7 +73,6 @@ export default function BotShowcase() {
                 </div>
               </div>
             </div>
-
             <Button
               size="lg"
               asChild
@@ -90,7 +89,6 @@ export default function BotShowcase() {
               </a>
             </Button>
           </div>
-
           <div className="relative">
             <Card className="p-8 bg-gradient-to-br from-[#364ff2]/10 to-accent/10 border-0 shadow-xl shadow-[#000c5a]/10">
               <div className="space-y-4">
@@ -124,7 +122,6 @@ export default function BotShowcase() {
                     </div>
                   </div>
                 </div>
-
                 <div className="bg-white/15 rounded-lg p-4 shadow-md">
                   <div className="flex items-center gap-2 mb-2">
                     <div className="h-8 w-8 rounded-full bg-primary/90 flex items-center justify-center">
@@ -138,7 +135,6 @@ export default function BotShowcase() {
                 </div>
               </div>
             </Card>
-
             <div className="absolute -top-4 -right-4 h-24 w-24 bg-accent/20 rounded-full blur-2xl" />
             <div className="absolute -bottom-4 -left-4 h-32 w-32 bg-primary/20 rounded-full blur-2xl" />
           </div>

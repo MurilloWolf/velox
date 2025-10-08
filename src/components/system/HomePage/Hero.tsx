@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { Zap, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import veloxLogo from "../../../public/velox-low-ql.png";
+import veloxLogo from "../../../../public/velox-low-ql.png";
 
 export default function Hero() {
+  const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
   const [showScroll, setShowScroll] = useState(true);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="min-h-screen relative overflow-hidden bg-gradient-to-br from-black via-[#121212] to-transparent py-24 md:py-32">
+    <section className="min-h-[900px] max-h-[calc(100vh-40vh)] h-full relative overflow-hidden bg-black/10 py-24 md:py-32">
       <div className="container relative z-10 mx-auto px-4">
         <div className="flex flex-col sm:flex-row justify-evenly items-center text-center">
           <div className="flex flex-col items-center max-w-4xl sm:mr-10">
@@ -35,7 +36,13 @@ export default function Hero() {
             />
           </div>
           <div>
-            <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+            <h1 className="text-5xl md:text-5xl font-extrabold text-white leading-tight max-w-3xl">
+              Encontrando as melhores provas de corrida para você
+            </h1>
+            <p className="mt-2 sm:mt-2 mb-10 max-w-3xl text-pretty text-xl text-white/85 md:text-2xl leading-relaxed font-medium">
+              Sua plataforma completa de corridas
+            </p>
+            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-[#d5fe46] text-shadow-[0_0_8px_#d5fe46] mb-2">
                   500+
@@ -61,19 +68,21 @@ export default function Hero() {
                 <div className="text-sm text-white/80">Disponível</div>
               </div>
             </div>
-            <p className="mt-10 sm:mt-10 mb-10 max-w-3xl text-pretty text-xl text-white/85 md:text-2xl leading-relaxed font-medium">
-              Sua plataforma completa para corrida: encontre eventos, receba
-              dicas personalizadas, acesse treinos e muito mais. Tudo integrado
-              ao Telegram!
-            </p>
-
             <Button
+              asChild
               size="lg"
               variant="outline"
-              className="border-[#d5fe46] text-[#d5fe46] bg-transparent ease-in-out duration-150 cursor-pointer uppercase text-lg py-4 px-7 h-auto transition-all hover:bg-[#d5fe46] hover:text-black"
+              className="border-[#d5fe46] text-[#d5fe46] mt-16 bg-transparent ease-in-out duration-150 cursor-pointer uppercase text-lg py-4 px-7 h-auto transition-all hover:bg-[#d5fe46] hover:text-black"
             >
-              <Zap className="mr-2 h-4 w-4" />
-              Começar Agora
+              <a
+                href={TELEGRAM_BOT_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Abrir o VELOX Bot no Telegram"
+              >
+                <Zap className="mr-2 h-4 w-4" />
+                Começar Agora
+              </a>
             </Button>
           </div>
         </div>

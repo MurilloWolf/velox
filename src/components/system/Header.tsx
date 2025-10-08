@@ -10,6 +10,8 @@ import { useSmoothScroll } from "./hooks/useSmoothScroll";
 import { usePathname } from "next/navigation";
 
 export default function Header() {
+  const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
+
   const scrollTo = useSmoothScroll();
   const pathname = usePathname();
 
@@ -98,7 +100,7 @@ export default function Header() {
             className=" text-black bg-[#d5fe46] hover:bg-[#d5fe46]/100 hover:opacity-80  cursor-pointer uppercase font-semibold"
           >
             <a
-              href="https://t.me/veloxsupport"
+              href={TELEGRAM_BOT_URL}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Fale com o VELOX no Telegram"

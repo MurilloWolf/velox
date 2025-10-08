@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { Calendar, Dumbbell, Droplets, Send, TrendingUp } from "lucide-react";
 
 import FeatureCard from "./FeatureCard";
-import training from "../../../../public/running-bg.jpg";
-import nutrition from "../../../../public/nutrition.jpg";
-import womanPhone from "../../../../public/woman-telephone.jpg";
-import calendar from "../../../../public/calendar.jpg";
-import airunning from "../../../../public/AiRunning.png";
+import training from "../../../../../public/running-bg.jpg";
+import nutrition from "../../../../../public/nutrition.jpg";
+import womanPhone from "../../../../../public/woman-telephone.jpg";
+import calendar from "../../../../../public/calendar.jpg";
+import airunning from "../../../../../public/AiRunning.png";
 
 function throttle<T extends (this: unknown, ...args: unknown[]) => void>(
   func: T,

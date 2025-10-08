@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Send, Bell, CalendarCheck, Sparkles } from "lucide-react";
-import MashGradiant from "./MashGradiant";
+import MashGradiant from "../MashGradiant";
 
 export default function CTASection() {
+  const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
+
   return (
     <MashGradiant>
       <section
@@ -61,7 +63,7 @@ export default function CTASection() {
                 className="cursor-pointer h-auto w-full bg-[#d5fe46] px-8 py-4 text-base font-semibold uppercase text-black hover:bg-[#d5fe46]/90 sm:w-auto"
               >
                 <a
-                  href="https://t.me/veloxsupport"
+                  href={TELEGRAM_BOT_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Acessar o VELOX Bot no Telegram"
