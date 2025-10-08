@@ -172,7 +172,10 @@ export default function SponsorsPage() {
             <div className="pointer-events-none absolute -left-24 bottom-0 h-56 w-56 rounded-full bg-emerald-500/15 blur-3xl" />
             <CardContent className="relative z-10 flex flex-col gap-8 px-6 py-12 text-center md:flex-row md:items-center md:justify-between md:text-left md:px-12">
               <div className="mx-auto max-w-2xl md:mx-0">
-                <h2 id="sponsors-contato" className="text-3xl font-bold text-white md:text-4xl">
+                <h2
+                  id="sponsors-contato"
+                  className="text-3xl font-bold text-white md:text-4xl"
+                >
                   {ctaCard.title}
                 </h2>
                 <p className="mt-4 text-base text-white/75 md:text-lg">
@@ -199,7 +202,6 @@ export default function SponsorsPage() {
           </Card>
         </section>
       </main>
-
       <Footer />
     </div>
   );
