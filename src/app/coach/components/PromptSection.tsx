@@ -1,10 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Copy, Download, Check, Eye, Search } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 
 import {
   Table,
@@ -18,205 +15,12 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
+  Button,
+  Badge,
+  Input,
 } from "@/components/ui/";
-
-const prompts = [
-  {
-    id: 1,
-    title: "Criar Planilha Personalizada",
-    category: "Treinos",
-    subcategory: "Planejamento",
-    description: "Gere uma planilha de treino adaptada ao seu nível e objetivo",
-    prompt: `Crie uma planilha de treino de corrida personalizada com as seguintes informações:
-- Nível atual: [iniciante/intermediário/avançado]
-- Objetivo: [5K/10K/Meia/Maratona]
-- Tempo disponível: [X semanas]
-- Frequência semanal: [X dias]
-- Melhor tempo atual: [seu tempo]
-- Objetivo de tempo: [tempo desejado]
-
-Inclua: aquecimento, treinos de base, intervalados, longões e recuperação.`,
-  },
-  {
-    id: 2,
-    title: "Análise de Desempenho",
-    category: "Treinos",
-    subcategory: "Análise",
-    description: "Analise seus treinos e identifique pontos de melhoria",
-    prompt: `Analise meu desempenho recente na corrida:
-- Treinos da última semana: [descreva seus treinos]
-- Sensações durante os treinos: [como se sentiu]
-- Tempos/paces: [seus tempos]
-- Dificuldades encontradas: [descreva]
-
-Forneça insights sobre: pontos fortes, áreas de melhoria, ajustes necessários e próximos passos.`,
-  },
-  {
-    id: 3,
-    title: "Treino Intervalado Personalizado",
-    category: "Treinos",
-    subcategory: "Treino",
-    description: "Crie sessões de treino intervalado específicas",
-    prompt: `Crie um treino intervalado de corrida para:
-- Objetivo: [melhorar velocidade/resistência/VO2max]
-- Distância da prova alvo: [5K/10K/etc]
-- Pace atual: [seu pace]
-- Tempo disponível: [minutos]
-- Local: [pista/rua/esteira]
-
-Inclua: aquecimento, séries, recuperação e volta à calma com tempos específicos.`,
-  },
-  {
-    id: 4,
-    title: "Periodização de Treino",
-    category: "Treinos",
-    subcategory: "Planejamento",
-    description: "Planeje ciclos de treino com periodização adequada",
-    prompt: `Crie um plano de periodização para corrida:
-- Prova alvo: [distância e data]
-- Nível: [iniciante/intermediário/avançado]
-- Semanas disponíveis: [número]
-- Pontos fracos: [velocidade/resistência/força]
-
-Divida em fases: base, construção, pico e recuperação com objetivos específicos.`,
-  },
-  {
-    id: 5,
-    title: "Plano Nutricional Semanal",
-    category: "Nutrição",
-    subcategory: "Planejamento",
-    description: "Crie um plano de alimentação para a semana de treinos",
-    prompt: `Crie um plano nutricional semanal para corredor:
-- Nível de treino: [iniciante/intermediário/avançado]
-- Volume semanal: [km por semana]
-- Objetivo: [performance/perda de peso/ganho de massa]
-- Restrições: [vegetariano/vegano/intolerâncias]
-- Dias de treino: [segunda, quarta, sexta, etc]
-
-Inclua: café da manhã, almoço, jantar, lanches e timing de nutrientes.`,
-  },
-  {
-    id: 6,
-    title: "Estratégia Nutricional para Prova",
-    category: "Nutrição",
-    subcategory: "Competição",
-    description: "Planeje sua nutrição antes, durante e depois da prova",
-    prompt: `Crie uma estratégia nutricional completa para prova:
-- Distância: [5K/10K/Meia/Maratona]
-- Horário da prova: [manhã/tarde]
-- Duração estimada: [tempo]
-- Experiência com géis/isotônicos: [sim/não]
-
-Inclua: refeições 3 dias antes, café da manhã, nutrição durante, e recuperação pós-prova.`,
-  },
-  {
-    id: 7,
-    title: "Suplementação para Corredores",
-    category: "Nutrição",
-    subcategory: "Suplementação",
-    description: "Recomendações de suplementos baseadas em seus objetivos",
-    prompt: `Sugira um protocolo de suplementação para corredor:
-- Objetivo: [performance/recuperação/saúde geral]
-- Nível: [iniciante/intermediário/avançado]
-- Volume de treino: [km/semana]
-- Idade: [sua idade]
-- Restrições: [alergias/intolerâncias]
-
-Inclua: suplementos essenciais, timing, dosagem e benefícios esperados.`,
-  },
-  {
-    id: 8,
-    title: "Superar Platô de Performance",
-    category: "Motivação",
-    subcategory: "Mindset",
-    description: "Estratégias para quebrar estagnação nos treinos",
-    prompt: `Estou em um platô de performance na corrida:
-- Tempo estagnado: [semanas/meses]
-- Distância atual: [km]
-- Pace atual: [min/km]
-- Rotina de treino: [descreva]
-- Sensação: [desmotivado/cansado/entediado]
-
-Forneça estratégias para: quebrar o platô, renovar motivação e alcançar novos objetivos.`,
-  },
-  {
-    id: 9,
-    title: "Preparação Mental para Prova",
-    category: "Motivação",
-    subcategory: "Mindset",
-    description: "Técnicas de mentalização e preparação psicológica",
-    prompt: `Preciso de preparação mental para minha prova:
-- Distância: [5K/10K/Meia/Maratona]
-- Dias até a prova: [número]
-- Ansiedade/nervosismo: [nível de 1-10]
-- Experiência anterior: [primeira prova/veterano]
-- Objetivo: [completar/tempo específico]
-
-Inclua: técnicas de visualização, controle de ansiedade, estratégia mental e mantras.`,
-  },
-  {
-    id: 10,
-    title: "Manter Consistência nos Treinos",
-    category: "Motivação",
-    subcategory: "Hábitos",
-    description: "Estratégias para criar e manter hábitos de treino",
-    prompt: `Quero criar consistência nos meus treinos de corrida:
-- Rotina atual: [descreva]
-- Dificuldades: [falta de tempo/motivação/cansaço]
-- Objetivo: [treinar X vezes por semana]
-- Horário disponível: [manhã/tarde/noite]
-
-Forneça: estratégias de hábito, dicas de organização, motivação e accountability.`,
-  },
-  {
-    id: 11,
-    title: "Protocolo de Recuperação Pós-Treino",
-    category: "Recuperação",
-    subcategory: "Recuperação",
-    description: "Otimize sua recuperação após treinos intensos",
-    prompt: `Crie um protocolo de recuperação pós-treino:
-- Tipo de treino: [longão/intervalado/fácil]
-- Intensidade: [leve/moderada/alta]
-- Duração: [minutos/km]
-- Sintomas: [dor muscular/fadiga/lesão leve]
-- Tempo até próximo treino: [horas/dias]
-
-Inclua: alongamento, nutrição, hidratação, sono, e técnicas de recuperação ativa.`,
-  },
-  {
-    id: 12,
-    title: "Prevenção de Lesões",
-    category: "Recuperação",
-    subcategory: "Prevenção",
-    description: "Exercícios e cuidados para prevenir lesões comuns",
-    prompt: `Crie um plano de prevenção de lesões para corredor:
-- Histórico: [lesões anteriores ou pontos fracos]
-- Volume semanal: [km]
-- Tipo de pisada: [pronada/supinada/neutra]
-- Superfície de treino: [asfalto/terra/pista]
-
-Inclua: exercícios de fortalecimento, alongamentos, mobilidade e cuidados preventivos.`,
-  },
-  {
-    id: 13,
-    title: "Recuperação Pós-Prova",
-    category: "Recuperação",
-    subcategory: "Recuperação",
-    description: "Plano completo de recuperação após competições",
-    prompt: `Preciso de um plano de recuperação pós-prova:
-- Distância da prova: [5K/10K/Meia/Maratona]
-- Como se sentiu: [ótimo/cansado/muito desgastado]
-- Sintomas: [dores/fadiga/lesões leves]
-- Próxima prova: [data ou "sem planos"]
-
-Inclua: descanso ativo, nutrição, quando voltar a treinar e progressão de volume.`,
-  },
-];
+import { PreviewDialog } from "./index";
+import { prompts } from "../presentation/prompts";
 
 export default function PromptsSection() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -371,58 +175,70 @@ export default function PromptsSection() {
         </Table>
       </div>
 
-      <Dialog
+      <PreviewDialog
         open={!!previewPrompt}
         onOpenChange={() => setPreviewPrompt(null)}
-      >
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{previewPrompt?.title}</DialogTitle>
-            <DialogDescription>{previewPrompt?.description}</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="flex gap-2">
+        title={previewPrompt?.title}
+        description={previewPrompt?.description}
+        size="compact"
+        metadata={
+          <div className="flex flex-wrap items-center gap-3 text-sm text-slate-300">
+            <div className="flex items-center gap-2">
+              <span className="text-slate-400">Categoria:</span>
               <Badge variant="outline">{previewPrompt?.category}</Badge>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-slate-400">Tema:</span>
               <Badge variant="secondary">{previewPrompt?.subcategory}</Badge>
             </div>
-            <div className="rounded-lg bg-muted p-4">
-              <pre className="whitespace-pre-wrap text-sm font-mono">
-                {previewPrompt?.prompt}
-              </pre>
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setPreviewPrompt(null)}>
-                Fechar
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() =>
-                  previewPrompt &&
-                  copyToClipboard(previewPrompt.prompt, previewPrompt.id)
-                }
-              >
-                {copiedId === previewPrompt?.id ? (
-                  <>
-                    <Check className="mr-2 h-4 w-4" />
-                    Copiado
-                  </>
-                ) : (
-                  <>
-                    <Copy className="mr-2 h-4 w-4" />
-                    Copiar
-                  </>
-                )}
-              </Button>
-              <Button
-                onClick={() => previewPrompt && downloadPrompt(previewPrompt)}
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Download
-              </Button>
-            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        }
+        previewContent={
+          <div className="glass-scrollbar max-h-64 overflow-y-auto rounded-lg border border-[#1b2b44] bg-[#060f21] p-4">
+            <pre className="whitespace-pre-wrap text-sm font-mono text-slate-100">
+              {previewPrompt?.prompt}
+            </pre>
+          </div>
+        }
+        actions={
+          <div className="flex justify-end gap-2">
+            <Button
+              size="sm"
+              className="bg-transparent border-[#1b2b44] hover:bg-transparent focus:ring-0"
+              variant="outline"
+              onClick={() => setPreviewPrompt(null)}
+            >
+              Fechar
+            </Button>
+            <Button
+              className="bg-[#1b2b44] border-[#1b2b44] hover:bg-transparent focus:ring-0"
+              variant="outline"
+              onClick={() =>
+                previewPrompt &&
+                copyToClipboard(previewPrompt.prompt, previewPrompt.id)
+              }
+            >
+              {copiedId === previewPrompt?.id ? (
+                <>
+                  <Check className="mr-2 h-4 w-4" />
+                  Copiado
+                </>
+              ) : (
+                <>
+                  <Copy className="mr-2 h-4 w-4" />
+                  Copiar
+                </>
+              )}
+            </Button>
+            <Button
+              onClick={() => previewPrompt && downloadPrompt(previewPrompt)}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Download
+            </Button>
+          </div>
+        }
+      />
     </div>
   );
 }

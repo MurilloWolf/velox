@@ -3,82 +3,50 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { LucideIcon } from "lucide-react";
-import { Apple, Dumbbell, Sparkles, ChevronRight } from "lucide-react";
-
+import { ChevronRight } from "lucide-react";
+import { sections } from "../presentation/sidebar";
 interface ResourcesSidebarProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
   mobileOpen: boolean;
   onMobileClose: () => void;
+  theme: {
+    container: string;
+    inactive: string;
+    hover: string;
+    active: string;
+    icon: string;
+    divider: string;
+    subtext: string;
+    subActive: string;
+    subHover: string;
+  };
 }
-
-type ResourceSection = {
-  id: string;
-  label: string;
-  icon: LucideIcon;
-  subsections?: Array<{ id: string; label: string }>;
-};
-
-const sections: ResourceSection[] = [
-  {
-    id: "nutrition",
-    label: "Dicas de Nutrição",
-    icon: Apple,
-    subsections: [
-      { id: "nutrition-beginner", label: "Iniciante" },
-      { id: "nutrition-intermediate", label: "Intermediário" },
-      { id: "nutrition-advanced", label: "Avançado" },
-      { id: "nutrition-5k", label: "5K" },
-      { id: "nutrition-10k", label: "10K" },
-      { id: "nutrition-half", label: "Meia Maratona" },
-      { id: "nutrition-marathon", label: "Maratona" },
-    ],
-  },
-  {
-    id: "training",
-    label: "Planilhas de Treino",
-    icon: Dumbbell,
-    subsections: [
-      { id: "training-beginner", label: "Iniciante" },
-      { id: "training-intermediate", label: "Intermediário" },
-      { id: "training-advanced", label: "Avançado" },
-    ],
-  },
-  {
-    id: "prompts",
-    label: "Prompts de IA",
-    icon: Sparkles,
-    subsections: [
-      { id: "prompts-training", label: "Treinos" },
-      { id: "prompts-nutrition", label: "Nutrição" },
-      { id: "prompts-motivation", label: "Motivação" },
-      { id: "prompts-recovery", label: "Recuperação" },
-    ],
-  },
-];
 
 export default function ResourcesSidebar({
   activeSection,
   onSectionChange,
   mobileOpen,
   onMobileClose,
+  theme,
 }: ResourcesSidebarProps) {
   return (
     <>
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-40 bg-[#030712]/70 backdrop-blur-sm lg:hidden"
           onClick={onMobileClose}
         />
       )}
       <aside
         className={cn(
-          "fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] w-64 border-r border-border bg-sidebar text-sidebar-foreground shadow-sm transition-transform duration-200 lg:translate-x-0",
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
+          "fixed left-0 top-16 bottom-0 z-40 w-64 transition-transform duration-200",
+          theme.container,
+          mobileOpen ? "translate-x-0" : "-translate-x-full",
+          "lg:translate-x-0"
         )}
       >
-        <ScrollArea className="h-full py-6">
+        <ScrollArea className="glass-scrollbar h-full py-6">
           <div className="space-y-1 px-3">
             {sections.map((section) => {
               const Icon = section.icon;
@@ -89,30 +57,43 @@ export default function ResourcesSidebar({
                   <Button
                     variant="ghost"
                     className={cn(
-                      "w-full justify-start gap-3 font-medium text-sidebar-foreground/80 hover:text-sidebar-foreground",
-                      isActive &&
-                        "border border-primary/40 bg-primary/25 text-primary-foreground shadow-[0_8px_30px_-18px_rgba(3,189,255,0.6)]"
+                      "w-full justify-start gap-3 font-medium border border-transparent transition-colors",
+                      theme.inactive,
+                      theme.hover,
+                      isActive && theme.active
                     )}
                     onClick={() => {
                       onSectionChange(section.id);
                       onMobileClose();
                     }}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon
+                      className={cn(
+                        "h-4 w-4 transition-colors",
+                        theme.icon,
+                        isActive && "text-inherit"
+                      )}
+                    />
                     {section.label}
                   </Button>
 
                   {isActive && section.subsections && (
-                    <div className="ml-7 space-y-1 border-l border-border pl-3">
+                    <div
+                      className={cn(
+                        "ml-7 space-y-1 border-l pl-3",
+                        theme.divider
+                      )}
+                    >
                       {section.subsections.map((subsection) => (
                         <Button
                           key={subsection.id}
                           variant="ghost"
                           size="sm"
                           className={cn(
-                            "w-full justify-start text-sm text-muted-foreground hover:text-foreground",
-                            activeSection === subsection.id &&
-                              "font-medium text-primary"
+                            "w-full justify-start text-sm border border-transparent transition-colors",
+                            theme.subtext,
+                            theme.subHover,
+                            activeSection === subsection.id && theme.subActive
                           )}
                           onClick={() => {
                             onSectionChange(subsection.id);

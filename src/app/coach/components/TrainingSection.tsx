@@ -12,11 +12,6 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   Table,
   TableBody,
   TableCell,
@@ -24,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui";
+import { PreviewDialog } from "./index";
 
 const trainingPlans = [
   {
@@ -527,46 +523,54 @@ export default function TrainingSection() {
         </Table>
       </div>
 
-      <Dialog open={!!previewPlan} onOpenChange={() => setPreviewPlan(null)}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{previewPlan?.title}</DialogTitle>
-            <DialogDescription>{previewPlan?.description}</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="flex gap-4 text-sm">
-              <div className="flex items-center gap-2">
-                <span className="text-muted-foreground">Nível:</span>
-                <Badge variant="outline">{previewPlan?.level}</Badge>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-muted-foreground">Duração:</span>
-                <span className="font-medium">{previewPlan?.duration}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-muted-foreground">Frequência:</span>
-                <span className="font-medium">{previewPlan?.frequency}</span>
-              </div>
+      <PreviewDialog
+        open={!!previewPlan}
+        onOpenChange={() => setPreviewPlan(null)}
+        title={previewPlan?.title}
+        description={previewPlan?.description}
+        metadata={
+          <div className="flex flex-wrap gap-4 text-sm text-slate-300">
+            <div className="flex items-center gap-2">
+              <span className="text-slate-400">Nível:</span>
+              <Badge variant="outline">{previewPlan?.level}</Badge>
             </div>
-            <div className="rounded-lg bg-muted p-4">
-              <pre className="whitespace-pre-wrap text-sm font-mono">
-                {previewPlan?.preview}
-              </pre>
+            <div className="flex items-center gap-2">
+              <span className="text-slate-400">Duração:</span>
+              <span className="font-medium text-slate-100">
+                {previewPlan?.duration}
+              </span>
             </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setPreviewPlan(null)}>
-                Fechar
-              </Button>
-              <Button
-                onClick={() => previewPlan && handleDownload(previewPlan)}
-              >
-                <Download className="mr-2 h-4 w-4" />
-                Download
-              </Button>
+            <div className="flex items-center gap-2">
+              <span className="text-slate-400">Frequência:</span>
+              <span className="font-medium text-slate-100">
+                {previewPlan?.frequency}
+              </span>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        }
+        previewContent={
+          <div className="glass-scrollbar max-h-64 overflow-y-auto rounded-lg border border-[#1b2b44] bg-[#060f21] p-4">
+            <pre className="whitespace-pre-wrap text-sm font-mono text-slate-100">
+              {previewPlan?.preview}
+            </pre>
+          </div>
+        }
+        actions={
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              className="bg-transparent border-[#1b2b44] text-slate-100 hover:bg-[#0a162b]"
+              onClick={() => setPreviewPlan(null)}
+            >
+              Fechar
+            </Button>
+            <Button onClick={() => previewPlan && handleDownload(previewPlan)}>
+              <Download className="mr-2 h-4 w-4" />
+              Download
+            </Button>
+          </div>
+        }
+      />
     </div>
   );
 }

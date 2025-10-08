@@ -5,5 +5,9 @@ export default function CoachLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  return <div className="min-h-screen bg-[#121212]">{children}</div>;
+  return (
+    <div className="dark min-h-screen bg-background text-foreground">
+      {children}
+    </div>
+  );
 }
