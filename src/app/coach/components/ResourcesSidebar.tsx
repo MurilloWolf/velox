@@ -4,8 +4,9 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChevronRight } from "lucide-react";
-import { sections } from "../presentation/sidebar";
+import type { CoachNavigationSection } from "../presentation/config";
 interface ResourcesSidebarProps {
+  sections: CoachNavigationSection[];
   activeSection: string;
   onSectionChange: (section: string) => void;
   mobileOpen: boolean;
@@ -24,6 +25,7 @@ interface ResourcesSidebarProps {
 }
 
 export default function ResourcesSidebar({
+  sections,
   activeSection,
   onSectionChange,
   mobileOpen,

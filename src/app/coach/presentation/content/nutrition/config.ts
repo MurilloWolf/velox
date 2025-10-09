@@ -1,19 +1,21 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Badge,
-} from "@/components/ui";
+import { Apple } from "lucide-react";
 
-const nutritionByLevel = {
+import { NutritionSection } from "../../../components/Sections";
+import type {
+  NutritionSectionProps,
+  NutritionLevel,
+  NutritionRaceGuide,
+} from "../../../components/Sections";
+import type { SectionContent } from "../../types";
+import { nutritionPanel } from "./panels";
+
+const intro: NutritionSectionProps["intro"] = {
+  title: "Dicas de Nutrição",
+  description:
+    "Guias completos de nutrição para corredores de todos os níveis e distâncias",
+};
+
+const levels: Record<string, NutritionLevel> = {
   beginner: {
     title: "Nutrição para Iniciantes",
     tips: [
@@ -103,7 +105,7 @@ const nutritionByLevel = {
   },
 };
 
-const nutritionByRace = {
+const races: Record<string, NutritionRaceGuide> = {
   "5k": {
     title: "Nutrição para 5K",
     tips: [
@@ -143,86 +145,32 @@ const nutritionByRace = {
   },
 };
 
-export default function NutritionSection() {
-  return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight text-balance">
-          Dicas de Nutrição
-        </h2>
-        <p className="mt-2 text-lg text-muted-foreground text-pretty">
-          Guias completos de nutrição para corredores de todos os níveis e
-          distâncias
-        </p>
-      </div>
+const subsections = [
+  { id: "nutrition-beginner", label: "Iniciante" },
+  { id: "nutrition-intermediate", label: "Intermediário" },
+  { id: "nutrition-advanced", label: "Avançado" },
+  { id: "nutrition-5k", label: "5K" },
+  { id: "nutrition-10k", label: "10K" },
+  { id: "nutrition-half", label: "Meia Maratona" },
+  { id: "nutrition-marathon", label: "Maratona" },
+];
 
-      <Tabs defaultValue="level" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="level">Por Nível</TabsTrigger>
-          <TabsTrigger value="race">Por Prova</TabsTrigger>
-        </TabsList>
+const props: NutritionSectionProps = {
+  intro,
+  levels,
+  races,
+};
 
-        <TabsContent value="level" className="space-y-6">
-          {Object.entries(nutritionByLevel).map(([key, data]) => (
-            <Card key={key}>
-              <CardHeader>
-                <CardTitle>{data.title}</CardTitle>
-                <CardDescription>
-                  Orientações nutricionais específicas para seu nível
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {data.tips.map((tip, index) => (
-                    <div
-                      key={index}
-                      className="rounded-lg border border-border bg-card p-4 space-y-2"
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <h4 className="font-semibold text-card-foreground">
-                          {tip.title}
-                        </h4>
-                        <Badge variant="secondary" className="shrink-0">
-                          {tip.category}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground text-pretty">
-                        {tip.description}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </TabsContent>
-
-        <TabsContent value="race" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            {Object.entries(nutritionByRace).map(([key, race]) => (
-              <Card key={key}>
-                <CardHeader>
-                  <CardTitle>{race.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {race.tips.map((tip, index) => (
-                      <li key={index} className="flex gap-3">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
-                          {index + 1}
-                        </span>
-                        <span className="text-sm text-muted-foreground text-pretty">
-                          {tip}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-}
+export const nutritionSectionContent: SectionContent = {
+  id: "nutrition",
+  label: "Dicas de Nutrição",
+  icon: Apple,
+  component: NutritionSection,
+  props,
+  panel: nutritionPanel,
+  subsections: subsections.map((entry) => ({
+    ...entry,
+    component: NutritionSection,
+    props,
+  })),
+};
