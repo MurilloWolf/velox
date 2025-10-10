@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -38,6 +38,14 @@ const normalizeSection = (candidate: string | null): string => {
 };
 
 export default function CoachPage() {
+  return (
+    <Suspense fallback={<CoachPageFallback />}>
+      <CoachPageContent />
+    </Suspense>
+  );
+}
+
+function CoachPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const sectionParam = searchParams.get("section");
@@ -133,6 +141,14 @@ export default function CoachPage() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function CoachPageFallback() {
+  return (
+    <div className="flex h-screen items-center justify-center bg-[#030712] text-slate-200">
+      Carregando painel do coach...
     </div>
   );
 }

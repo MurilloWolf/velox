@@ -10,6 +10,8 @@ import { calendarPageContent } from "@/presentation";
 import { fetchRacesAction } from "@/server/actions/races";
 import { buildMetadata } from "@/lib/seo";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = buildMetadata({
   title: "Calendário de corridas - VELOX Corridas",
   description:
