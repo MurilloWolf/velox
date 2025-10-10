@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from "react";
 import type { ComponentType } from "react";
 import type { LucideIcon } from "lucide-react";
 
@@ -17,7 +19,7 @@ export type PanelContent = {
 
 export type PanelEntry = PanelContent | null;
 
-export type RendererFactory = () => JSX.Element;
+export type RendererFactory = () => React.JSX.Element;
 
 export type SubsectionContent = {
   id: string;
