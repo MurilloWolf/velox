@@ -30,6 +30,12 @@ export default function EventDetailsModal({
 
   if (!isOpen || !event) return null;
 
+  const normalizeDate = (date: Date) =>
+    new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const today = normalizeDate(new Date());
+  const eventDate = normalizeDate(event.date);
+  const registrationClosed = eventDate <= today;
+
   const formattedDate = event.date.toLocaleDateString("pt-BR", {
     weekday: "long",
     day: "numeric",
@@ -135,20 +141,29 @@ export default function EventDetailsModal({
 
               {event.link && (
                 <div className="pt-2">
-                  <Button
-                    asChild
-                    className="w-full h-11 bg-[#d5fe46] text-black font-semibold hover:bg-[#d5fe46]/70 transition-all rounded-lg"
-                  >
-                    <Link
-                      href={event.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2"
+                  {registrationClosed ? (
+                    <Button
+                      disabled
+                      className="w-full h-11 rounded-lg bg-white/10 text-white/50 font-semibold cursor-not-allowed"
                     >
-                      Inscrever-se na Corrida
-                      <ExternalLink className="h-4 w-4" />
-                    </Link>
-                  </Button>
+                      Inscrições encerradas
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      className="w-full h-11 bg-[#d5fe46] text-black font-semibold hover:bg-[#d5fe46]/70 transition-all rounded-lg"
+                    >
+                      <Link
+                        href={event.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-2"
+                      >
+                        Inscrever-se na Corrida
+                        <ExternalLink className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
