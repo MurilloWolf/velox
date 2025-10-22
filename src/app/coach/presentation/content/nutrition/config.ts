@@ -8,6 +8,7 @@ import type {
 } from "../../../components/Sections";
 import type { SectionContent } from "../../types";
 import { nutritionPanel } from "./panels";
+import subsections from "./subsections";
 
 const intro: NutritionSectionProps["intro"] = {
   title: "Dicas de Nutrição",
@@ -107,12 +108,19 @@ const levels: Record<string, NutritionLevel> = {
 
 const races: Record<string, NutritionRaceGuide> = {
   "5k": {
-    title: "Nutrição para 5K",
+    title: "Alimentação e Hidratação para Provas de 5km",
     tips: [
-      "Refeição leve 2-3 horas antes: banana com pasta de amendoim",
-      "Não precisa de nutrição durante a prova",
-      "Hidrate-se bem no dia anterior",
-      "Evite alimentos novos no dia da prova",
+      "24 horas antes: priorize carboidratos de fácil digestão (arroz, batata, macarrão, frutas, aveia, pães leves) e reduza excesso de gorduras e fibras para evitar desconforto gastrointestinal.",
+      "Inclua proteínas magras em porções moderadas (frango, peixe, ovos ou tofu) para apoiar a recuperação sem pesar no estômago.",
+      "Hidrate-se continuamente com 35-45 ml de líquidos por quilo ao longo do dia; para um corredor de 70 kg isso representa cerca de 2,5 a 3 litros entre água, isotônicos e água de coco.",
+      "De 2 a 3 horas antes da largada faça uma refeição leve rica em carboidratos de rápida e média absorção, moderada em proteína e pobre em gordura/fibras, como pão com mel, banana com aveia, tapioca com geleia ou batata-doce com ovo cozido.",
+      "Evite alimentos novos, leite, frituras e condimentos fortes na preparação imediata para reduzir riscos de desconforto.",
+      "Entre 30 e 60 minutos antes, se houver intervalo, utilize um snack de rápida absorção (banana ou gel com 20-30 g de carboidratos) acompanhado de pequenos goles de água ou isotônico (100-200 ml).",
+      "Durante a prova, foque em conforto: pequenos goles de água nos postos são suficientes; em dias muito quentes considere cerca de 100 ml de isotônico para repor sódio e potássio.",
+      "Nos primeiros 30 minutos pós-prova combine carboidratos e proteína na proporção 3:1 ou 4:1 (vitamina de banana com whey, iogurte com frutas e aveia, sanduíche de frango) e ingira 500-700 ml de líquidos, privilegiando isotônicos se houve muito suor.",
+      "Entre 1 e 3 horas após a corrida faça refeição completa com carboidratos complexos (arroz, batata, quinoa), proteínas magras e vegetais para acelerar reposição de glicogênio e micronutrientes.",
+      "Suplementos úteis incluem whey protein no pós-prova, gel ou bebida esportiva antes/depois de esforços intensos >25 minutos, cafeína (3-6 mg/kg) 30-45 minutos antes, beta-alanina e creatina em uso contínuo — sempre com acompanhamento profissional.",
+      "Adapte a estratégia ao nível: iniciantes priorizam leveza e hidratação consistente; atletas avançados testam timing de cafeína, snacks e recuperação ativa durante os treinos preparatórios.",
     ],
   },
   "10k": {
@@ -145,16 +153,6 @@ const races: Record<string, NutritionRaceGuide> = {
   },
 };
 
-const subsections = [
-  { id: "nutrition-beginner", label: "Iniciante" },
-  { id: "nutrition-intermediate", label: "Intermediário" },
-  { id: "nutrition-advanced", label: "Avançado" },
-  { id: "nutrition-5k", label: "5K" },
-  { id: "nutrition-10k", label: "10K" },
-  { id: "nutrition-half", label: "Meia Maratona" },
-  { id: "nutrition-marathon", label: "Maratona" },
-];
-
 const props: NutritionSectionProps = {
   intro,
   levels,
@@ -168,9 +166,5 @@ export const nutritionSectionContent: SectionContent = {
   component: NutritionSection,
   props,
   panel: nutritionPanel,
-  subsections: subsections.map((entry) => ({
-    ...entry,
-    component: NutritionSection,
-    props,
-  })),
+  subsections: subsections,
 };
