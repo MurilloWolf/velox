@@ -97,7 +97,7 @@ function CoachPageContent() {
   const panelContent = getPanelContent(rootSection, activeSection);
 
   return (
-    <div className="relative h-screen overflow-hidden bg-[#030712] text-slate-100">
+    <div className="relative h-screen overflow-hidden bg-black/90 text-slate-100">
       <div
         className={cn(
           "pointer-events-none absolute inset-0 -z-10",
