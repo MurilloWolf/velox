@@ -41,7 +41,10 @@ export type TrainingSectionProps = {
   plans: TrainingPlan[];
 };
 
-export default function TrainingSection({ header, plans }: TrainingSectionProps) {
+export default function TrainingSection({
+  header,
+  plans,
+}: TrainingSectionProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [levelFilter, setLevelFilter] = useState<string>("all");
   const [distanceFilter, setDistanceFilter] = useState<string>("all");
@@ -89,7 +92,7 @@ export default function TrainingSection({ header, plans }: TrainingSectionProps)
         </div>
       </div>
 
-      <div className="space-y-4 rounded-lg border border-border/60 bg-card p-4 shadow-sm">
+      <div className="space-y-4 rounded-lg border border-border/60 bg-card p-4 shadow-sm bg-gradient-to-br from-slate-900/60 to-black/60">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -131,7 +134,7 @@ export default function TrainingSection({ header, plans }: TrainingSectionProps)
           </div>
         </div>
 
-        <div className="rounded-lg border border-border/60">
+        <div className="rounded-lg border border-border/60 ">
           <Table>
             <TableHeader>
               <TableRow>
