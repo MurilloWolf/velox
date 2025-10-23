@@ -327,6 +327,7 @@ export default function FiveKNutritionGuide() {
           </p>
         </div>
       </section>
+      <h5 className="text-4xl font-bold p-4">Recomendações</h5>
 
       <div className="flex flex-row  gap-2 py-4 px-4 overflow-x-auto mx-auto max-w-5xl">
         {contentOptions.map((option) => (
@@ -345,8 +346,6 @@ export default function FiveKNutritionGuide() {
       </div>
 
       <div className="flex flex-col gap-4">{renderContent()}</div>
-
-      {/* Suplementos */}
     </div>
   );
 }

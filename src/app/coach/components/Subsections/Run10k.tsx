@@ -13,7 +13,7 @@ import { useState } from "react";
 
 const BeforeRaceContent = () => {
   return (
-    <section className="mx-auto max-w-5xl  md:p-4 text-slate-200  bg-[#151515] rounded-2xl flex flex-col gap-12 md:gap-4">
+    <section className="mx-auto min-w-full max-w-5xl  md:p-4 text-slate-200  bg-[#151515] rounded-2xl flex flex-col gap-12 md:gap-4">
       <div className="rounded-2xl  p-5 md:p-7  flex flex-col gap-4  shadow-sm">
         <h3 className="text-3xl font-bold">Antes da Prova</h3>
         <h3 className="text-2xl font-semibold text-white/90">
@@ -73,19 +73,31 @@ const BeforeRaceContent = () => {
               <div className="text-lg  md:max-w-md">
                 <p className="text-xl">Opções de refeição:</p>
                 <Badge className="mb-2 mr-2 text-sm">
-                  arroz branco com frango grelhado
-                </Badge>
-                <Badge className="mb-2 mr-2 text-sm">Tapioca com geleia</Badge>
-                <Badge className="mb-2 mr-2 text-sm">legumes cozidos</Badge>
-                <Badge className="mb-2 mr-2 text-sm">Aveia com frutas</Badge>
-                <Badge className="mb-2 mr-2 text-sm">
-                  tapioca com ovo e banana
+                  Pão francês com queijo branco e suco de laranja
                 </Badge>
                 <Badge className="mb-2 mr-2 text-sm">
-                  Banana + doce de leite
+                  Tapioca com banana e canela
                 </Badge>
                 <Badge className="mb-2 mr-2 text-sm">
-                  Pão francês + queijo branco e suco de uva integral
+                  Aveia com mel e frutas (banana, maçã ou mamão)
+                </Badge>
+                <Badge className="mb-2 mr-2 text-sm">
+                  Panqueca de aveia com mel
+                </Badge>
+                <Badge className="mb-2 mr-2 text-sm">
+                  Pão integral com pasta de amendoim
+                </Badge>
+                <Badge className="mb-2 mr-2 text-sm">
+                  Vitamina de banana com leite desnatado e aveia
+                </Badge>
+                <Badge className="mb-2 mr-2 text-sm">
+                  Batata-doce amassada com mel
+                </Badge>
+                <Badge className="mb-2 mr-2 text-sm">
+                  Iogurte natural com granola leve
+                </Badge>
+                <Badge className="mb-2 mr-2 text-sm">
+                  Pão com geleia e café preto leve
                 </Badge>
               </div>
               <div className="bg-[#252525] text-sm p-4 rounded-xl">
@@ -124,7 +136,7 @@ const BeforeRaceContent = () => {
 
 const DuringRaceContent = () => {
   return (
-    <section className="mx-auto max-w-5xl  md:p-4 text-slate-200  bg-[#151515] rounded-2xl flex flex-col gap-12 md:gap-4">
+    <section className="mx-auto min-w-full  max-w-5xl  md:p-4 text-slate-200  bg-[#151515] rounded-2xl flex flex-col gap-12 md:gap-4">
       <div className="rounded-2xl  p-5 md:p-7  flex flex-col gap-4  shadow-sm">
         <h3 className="text-3xl font-bold">Durante a Prova</h3>
         <p className="border-s-emerald-500 px-4 border-l-2 bg-emerald-900/40 p-3 rounded-md">
@@ -139,7 +151,7 @@ const DuringRaceContent = () => {
         <ul className="list-disc list-inside mt-2 space-y-4 text-white/80">
           <li>
             <strong>Hidratação:</strong> pequenas doses (100 - 150 ml) de água a
-            cada 15–20 minutos.
+            cada 15 - 20 minutos.
           </li>
           <li>
             <strong>Isotônicos:</strong> úteis para repor sódio e potássio em
@@ -365,6 +377,7 @@ export default function TenKNutritionGuide() {
           </p>
         </div>
       </section>
+      <h5 className="text-4xl font-bold p-4">Recomendações</h5>
 
       <div className="flex flex-row  gap-2 py-4 px-4 overflow-x-auto mx-auto max-w-5xl">
         {contentOptions.map((option) => (
@@ -383,8 +396,6 @@ export default function TenKNutritionGuide() {
       </div>
 
       <div className="flex flex-col gap-4">{renderContent()}</div>
-
-      {/* Suplementos */}
     </div>
   );
 }

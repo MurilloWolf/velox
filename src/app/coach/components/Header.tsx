@@ -50,10 +50,12 @@ export default function CoachHeader(props: ICoachHeaderProps) {
           <Button
             asChild
             variant="ghost"
-            size="sm"
+            size="lg"
             className={cn("text-slate-200 transition-colors", theme.button)}
           >
-            <Link href="/">Início</Link>
+            <Link href="/" className="uppercase">
+              Início
+            </Link>
           </Button>
         </div>
       </div>

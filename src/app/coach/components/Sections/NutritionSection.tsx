@@ -1,13 +1,8 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
   Badge,
 } from "@/components/ui";
 
@@ -36,86 +31,85 @@ export type NutritionSectionProps = {
   races: Record<string, NutritionRaceGuide>;
 };
 
-export default function NutritionSection(props: NutritionSectionProps) {
-  const { intro, levels, races } = props;
+export default function RunningNutritionHome() {
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-3xl font-bold tracking-tight text-balance">
-          {intro.title}
-        </h2>
-        <p className="mt-2 text-lg text-muted-foreground text-pretty">
-          {intro.description}
-        </p>
-      </div>
-
-      <Tabs defaultValue="level" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="level">Por Nível</TabsTrigger>
-          <TabsTrigger value="race">Por Prova</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="level" className="space-y-6">
-          {Object.entries(levels).map(([key, data]) => (
-            <Card key={key}>
-              <CardHeader>
-                <CardTitle>{data.title}</CardTitle>
-                <CardDescription>
-                  Orientações nutricionais específicas para seu nível
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {data.tips.map((tip, index) => (
-                    <div
-                      key={index}
-                      className="rounded-lg border border-border bg-card p-4 space-y-2"
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <h4 className="font-semibold text-card-foreground">
-                          {tip.title}
-                        </h4>
-                        <Badge variant="secondary" className="shrink-0">
-                          {tip.category}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground text-pretty">
-                        {tip.description}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </TabsContent>
-
-        <TabsContent value="race" className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            {Object.entries(races).map(([key, race]) => (
-              <Card key={key}>
-                <CardHeader>
-                  <CardTitle>{race.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {race.tips.map((tip, index) => (
-                      <li key={index} className="flex gap-3">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
-                          {index + 1}
-                        </span>
-                        <span className="text-sm text-muted-foreground text-pretty">
-                          {tip}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
+    <main className="mx-auto max-w-6xl px-4 py-10">
+      <section className="rounded-3xl bg-gradient-to-br from-emerald-600/20 via-emerald-700/10 to-emerald-900/10 border border-emerald-500/20 p-6 md:p-10">
+        <div className="flex flex-col gap-3">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-emerald-200">
+            Corra melhor com nutrição inteligente
+          </h1>
+          <p className="text-emerald-100/80 text-lg max-w-3xl">
+            Protocolos claros para treinos e provas. Doses, timing, hidratação e
+            recuperação — do 5k à ultra.
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {["5K", "10K", "15K", "21K", "42K", "ULTRA"].map((tag) => (
+              <Badge
+                key={tag}
+                variant="secondary"
+                className="bg-emerald-900/30 text-emerald-200 border border-emerald-400/30"
+              >
+                {tag}
+              </Badge>
             ))}
           </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+        </div>
+        <div className="mt-6 grid md:grid-cols-3 gap-4">
+          <Card className="bg-background/60">
+            <CardHeader>
+              <CardTitle>Regras de Ouro</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground space-y-2">
+              <p>Teste tudo nos treinos. Nada novo no dia da prova.</p>
+              <p>Géis sempre com água; alterne água e isotônico.</p>
+              <p>Ajuste por clima e sudorese; priorize segurança.</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-background/60">
+            <CardHeader>
+              <CardTitle>Alertas Rápidos</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground space-y-2">
+              <p>Evite AINEs sem orientação (risco renal/estomacal).</p>
+              <p>Hiponatremia: não exagere em água sem sódio.</p>
+              <p>
+                Intolerância à lactose? Prefira bebidas vegetais/alternativas.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="bg-background/60">
+            <CardHeader>
+              <CardTitle>Checklist Pré-Prova</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground space-y-2">
+              <p>Estratégia de gel/bebida por km/tempo definida.</p>
+              <p>Rotas de hidratação e postos mapeados.</p>
+              <p>Plano de clima: calor/frio/chuva, roupa e eletrólitos.</p>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* FOOTER CALLOUT */}
+      <section className="mt-10">
+        <Card>
+          <CardHeader>
+            <CardTitle>Mensagem Importante</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm text-muted-foreground space-y-2">
+            <p>
+              Maratona: recomenda-se ter completado pelo menos{" "}
+              <b>32 km em até 4h</b> em treinos longos antes de tentar a prova.
+            </p>
+            <p>
+              Ultras: controle a ingestão por <b>tempo</b> (60–120 g CHO/h),
+              equilibre água e eletrólitos e tenha plano de{" "}
+              <b>crew/drop bags</b>.
+            </p>
+          </CardContent>
+        </Card>
+      </section>
+    </main>
   );
 }
