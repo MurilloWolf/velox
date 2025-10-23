@@ -1,5 +1,6 @@
-import type { PanelEntry } from "../../types";
 import type { SubsectionExplanationProps } from "@/app/coach/components/Subsections/SubExplanations";
+import type { TrainingTypeGuideProps } from "@/app/coach/components/Subsections/TrainingTypeGuide";
+import type { PanelEntry } from "../../types";
 
 export const trainingPanel: PanelEntry = {
   label: "Painel Treinos",
@@ -29,3 +30,24 @@ export const explanationPanel = (
       }
     : undefined,
 });
+
+export const trainingTypePanel = (
+  props: TrainingTypeGuideProps
+): PanelEntry => {
+  const highlightItems = [
+    ...props.whenToUse.slice(0, 2),
+    props.tips[0],
+  ].filter(Boolean);
+
+  return {
+    label: props.title,
+    title: props.title,
+    description: props.goal,
+    highlights: highlightItems.length
+      ? {
+          title: "Leve para o treino",
+          items: highlightItems,
+        }
+      : undefined,
+  };
+};
