@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Header, Footer, Chat } from "@/components/system";
+import { Header, Footer, Chat, PageTracker } from "@/components/system";
 import { buildMetadata } from "@/lib/seo";
 
 const faqs = [
@@ -61,6 +61,8 @@ export const metadata: Metadata = buildMetadata({
 export default function FaqaPage() {
   return (
     <div className="min-h-screen bg-[#000] ">
+      <PageTracker pagePath="/faq" />
+
       <Header />
       <main
         id="conteudo-principal"

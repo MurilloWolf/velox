@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useTrack from "@/tracking/use-track";
 import useDeviceInfo from "@/hooks/useDeviceInfo";
 
@@ -11,9 +11,18 @@ interface PageTrackerProps {
 export default function PageTracker({ pagePath }: PageTrackerProps) {
   const { trackEvent } = useTrack();
   const deviceInfo = useDeviceInfo();
+  const hasTracked = useRef(false);
+  const lastTrackedPath = useRef<string>("");
 
   useEffect(() => {
-    if (deviceInfo) {
+    if (!deviceInfo) return;
+
+    if (pagePath !== lastTrackedPath.current) {
+      hasTracked.current = false;
+      lastTrackedPath.current = pagePath;
+    }
+
+    if (!hasTracked.current) {
       trackEvent({
         targetType: "PAGE",
         action: "VIEW",
@@ -21,8 +30,10 @@ export default function PageTracker({ pagePath }: PageTrackerProps) {
         userAgent: deviceInfo.userAgent,
         isMobile: deviceInfo.isMobile,
       });
+
+      hasTracked.current = true;
     }
-  }, [pagePath, trackEvent, deviceInfo]);
+  }, [pagePath, deviceInfo, trackEvent]);
 
   return null;
 }

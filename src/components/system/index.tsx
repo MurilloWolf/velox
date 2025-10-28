@@ -10,7 +10,7 @@ import Chat from "./Chat/components/Chat";
 import ChatWidget from "./Chat/components/ChatWidget";
 import EventCalendar from "./Calendar";
 import MashGradiant from "./MashGradiant";
-import PageTracker from "./PageTracker";
+import PageTracker from "./Tracker/PageTracker";
 
 export {
   MashGradiant,

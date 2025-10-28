@@ -5,6 +5,7 @@ import {
   Header,
   Footer,
   MashGradiant,
+  PageTracker,
 } from "@/components/system";
 import { calendarPageContent } from "@/presentation";
 import { fetchRacesAction } from "@/server/actions/races";
@@ -32,6 +33,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-black/95">
+      <PageTracker pagePath="/calendar" />
       <Header />
       <MashGradiant>
         <main
@@ -43,9 +45,7 @@ export default async function Home() {
               <h1 className="text-4xl font-bold text-balance mb-2 text-white">
                 {calendarPageContent.title}
               </h1>
-              <p className="text-white/80">
-                {calendarPageContent.subtitle}
-              </p>
+              <p className="text-white/80">{calendarPageContent.subtitle}</p>
             </div>
             <EventCalendar races={races ?? []} error={error} />
           </div>

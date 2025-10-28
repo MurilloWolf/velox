@@ -1,5 +1,5 @@
 "use client";
-import { Header, Footer } from "@/components/system";
+import { Header, Footer, PageTracker } from "@/components/system";
 import {
   Card,
   CardContent,
@@ -39,8 +39,8 @@ export default function SponsorsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-[#050807] to-black text-white">
+      <PageTracker pagePath="/sponsors" />
       <Header />
-
       <main
         id="conteudo-principal"
         className="container mx-auto px-4 py-16 md:py-24 space-y-24"

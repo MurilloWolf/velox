@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { sendTrackEvent } from "@/server/actions/trackAnalytics";
 
 export type TrackChannel = "WEBSITE";
@@ -36,10 +37,12 @@ export interface TrackEventParams {
 }
 
 export default function useTrack() {
-  const trackEvent = (trackEvent: Omit<TrackEventParams, "channel">) => {
-    console.log(`Tracking Event: ${trackEvent.action}`, trackEvent);
-    sendTrackEvent({ ...trackEvent, channel: "WEBSITE" });
-  };
+  const trackEvent = useCallback(
+    (trackEvent: Omit<TrackEventParams, "channel">) => {
+      sendTrackEvent({ ...trackEvent, channel: "WEBSITE" });
+    },
+    []
+  );
 
   return { trackEvent };
 }

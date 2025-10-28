@@ -12,6 +12,8 @@ import {
   subsectionRenderers,
   getPanelContent,
 } from "./presentation/config";
+import { PageTracker } from "@/components/system";
+import { useTrackSection } from "./track";
 
 const DEFAULT_SECTION: CoachRootSection = "nutrition";
 const KNOWN_SECTIONS = new Set(
@@ -40,8 +42,22 @@ const normalizeSection = (candidate: string | null): string => {
 export default function CoachPage() {
   return (
     <Suspense fallback={<CoachPageFallback />}>
-      <CoachPageContent />
+      <CoachPageWithTracker />
     </Suspense>
+  );
+}
+
+function CoachPageWithTracker() {
+  const searchParams = useSearchParams();
+  const sectionParam = searchParams.get("section");
+
+  const pagePath = sectionParam ? `/coach?section=${sectionParam}` : "/coach";
+
+  return (
+    <>
+      <PageTracker pagePath={pagePath} />
+      <CoachPageContent />
+    </>
   );
 }
 
@@ -49,6 +65,7 @@ function CoachPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const sectionParam = searchParams.get("section");
+  const { trackSection } = useTrackSection();
 
   const [activeSection, setActiveSection] = useState(() =>
     normalizeSection(sectionParam)
@@ -117,6 +134,7 @@ function CoachPageContent() {
         sections={navigationSections}
         activeSection={activeSection}
         onSectionChange={(section) => {
+          trackSection({ section, basePath: "/coach" });
           handleSectionChange(section);
           setMobileMenuOpen(false);
         }}
