@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Calendar } from "../Calendar";
 import { MonthSelector } from "../MonthSelector";
 import { ListModal, Detail } from "./index";
@@ -46,24 +46,6 @@ export function EventCalendar({ races, error }: EventCalendarProps) {
     null
   );
   const [showEventList, setShowEventList] = useState(false);
-
-  useEffect(() => {
-    if (!events.length) {
-      return;
-    }
-
-    const earliestEventDate = events.reduce(
-      (earliest, event) =>
-        event.date.getTime() < earliest.getTime() ? event.date : earliest,
-      events[0].date
-    );
-
-    setSelectedDate((current) =>
-      current.getTime() === earliestEventDate.getTime()
-        ? current
-        : earliestEventDate
-    );
-  }, [events]);
 
   const handleEventClick = (event: Event) => {
     setSelectedEvent(event);
