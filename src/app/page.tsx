@@ -9,6 +9,7 @@ import {
   Footer,
   PlatformFeatures,
   BotShowcase,
+  PageTracker,
 } from "@/components/system";
 import { buildMetadata } from "@/lib/seo";
 
@@ -30,6 +31,7 @@ export const metadata: Metadata = buildMetadata({
 export default function Home() {
   return (
     <>
+      <PageTracker pagePath="/" />
       <Header />
       <main className="min-h-screen" id="conteudo-principal">
         <Hero />
