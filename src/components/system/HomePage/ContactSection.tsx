@@ -52,7 +52,7 @@ export default function ContactSection() {
   const handleTrackSocialMedia = (id: string) => {
     trackEvent({
       action: AnalyticsActions.BUTTON_CLICK,
-      targetType: "CONTACT_METHOD",
+      targetType: "EXTERNAL_LINK",
       targetId: id,
       pagePath: "/#contato",
     });

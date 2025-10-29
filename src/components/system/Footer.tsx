@@ -1,8 +1,35 @@
+"use client";
 import { Heart, Github, Twitter, Instagram } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
 import veloxLogo from "../../../public/Velox.png";
+import useAnalytics from "@/tracking/useAnalytics";
+import { AnalyticsActions } from "@/tracking/types";
+
 export default function Footer() {
+  const { trackEvent } = useAnalytics();
+
+  const handleTrackClick = (
+    href: string,
+    targetType: string = "EXTERNAL_LINK"
+  ) => {
+    trackEvent({
+      action: AnalyticsActions.BUTTON_CLICK,
+      targetType: targetType,
+      targetId: "FOOTER:" + href,
+      pagePath: window.location.pathname,
+    });
+  };
+
+  const handleExternalLinkClick = (href: string, destiny: string) => {
+    handleTrackClick(destiny, "EXTERNAL_LINK");
+    window.open(href, "_blank", "noopener,noreferrer");
+  };
+
+  const handleInternalLinkClick = (href: string) => {
+    handleTrackClick(href, "LINK");
+    window.location.href = href;
+  };
+
   return (
     <footer className="bg-foreground text-background py-12">
       <div className="container mx-auto px-4">
@@ -23,69 +50,70 @@ export default function Footer() {
               Tudo de forma rápida, fácil e gratuita!
             </p>
             <div className="flex gap-4">
-              <a
-                href="https://github.com/MurilloWolf"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() =>
+                  handleExternalLinkClick(
+                    "https://github.com/MurilloWolf",
+                    "GITHUB"
+                  )
+                }
                 aria-label="GitHub do VELOX"
                 className="hover:text-[#d5fe46] transition-colors"
               >
                 <Github className="h-5 w-5" />
-              </a>
-              <a
-                href="https://twitter.com/RunningVelox"
-                target="_blank"
-                rel="noopener noreferrer"
+              </button>
+              <button
+                onClick={() =>
+                  handleExternalLinkClick(
+                    "https://twitter.com/RunningVelox",
+                    "TWITTER"
+                  )
+                }
                 aria-label="Perfil do VELOX no X"
                 className="hover:text-[#d5fe46] transition-colors"
               >
                 <Twitter className="h-5 w-5" />
-              </a>
-              <a
-                href="https://www.instagram.com/runningvelox/"
-                target="_blank"
-                rel="noopener noreferrer"
+              </button>
+              <button
+                onClick={() =>
+                  handleExternalLinkClick(
+                    "https://www.instagram.com/runningvelox/",
+                    "INSTAGRAM"
+                  )
+                }
                 aria-label="Instagram do VELOX"
                 className="hover:text-[#d5fe46] transition-colors"
               >
                 <Instagram className="h-5 w-5" />
-              </a>
+              </button>
             </div>
           </div>
           <div>
             <h4 className="mb-4 font-semibold text-[#d5fe46]">Links Rápidos</h4>
             <ul className="space-y-2 text-sm text-background/80">
               <li>
-                <Link
-                  href="/info"
+                <button
+                  onClick={() => handleInternalLinkClick("/info")}
                   className="hover:text-[#d5fe46] transition-colors"
                 >
                   Sobre o Bot
-                </Link>
+                </button>
               </li>
               <li>
-                <Link
-                  href="/#recursos"
+                <button
+                  onClick={() => handleInternalLinkClick("/#recursos")}
                   className="hover:text-[#d5fe46] transition-colors"
                 >
                   Como Funciona
-                </Link>
+                </button>
               </li>
               <li>
-                <Link
-                  href="/#contato"
-                  className="hover:text-[#d5fe46] transition-colors"
-                >
-                  Adicionar Corrida
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="#contato"
+                <button
+                  onClick={() => handleInternalLinkClick("#contato")}
                   className="hover:text-[#d5fe46] transition-colors"
                 >
                   Contato
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -93,20 +121,20 @@ export default function Footer() {
             <h4 className="mb-4 font-semibold text-[#d5fe46]">Legal</h4>
             <ul className="space-y-2 text-sm text-background/80">
               <li>
-                <Link
-                  href="/privacy"
+                <button
+                  onClick={() => handleInternalLinkClick("/privacy")}
                   className="hover:text-[#d5fe46] transition-colors"
                 >
                   Política de Privacidade
-                </Link>
+                </button>
               </li>
               <li>
-                <Link
-                  href="/faq"
+                <button
+                  onClick={() => handleInternalLinkClick("/faq")}
                   className="hover:text-[#d5fe46] transition-colors"
                 >
                   FAQ
-                </Link>
+                </button>
               </li>
             </ul>
           </div>
