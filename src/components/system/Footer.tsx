@@ -58,7 +58,7 @@ export default function Footer() {
                   )
                 }
                 aria-label="GitHub do VELOX"
-                className="hover:text-[#d5fe46] transition-colors"
+                className="hover:text-[#d5fe46] transition-colors cursor-pointer"
               >
                 <Github className="h-5 w-5" />
               </button>
@@ -70,7 +70,7 @@ export default function Footer() {
                   )
                 }
                 aria-label="Perfil do VELOX no X"
-                className="hover:text-[#d5fe46] transition-colors"
+                className="hover:text-[#d5fe46] transition-colors cursor-pointer"
               >
                 <Twitter className="h-5 w-5" />
               </button>
@@ -82,7 +82,7 @@ export default function Footer() {
                   )
                 }
                 aria-label="Instagram do VELOX"
-                className="hover:text-[#d5fe46] transition-colors"
+                className="hover:text-[#d5fe46] transition-colors cursor-pointer"
               >
                 <Instagram className="h-5 w-5" />
               </button>
@@ -94,7 +94,7 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => handleInternalLinkClick("/info")}
-                  className="hover:text-[#d5fe46] transition-colors"
+                  className="hover:text-[#d5fe46] transition-colors cursor-pointer"
                 >
                   Sobre o Bot
                 </button>
@@ -102,7 +102,7 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => handleInternalLinkClick("/#recursos")}
-                  className="hover:text-[#d5fe46] transition-colors"
+                  className="hover:text-[#d5fe46] transition-colors cursor-pointer"
                 >
                   Como Funciona
                 </button>
@@ -110,7 +110,7 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => handleInternalLinkClick("#contato")}
-                  className="hover:text-[#d5fe46] transition-colors"
+                  className="hover:text-[#d5fe46] transition-colors cursor-pointer"
                 >
                   Contato
                 </button>
@@ -123,7 +123,7 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => handleInternalLinkClick("/privacy")}
-                  className="hover:text-[#d5fe46] transition-colors"
+                  className="hover:text-[#d5fe46] transition-colors cursor-pointer"
                 >
                   Política de Privacidade
                 </button>
@@ -131,7 +131,7 @@ export default function Footer() {
               <li>
                 <button
                   onClick={() => handleInternalLinkClick("/faq")}
-                  className="hover:text-[#d5fe46] transition-colors"
+                  className="hover:text-[#d5fe46] transition-colors cursor-pointer"
                 >
                   FAQ
                 </button>
