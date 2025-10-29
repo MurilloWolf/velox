@@ -38,7 +38,7 @@ export interface TrackEventParams {
   purchaseId?: string;
 }
 
-export default function useTrack() {
+export default function useAnalytics() {
   const { sessionId, deviceId, updateActivity } = useSessionId();
 
   const trackEvent = useCallback(

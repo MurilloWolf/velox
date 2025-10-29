@@ -8,6 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { AnalyticsActions } from "@/tracking/types";
+import useAnalytics from "@/tracking/useAnalytics";
 import { Instagram, Mail, Send } from "lucide-react";
 
 export default function ContactSection() {
@@ -15,8 +17,11 @@ export default function ContactSection() {
   const telegramUrl = "https://t.me/veloxsupport";
   const emailAddress = "velox.running.app@gmail.com";
 
+  const { trackEvent } = useAnalytics();
+
   const contactMethods = [
     {
+      id: "TELEGRAM",
       title: "Equipe no Telegram",
       description: "Suporte em tempo real, dicas e atualizações de corridas.",
       actionLabel: "Falar no Telegram",
@@ -25,6 +30,7 @@ export default function ContactSection() {
       ariaLabel: "Abrir conversa com a equipe VELOX no Telegram",
     },
     {
+      id: "EMAIL",
       title: "E-mail",
       description: "Retorno em até 24h úteis para parcerias e dúvidas gerais.",
       actionLabel: "Enviar e-mail",
@@ -33,6 +39,7 @@ export default function ContactSection() {
       ariaLabel: "Enviar um e-mail para a equipe VELOX",
     },
     {
+      id: "INSTAGRAM",
       title: "Instagram",
       description: "Siga-nos para dicas diárias e novidades sobre corridas.",
       actionLabel: "@RunningVelox",
@@ -41,6 +48,23 @@ export default function ContactSection() {
       ariaLabel: "Abrir o perfil do VELOX no Instagram",
     },
   ] as const;
+
+  const handleTrackSocialMedia = (id: string) => {
+    trackEvent({
+      action: AnalyticsActions.BUTTON_CLICK,
+      targetType: "CONTACT_METHOD",
+      targetId: id,
+      pagePath: "/#contato",
+    });
+  };
+
+  const handleContactClick = (id: string) => {
+    handleTrackSocialMedia(id);
+    window.open(
+      contactMethods.find((method) => method.id === id)?.href,
+      "_blank"
+    );
+  };
 
   return (
     <section
@@ -95,26 +119,12 @@ export default function ContactSection() {
                     </CardHeader>
                     <CardContent>
                       <Button
-                        asChild
+                        onClick={() => handleContactClick(method.id)}
+                        aria-label={method.ariaLabel}
                         variant="outline"
                         className="w-full cursor-pointer border-[#d5fe46]/40 bg-transparent text-[#d5fe46] hover:bg-[#d5fe46] hover:text-black"
                       >
-                        <a
-                          href={method.href}
-                          target={
-                            method.href.startsWith("http")
-                              ? "_blank"
-                              : undefined
-                          }
-                          rel={
-                            method.href.startsWith("http")
-                              ? "noopener noreferrer"
-                              : undefined
-                          }
-                          aria-label={method.ariaLabel}
-                        >
-                          {method.actionLabel}
-                        </a>
+                        {method.actionLabel}
                       </Button>
                     </CardContent>
                   </Card>

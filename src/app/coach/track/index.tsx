@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import useTrack from "@/tracking/use-track";
+import useAnalytics from "@/tracking/useAnalytics";
 
 export function useTrackSection() {
-  const { trackEvent } = useTrack();
+  const { trackEvent } = useAnalytics();
 
   const handleTrackSection = useCallback(
     (props: { section: string; basePath: string }) => {

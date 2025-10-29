@@ -1,6 +1,6 @@
 "use server";
 
-import { TrackEventParams } from "@/tracking/use-track";
+import { TrackEventParams } from "@/tracking/useAnalytics";
 
 interface TrackApiResponse {
   success: boolean;
