@@ -1,9 +1,24 @@
+"use client";
 import FlurryBackground from "@/app/privacy/flurrybackground";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { AnalyticsActions } from "@/tracking/types";
+import useAnalytics from "@/tracking/useAnalytics";
 import { Send, MessageSquare, Bell, Star } from "lucide-react";
 
 export default function BotShowcase() {
+  const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
+  const { trackEvent } = useAnalytics();
+  const handleTelegramClick = () => {
+    trackEvent({
+      targetType: "BOT_LINK",
+      action: AnalyticsActions.BUTTON_CLICK,
+      pagePath: window.location.pathname,
+      targetId: "SHOW_CASE_TELEGRAM_BUTTON",
+    });
+    window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <section
       id="bot-telegram"
@@ -74,19 +89,13 @@ export default function BotShowcase() {
               </div>
             </div>
             <Button
+              onClick={handleTelegramClick}
               size="lg"
-              asChild
+              aria-label="Abrir o VELOX Bot no Telegram em uma nova aba"
               className="w-full font-semibold sm:w-2/4 uppercase bg-[#d5fe46] brightness-90 hover:bg-[#d5fe46]/90 text-black  hover:opacity-80 cursor-pointer"
             >
-              <a
-                href="https://t.me/veloxsupport"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Abrir o VELOX Bot no Telegram em uma nova aba"
-              >
-                <Send className="mr-2 h-5 w-5" />
-                Abrir bot no Telegram
-              </a>
+              <Send className="mr-2 h-5 w-5" />
+              Abrir bot no Telegram
             </Button>
           </div>
           <div className="relative">

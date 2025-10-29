@@ -12,6 +12,8 @@ import nutrition from "../../../../../public/nutrition.jpg";
 import womanPhone from "../../../../../public/woman-telephone.jpg";
 import calendar from "../../../../../public/calendar.jpg";
 import airunning from "../../../../../public/AiRunning.png";
+import { AnalyticsActions } from "@/tracking/types";
+import useAnalytics from "@/tracking/useAnalytics";
 
 function throttle<T extends (this: unknown, ...args: unknown[]) => void>(
   func: T,
@@ -53,6 +55,7 @@ export default function PlatformFeatures() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [showScroll, setShowScroll] = useState(false);
   const router = useRouter();
+  const { trackEvent } = useAnalytics();
   const features: FeatureItem[] = [
     {
       icon: Calendar,
@@ -97,6 +100,12 @@ export default function PlatformFeatures() {
   ];
 
   const handleFeatureSelect = (feature: FeatureItem) => {
+    trackEvent({
+      targetType: "BOT_FEATURE",
+      action: AnalyticsActions.BUTTON_CLICK,
+      pagePath: window.location.pathname,
+      targetId: `FEATURE:${feature.title}`,
+    });
     if (feature.section) {
       router.push(`/coach?section=${feature.section}`);
       return;

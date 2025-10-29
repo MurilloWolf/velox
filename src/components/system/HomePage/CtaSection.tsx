@@ -1,10 +1,23 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Send, Bell, CalendarCheck, Sparkles } from "lucide-react";
 import MashGradiant from "../MashGradiant";
+import useAnalytics from "@/tracking/useAnalytics";
+import { AnalyticsActions } from "@/tracking/types";
 
 export default function CTASection() {
   const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
-
+  const { trackEvent } = useAnalytics();
+  const handleTelegramClick = () => {
+    trackEvent({
+      targetType: "BOT_LINK",
+      action: AnalyticsActions.BUTTON_CLICK,
+      pagePath: window.location.pathname,
+      targetId: "CTA_SECTION_TELEGRAM_BUTTON",
+    });
+    window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
+  };
   return (
     <MashGradiant>
       <section
@@ -59,18 +72,12 @@ export default function CTASection() {
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button
                 size="lg"
-                asChild
+                onClick={handleTelegramClick}
+                aria-label="Acessar o VELOX Bot no Telegram"
                 className="cursor-pointer h-auto w-full bg-[#d5fe46] px-8 py-4 text-base font-semibold uppercase text-black hover:bg-[#d5fe46]/90 sm:w-auto"
               >
-                <a
-                  href={TELEGRAM_BOT_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Acessar o VELOX Bot no Telegram"
-                >
-                  <Send className="mr-2 h-5 w-5" />
-                  Acessar bot no Telegram
-                </a>
+                <Send className="mr-2 h-5 w-5" />
+                Acessar bot no Telegram
               </Button>
             </div>
 

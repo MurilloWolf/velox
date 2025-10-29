@@ -8,9 +8,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSmoothScroll } from "./hooks/useSmoothScroll";
 import { usePathname } from "next/navigation";
+import useAnalytics from "@/tracking/useAnalytics";
+import { AnalyticsActions } from "@/tracking/types";
 
 export default function Header() {
   const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
+
+  const { trackEvent } = useAnalytics();
 
   const scrollTo = useSmoothScroll();
   const pathname = usePathname();
@@ -34,6 +38,12 @@ export default function Header() {
     event: MouseEvent<HTMLAnchorElement>,
     href: string
   ) => {
+    trackEvent({
+      targetType: "LINK",
+      action: AnalyticsActions.BUTTON_CLICK,
+      pagePath: window.location.pathname,
+      targetId: `HEADER_NAVIGATION:${href}`,
+    });
     if (!href.startsWith("#")) {
       return;
     }
@@ -48,6 +58,16 @@ export default function Header() {
 
     event.preventDefault();
     scrollTo(href);
+  };
+
+  const handleTelegramClick = () => {
+    trackEvent({
+      targetType: "BOT_LINK",
+      action: AnalyticsActions.BUTTON_CLICK,
+      pagePath: window.location.pathname,
+      targetId: "HEADER_TELEGRAM_BUTTON",
+    });
+    window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -95,19 +115,13 @@ export default function Header() {
           </nav>
 
           <Button
+            onClick={handleTelegramClick}
             size="sm"
-            asChild
+            aria-label="VELOX BOT Telegram"
             className=" text-black bg-[#d5fe46] hover:bg-[#d5fe46]/100 hover:opacity-80  cursor-pointer uppercase font-semibold"
           >
-            <a
-              href={TELEGRAM_BOT_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Fale com o VELOX no Telegram"
-            >
-              <Send className=" h-4 w-4" />
-              Telegram
-            </a>
+            <Send className=" h-4 w-4" />
+            Telegram
           </Button>
         </div>
       </div>

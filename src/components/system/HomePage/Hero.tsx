@@ -4,11 +4,13 @@ import { Zap, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import veloxLogo from "../../../../public/velox-low-ql.png";
+import useAnalytics from "@/tracking/useAnalytics";
+import { AnalyticsActions } from "@/tracking/types";
 
 export default function Hero() {
   const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
   const [showScroll, setShowScroll] = useState(true);
-
+  const { trackEvent } = useAnalytics();
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -22,6 +24,15 @@ export default function Hero() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const handleTelegramClick = () => {
+    trackEvent({
+      targetType: "BOT_LINK",
+      action: AnalyticsActions.BUTTON_CLICK,
+      pagePath: window.location.pathname,
+      targetId: "HERO_TELEGRAM_BUTTON",
+    });
+    window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
+  };
   return (
     <section className="min-h-[900px] max-h-[calc(100vh-40vh)] h-full relative overflow-hidden bg-black/10 py-24 md:py-32">
       <div className="container relative z-10 mx-auto px-4">
@@ -69,20 +80,13 @@ export default function Hero() {
               </div>
             </div>
             <Button
-              asChild
               size="lg"
+              onClick={handleTelegramClick}
               variant="outline"
               className="border-[#d5fe46] text-[#d5fe46] mt-16 bg-transparent ease-in-out duration-150 cursor-pointer uppercase text-lg py-4 px-7 h-auto transition-all hover:bg-[#d5fe46] hover:text-black"
             >
-              <a
-                href={TELEGRAM_BOT_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Abrir o VELOX Bot no Telegram"
-              >
-                <Zap className="mr-2 h-4 w-4" />
-                Começar Agora
-              </a>
+              <Zap className="mr-2 h-4 w-4" />
+              Começar Agora
             </Button>
           </div>
         </div>
