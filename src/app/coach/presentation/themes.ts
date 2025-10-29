@@ -1,4 +1,4 @@
-export type CoachRootSection = "nutrition" | "training" | "prompts";
+export type CoachRootSection = "nutrition" | "training";
 
 export type CoachThemeHeader = {
   container: string;
@@ -82,44 +82,6 @@ export const SECTION_THEMES: Record<CoachRootSection, CoachTheme> = {
     },
   },
   training: {
-    header: {
-      container:
-        "border-[#9c3b00]/80 bg-gradient-to-r from-[#411700]/90 via-[#632300]/80 to-[#9c3b00]/70",
-      title: "text-[#ff9448]",
-      button: "hover:bg-[#ff8a3c]/20 hover:text-[#ffe0cc]",
-    },
-    overlays: {
-      top: "bg-[radial-gradient(circle_at_top,_rgba(255,138,60,0.28),_rgba(3,7,18,0.9)_60%)]",
-      bottom:
-        "bg-[radial-gradient(circle_at_bottom,_rgba(255,166,86,0.2),_rgba(3,7,18,0)_65%)]",
-    },
-    hero: {
-      wrapper:
-        "border-[#9c3b00]/60 bg-gradient-to-br from-[#321205]/70 via-[#1a0904]/60 to-[#4a2008]/65 shadow-[0_20px_60px_-40px_rgba(156,59,0,0.8)]",
-      inner: "bg-[#1c0d05]/85",
-      label: "border-[#ff8a3c]/40 bg-[#ff8a3c]/10 text-[#ffbd85]",
-      heading: "text-[#ff9448]",
-      description: "text-[#ffd8c0]",
-      quickCard: "border-[#ff8a3c]/30 bg-[#ff8a3c]/10 text-[#ffe1cc]",
-      quickHeading: "text-[#ffbd85]",
-      quickText: "text-[#ffe1cc]",
-      bullets: ["bg-[#ff8a3c]", "bg-[#ffd166]", "bg-[#ffb347]"],
-    },
-    sidebar: {
-      container:
-        "border-r border-[#2f1306]/80 bg-[#1a0b04]/95 text-[#ffe1cc] shadow-[0_25px_60px_-45px_rgba(65,23,0,0.55)]",
-      inactive: "text-[#ffe1cc]",
-      hover: "hover:text-[#fff4eb]",
-      active:
-        "border-[#ff8a3c]/45 bg-[#4a2008]/70 text-[#fff4eb] shadow-[0_15px_40px_-28px_rgba(255,138,60,0.55)]",
-      icon: "text-[#ff9448]",
-      divider: "border-[#2f1306]/60",
-      subtext: "text-[#ffcfad]",
-      subHover: "hover:text-[#fff4eb]",
-      subActive: "text-[#ff8a3c]",
-    },
-  },
-  prompts: {
     header: {
       container:
         "border-[#0f2d52]/80 bg-gradient-to-r from-[#000c5a]/85 via-[#03143a]/80 to-[#052f3f]/70",

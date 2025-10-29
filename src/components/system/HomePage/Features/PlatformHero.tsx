@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { ComponentType, SVGProps } from "react";
 import { useRouter } from "next/navigation";
-import { Calendar, Dumbbell, Droplets, Send, TrendingUp } from "lucide-react";
+import { Calendar, Dumbbell, Droplets, Send } from "lucide-react";
 
 import FeatureCard from "./FeatureCard";
 import type { StaticImageData } from "next/image";
@@ -11,7 +11,6 @@ import training from "../../../../../public/running-bg.jpg";
 import nutrition from "../../../../../public/nutrition.jpg";
 import womanPhone from "../../../../../public/woman-telephone.jpg";
 import calendar from "../../../../../public/calendar.jpg";
-import airunning from "../../../../../public/AiRunning.png";
 import { AnalyticsActions } from "@/tracking/types";
 import useAnalytics from "@/tracking/useAnalytics";
 
@@ -88,14 +87,6 @@ export default function PlatformFeatures() {
         "Aprenda quando e quanto beber antes, durante e depois das corridas. Dicas para diferentes distâncias e climas.",
       img: nutrition,
       section: "nutrition",
-    },
-    {
-      icon: TrendingUp,
-      title: "IA Prompts",
-      description:
-        "Gere planos de treino, dicas de nutrição e estratégias de corrida com prompts personalizados.",
-      img: airunning,
-      section: "prompts",
     },
   ];
 
