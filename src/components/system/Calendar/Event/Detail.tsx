@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { X, MapPin, Clock, ExternalLink, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import useAnalytics from "@/tracking/useAnalytics";
+import { AnalyticsActions } from "@/tracking/types";
 import type { Event } from "../types";
 
 interface EventDetailsModalProps {
@@ -17,6 +19,8 @@ export default function EventDetailsModal({
   onClose,
   event,
 }: EventDetailsModalProps) {
+  const { trackEvent } = useAnalytics();
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -27,6 +31,53 @@ export default function EventDetailsModal({
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
+
+  useEffect(() => {
+    if (isOpen && event) {
+      trackEvent({
+        action: AnalyticsActions.PAGE_VIEW,
+        targetType: "RACE_EVENT",
+        targetId: event.id,
+        pagePath: `/calendar`,
+        props: {
+          eventTitle: event.title,
+          eventDate: event.date.toISOString(),
+          eventLocation: event.location,
+        },
+      });
+    }
+  }, [isOpen, event, trackEvent]);
+
+  const handleLocationClick = () => {
+    if (event) {
+      trackEvent({
+        action: AnalyticsActions.BUTTON_CLICK,
+        targetType: "RACE_LOCATION",
+        targetId: event.id,
+        pagePath: `/calendar`,
+        props: {
+          eventTitle: event.title,
+          eventLocation: event.location,
+        },
+      });
+    }
+  };
+
+  const handleRegistrationClick = () => {
+    if (event) {
+      trackEvent({
+        action: AnalyticsActions.BUTTON_CLICK,
+        targetType: "RACE_REGISTRATION",
+        targetId: event.id,
+        pagePath: `/calendar`,
+        props: {
+          eventTitle: event.title,
+          eventDate: event.date.toISOString(),
+          registrationLink: event.link || "",
+        },
+      });
+    }
+  };
 
   if (!isOpen || !event) return null;
 
@@ -104,6 +155,7 @@ export default function EventDetailsModal({
                         href={mapsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={handleLocationClick}
                         className="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors group"
                       >
                         <span className="">{event.location}</span>
@@ -157,6 +209,7 @@ export default function EventDetailsModal({
                         href={event.link}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={handleRegistrationClick}
                         className="inline-flex items-center justify-center gap-2"
                       >
                         Inscrever-se na Corrida
