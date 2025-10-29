@@ -9,15 +9,27 @@ interface TrackApiResponse {
 const TRACKEVENTS_ENDPOINT =
   "https://dash-bot-api.fly.dev/api/analytics/events";
 
+const TRACKEVENTS_ENDPOINT_LOCAL = "http://localhost:4000/api/analytics/events";
+
 export async function sendTrackEvent(
   trackEvent: TrackEventParams
 ): Promise<{ success: true } | { success: false; error: string }> {
+  const TRACK_ENDPOINT =
+    process.env.NODE_ENV === "development"
+      ? TRACKEVENTS_ENDPOINT_LOCAL
+      : TRACKEVENTS_ENDPOINT;
+
+  const BEARER_TOKEN =
+    process.env.NODE_ENV === "development"
+      ? process.env.FRONTEND_BEARER_TOKEN_DEV
+      : process.env.FRONTEND_BEARER_TOKEN;
+
   try {
-    const response = await fetch(TRACKEVENTS_ENDPOINT, {
+    const response = await fetch(TRACK_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.FRONTEND_BEARER_TOKEN}`,
+        Authorization: `Bearer ${BEARER_TOKEN}`,
       },
       body: JSON.stringify(trackEvent),
       cache: "no-store",

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import ChatWidget from "@/components/system/Chat/components/ChatWidget";
+import { SessionProvider } from "@/components/system";
 import { seo } from "@/lib/seo";
 
 const geistSans = Geist({
@@ -101,18 +102,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <a className="skip-to-content" href="#conteudo-principal">
-          Pular para o conteúdo principal
-        </a>
-        <script
-          type="application/ld+json"
-          suppressHydrationWarning
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationJsonLd),
-          }}
-        />
-        {children}
-        <ChatWidget />
+        <SessionProvider>
+          <a className="skip-to-content" href="#conteudo-principal">
+            Pular para o conteúdo principal
+          </a>
+          <script
+            type="application/ld+json"
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(organizationJsonLd),
+            }}
+          />
+          {children}
+          <ChatWidget />
+        </SessionProvider>
       </body>
     </html>
   );

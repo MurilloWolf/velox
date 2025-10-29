@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { sendTrackEvent } from "@/server/actions/trackAnalytics";
+import useSessionId from "@/hooks/useSessionId";
 
 export type TrackChannel = "WEBSITE";
 
@@ -15,6 +16,7 @@ export interface TrackEventParams {
   // /coach?section=training, /contact, etc.
   pagePath?: string;
   sessionId?: string;
+  deviceId?: string;
 
   // Additional fields
   referrer?: string;
@@ -37,12 +39,36 @@ export interface TrackEventParams {
 }
 
 export default function useTrack() {
+  const { sessionId, deviceId, updateActivity } = useSessionId();
+
   const trackEvent = useCallback(
-    (trackEvent: Omit<TrackEventParams, "channel">) => {
-      sendTrackEvent({ ...trackEvent, channel: "WEBSITE" });
+    (
+      trackEvent: Omit<TrackEventParams, "channel" | "sessionId" | "deviceId">
+    ) => {
+      updateActivity("track_event");
+
+      if (process.env.NODE_ENV === "development") {
+        console.log(`📊 Track Event: ${trackEvent.action}`, {
+          ...trackEvent,
+          sessionId,
+          deviceId,
+        });
+      }
+
+      sendTrackEvent({
+        ...trackEvent,
+        channel: "WEBSITE",
+        sessionId: sessionId || undefined,
+        deviceId: deviceId || undefined,
+      });
     },
-    []
+    [sessionId, deviceId, updateActivity]
   );
 
-  return { trackEvent };
+  return {
+    trackEvent,
+    sessionId,
+    deviceId,
+    updateActivity,
+  };
 }

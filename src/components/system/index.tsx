@@ -11,6 +11,7 @@ import ChatWidget from "./Chat/components/ChatWidget";
 import EventCalendar from "./Calendar";
 import MashGradiant from "./MashGradiant";
 import PageTracker from "./Tracker/PageTracker";
+import SessionProvider from "./SessionProvider";
 
 export {
   MashGradiant,
@@ -26,4 +27,5 @@ export {
   Chat,
   ChatWidget,
   PageTracker,
+  SessionProvider,
 };
