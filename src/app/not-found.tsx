@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Header, Footer } from "@/components/system";
+import { Header, Footer, PageTracker } from "@/components/system";
 import { Card, CardContent, Button } from "@/components/ui";
 import { notFoundPageContent } from "@/presentation";
 import { Compass, Home, Sparkles } from "lucide-react";
@@ -17,6 +17,7 @@ export default function NotFound() {
 
   return (
     <div className="relative min-h-screen bg-[#050505] text-slate-100">
+      <PageTracker pagePath="/not-found" />
       <Header />
       <main className="relative overflow-hidden" id="conteudo-principal">
         <div className="pointer-events-none absolute inset-0">

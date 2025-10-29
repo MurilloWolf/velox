@@ -6,9 +6,12 @@ import { MessageCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import ChatPanel from "./ChatPanel";
+import useAnalytics from "@/tracking/useAnalytics";
+import { AnalyticsActions } from "@/tracking/types";
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
+  const { trackEvent } = useAnalytics();
   const pathname = usePathname();
 
   const isFaqPage = pathname?.startsWith("/faq");
@@ -16,6 +19,17 @@ export default function ChatWidget() {
   if (isFaqPage) {
     return null;
   }
+
+  const toggleOpen = () => {
+    setIsOpen((prev) => !prev);
+    trackEvent({
+      targetType: "CHAT_WIDGET",
+      action: isOpen
+        ? AnalyticsActions.CHAT_WIDGET_CLOSED
+        : AnalyticsActions.CHAT_WIDGET_OPENED,
+      pagePath: pathname || "",
+    });
+  };
 
   return (
     <div className="fixed bottom-4 right-4 z-50 flex max-w-full flex-col items-end gap-3 p-2 sm:p-0">
@@ -34,8 +48,8 @@ export default function ChatWidget() {
       ) : null}
       <button
         type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center gap-2 rounded-full bg-[#2563EB] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#93C5FD] active:scale-95"
+        onClick={toggleOpen}
+        className="flex items-center gap-2 rounded-full bg-[#2563EB] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:scale-105 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#93C5FD] active:scale-95"
         aria-expanded={isOpen}
         aria-controls="chat-widget"
       >
