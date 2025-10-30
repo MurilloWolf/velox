@@ -18,7 +18,7 @@ import {
 } from "../utils/message";
 import { getTimeOfDay } from "../utils/time";
 import { createRateLimitState, evaluateRateLimit } from "../utils/rate-limit";
-import { sendChatCompletion } from "@/server/actions/chat";
+import { sendChatCompletion } from "@/services/actions/chat";
 import {
   ASSISTANT_FALLBACK_MESSAGE,
   DEFAULT_USER_NAME,
@@ -212,14 +212,15 @@ export default function ChatPanel({
   const containerClasses = cn(
     "flex flex-col overflow-hidden rounded-2xl border border-white/20 bg-white/5 shadow-2xl backdrop-blur-xl",
     variant === "full" && "h-full md:rounded-2xl",
-    variant === "widget" && "rounded-2xl h-[70vh] min-h-[360px] max-h-[620px] sm:h-[540px]",
-    className,
+    variant === "widget" &&
+      "rounded-2xl h-[70vh] min-h-[360px] max-h-[620px] sm:h-[540px]",
+    className
   );
 
   const contentClasses = cn(
     "glass-scrollbar flex-1 overflow-y-auto overflow-x-hidden touch-pan-y bg-white/5 backdrop-blur-lg",
     isWidget ? "px-3 py-3 sm:px-3.5" : "px-4 py-4",
-    contentClassName,
+    contentClassName
   );
 
   const wrapperClasses =
@@ -233,16 +234,18 @@ export default function ChatPanel({
         <header
           className={cn(
             "flex items-center border-b border-white/10 bg-white/10 backdrop-blur-xl",
-            isWidget ? "gap-3 px-3 py-2" : "gap-4 px-4 py-3 md:px-6 md:py-4",
+            isWidget ? "gap-3 px-3 py-2" : "gap-4 px-4 py-3 md:px-6 md:py-4"
           )}
         >
-          <div className={cn("flex items-center", isWidget ? "gap-3" : "gap-4")}>
+          <div
+            className={cn("flex items-center", isWidget ? "gap-3" : "gap-4")}
+          >
             <Image
               src="/velox_x.png"
               alt="Velox"
               className={cn(
                 "rounded-full object-contain",
-                isWidget ? "h-8 w-8" : "h-9 w-9 md:h-12 md:w-12",
+                isWidget ? "h-8 w-8" : "h-9 w-9 md:h-12 md:w-12"
               )}
               width={60}
               height={60}
@@ -251,7 +254,9 @@ export default function ChatPanel({
               <h1
                 className={cn(
                   "font-semibold text-white",
-                  isWidget ? "text-base sm:text-lg" : "text-lg sm:text-xl md:text-2xl",
+                  isWidget
+                    ? "text-base sm:text-lg"
+                    : "text-lg sm:text-xl md:text-2xl"
                 )}
               >
                 Velox
@@ -259,7 +264,7 @@ export default function ChatPanel({
               <p
                 className={cn(
                   "text-white/80",
-                  isWidget ? "text-[11px] sm:text-xs" : "text-xs md:text-sm",
+                  isWidget ? "text-[11px] sm:text-xs" : "text-xs md:text-sm"
                 )}
               >
                 Assistente Virtual
@@ -281,7 +286,7 @@ export default function ChatPanel({
           <div
             className={cn(
               "mx-auto max-w-4xl",
-              isWidget ? "space-y-4" : "space-y-6",
+              isWidget ? "space-y-4" : "space-y-6"
             )}
           >
             {messages.map((message) => (

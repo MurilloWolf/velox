@@ -62,7 +62,6 @@ export function EventCalendar({ races, error }: EventCalendarProps) {
 
   const handleCloseEventDetails = () => {
     if (showEventList) {
-      // Se veio da listagem, volta para a listagem
       setSelectedEvent(null);
     } else {
       // Se veio direto do calendário, fecha tudo
@@ -99,7 +98,8 @@ export function EventCalendar({ races, error }: EventCalendarProps) {
         )}
         {!error && events.length === 0 && (
           <div className="rounded-2xl border border-white/10 bg-white/[0.08] px-4 py-5 text-sm text-white/70">
-            Nenhuma corrida encontrada para os próximos meses. Volte mais tarde para conferir novas atualizações.
+            Nenhuma corrida encontrada para os próximos meses. Volte mais tarde
+            para conferir novas atualizações.
           </div>
         )}
       </div>
