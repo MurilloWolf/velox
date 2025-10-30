@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { sendTrackEvent } from "@/server/actions/trackAnalytics";
+import { sendTrackEvent } from "@/services/actions/trackAnalytics";
 import useSessionId from "@/hooks/useSessionId";
 
 export type TrackChannel = "WEBSITE";

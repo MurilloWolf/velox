@@ -4,7 +4,6 @@ import {
   TrainingSectionProps,
 } from "@/app/coach/components/Sections";
 import type { SectionContent } from "../../types";
-import plans from "./plans";
 import subsections from "./subsections";
 import { trainingPanel } from "./panels";
 
@@ -16,7 +15,6 @@ const header: TrainingSectionProps["header"] = {
 
 const props: TrainingSectionProps = {
   header,
-  plans,
 };
 
 export const trainingSectionContent: SectionContent = {
