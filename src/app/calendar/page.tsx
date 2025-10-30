@@ -8,7 +8,7 @@ import {
   PageTracker,
 } from "@/components/system";
 import { calendarPageContent } from "@/presentation";
-import { fetchRacesAction } from "@/server/actions/races";
+import { fetchRacesAction } from "@/services/actions/races";
 import { buildMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -28,7 +28,7 @@ export const metadata: Metadata = buildMetadata({
   image: "/velox_x.png",
 });
 
-export default async function Home() {
+export default async function CalendarPage() {
   const { races, error } = await fetchRacesAction();
 
   return (
