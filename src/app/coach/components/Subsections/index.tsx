@@ -1,8 +1,6 @@
-import HelloWorldSection from "./HelloWorldSection";
 import SubsectionExplanation from "./SubExplanations";
 import NutritionDistanceGuide from "./NutritionDistanceGuide";
 import TrainingTypeGuide from "./TrainingTypeGuide";
-export type { HelloWorldSectionProps } from "./HelloWorldSection";
 export type { SubsectionExplanationProps } from "./SubExplanations";
 export type {
   NutritionDistanceGuideProps,
@@ -15,9 +13,4 @@ export type {
   TrainingStructureItem,
 } from "./TrainingTypeGuide";
 
-export {
-  HelloWorldSection,
-  SubsectionExplanation,
-  NutritionDistanceGuide,
-  TrainingTypeGuide,
-};
+export { SubsectionExplanation, NutritionDistanceGuide, TrainingTypeGuide };

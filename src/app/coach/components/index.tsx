@@ -3,7 +3,7 @@ import CoachHeader from "./Header";
 import PreviewDialog from "./PreviewDialog";
 import Panel from "./Panel";
 import { NutritionSection, TrainingSection } from "./Sections";
-import { HelloWorldSection, SubsectionExplanation } from "./Subsections";
+import { SubsectionExplanation } from "./Subsections";
 
 export {
   SubsectionExplanation,
@@ -12,6 +12,5 @@ export {
   ResourcesSidebar,
   CoachHeader,
   PreviewDialog,
-  HelloWorldSection,
   Panel,
 };
