@@ -1,8 +1,7 @@
 "use client";
 import { useMemo, useState, useEffect } from "react";
-import { Download, Eye, Search } from "lucide-react";
+import { Search, Star } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -163,15 +162,13 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
                 <TableHead>Produto</TableHead>
                 <TableHead>Categorias</TableHead>
                 <TableHead>Preço</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredPlans.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={5}
+                    colSpan={3}
                     className="text-center text-muted-foreground"
                   >
                     Nenhum produto encontrado
@@ -179,12 +176,20 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
                 </TableRow>
               ) : (
                 filteredPlans.map((plan) => (
-                  <TableRow key={plan.id}>
+                  <TableRow
+                    key={plan.id}
+                    className="group cursor-pointer hover:bg-accent/10 transition-colors"
+                    onClick={() => setPreviewPlan(plan)}
+                  >
                     <TableCell className="font-medium text-card-foreground">
-                      {plan.title}
-                      <p className="text-sm text-muted-foreground">
-                        {plan.subtitle}
-                      </p>
+                      <div className="relative flex flex-row items-center w-full">
+                        <div>
+                          <p className="text-lg">{plan.title}</p>
+                          <p className="text-sm text-muted-foreground ">
+                            {plan.subtitle}
+                          </p>
+                        </div>
+                      </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
@@ -205,37 +210,33 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <span className="font-medium">
-                        {formatPrice(
-                          plan.priceCents,
-                          plan.currency,
+                      <div
+                        className={` text-md ${
                           plan.isFree
-                        )}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={plan.isAvailable ? "default" : "secondary"}
+                            ? "text-white font-bold"
+                            : "font-semibold bg-transparent"
+                        }`}
                       >
-                        {plan.isAvailable ? "Disponível" : "Indisponível"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setPreviewPlan(plan)}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => window.open(plan.driveLink, "_blank")}
-                        >
-                          <Download className="h-4 w-4" />
-                        </Button>
+                        {plan.isFree ? (
+                          <div className=" w-fit text-center px-4 p-1 rounded-full text-green-400 shadow-sm shadow-green-400/50">
+                            {formatPrice(
+                              plan.priceCents,
+                              plan.currency,
+                              plan.isFree
+                            )}
+                          </div>
+                        ) : (
+                          <div className="w-fit px-4 flex justify-center items-center flex-row gap-2 p-1 rounded-full text-amber-400 shadow-sm shadow-amber-400/50 group-hover:bg-amber-400 transition-colors">
+                            <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 group-hover:text-black group-hover:fill-transparent transition-colors" />
+                            <p className="text-amber-300 group-hover:text-black transition-colors">
+                              {formatPrice(
+                                plan.priceCents,
+                                plan.currency,
+                                plan.isFree
+                              )}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -254,17 +255,18 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
         metadata={
           currentPlan ? (
             <div className="flex flex-wrap items-center gap-2 text-sm text-slate-300">
-              <span className="font-medium">
+              <Badge
+                className={`font-medium ${
+                  currentPlan.isFree
+                    ? "bg-green-600 text-yellow-300 border-green-500 hover:bg-green-600/90"
+                    : ""
+                }`}
+              >
                 {formatPrice(
                   currentPlan.priceCents,
                   currentPlan.currency,
                   currentPlan.isFree
                 )}
-              </span>
-              <Badge
-                variant={currentPlan.isAvailable ? "default" : "secondary"}
-              >
-                {currentPlan.isAvailable ? "Disponível" : "Indisponível"}
               </Badge>
               {currentPlan.categories.slice(0, 3).map((category) => (
                 <Badge key={category} variant="outline" className="text-xs">
