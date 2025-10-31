@@ -18,7 +18,8 @@ import {
   TableRow,
 } from "@/components/ui";
 
-import PreviewDialog from "../PreviewDialog";
+import PurchaseDialog from "../Checkout/PurchaseDialog";
+import ProductContent from "../Checkout/ProductContent";
 import { fetchAvailableProducts } from "@/services/actions/products";
 import { Product } from "@/types/products";
 
@@ -43,9 +44,50 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
     const loadProducts = async () => {
       try {
         setLoading(true);
-        const result = await fetchAvailableProducts();
-
+        const result = {
+          products: [
+            {
+              id: "cmhchihz8000tz47pl9n0kq2s",
+              title: "Primeiros 10km",
+              subtitle: "Planilha de 8 semanas para correr seus primeiros 10km",
+              priceCents: 0,
+              currency: "BRL",
+              isAvailable: true,
+              isFree: true,
+              categories: ["10km", "iniciante"],
+              driveLink:
+                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+              notionLink:
+                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+              imageLink:
+                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+              createdAt: "2025-10-29T21:05:20.427Z",
+              updatedAt: "2025-10-29T21:05:20.427Z",
+            },
+            {
+              id: "cmhchdjxe000sz47p35pbqgrk",
+              title: "Primeiros 5km",
+              subtitle: "Planilha de 4 semanas para os seus primeiros 5km",
+              priceCents: 10000,
+              currency: "BRL",
+              isAvailable: true,
+              isFree: false,
+              categories: ["5km"],
+              driveLink:
+                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+              notionLink:
+                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+              imageLink:
+                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+              createdAt: "2025-10-29T21:01:29.731Z",
+              updatedAt: "2025-10-29T21:04:14.121Z",
+            },
+          ],
+        };
+        // const result = await fetchAvailableProducts();
+        // @ts-expect-error --- IGNORE ---
         if (result.error) {
+          // @ts-expect-error --- IGNORE ---
           setError(result.error);
         } else {
           setPlans(result.products || []);
@@ -247,19 +289,20 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
         </div>
       </div>
 
-      <PreviewDialog
+      <PurchaseDialog
         open={Boolean(previewPlan)}
         onOpenChange={() => setPreviewPlan(null)}
         title={previewPlan?.title}
         description={previewPlan?.subtitle}
+        size="large"
         metadata={
           currentPlan ? (
             <div className="flex flex-wrap items-center gap-2 text-sm text-slate-300">
               <Badge
                 className={`font-medium ${
                   currentPlan.isFree
-                    ? "bg-green-600 text-yellow-300 border-green-500 hover:bg-green-600/90"
-                    : ""
+                    ? "bg-green-600 text-white border-green-500 hover:bg-green-600/90"
+                    : "bg-amber-600 text-white border-amber-500 hover:bg-amber-600/90"
                 }`}
               >
                 {formatPrice(
@@ -269,69 +312,25 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
                 )}
               </Badge>
               {currentPlan.categories.slice(0, 3).map((category) => (
-                <Badge key={category} variant="outline" className="text-xs">
+                <Badge
+                  key={category}
+                  variant="outline"
+                  className="text-xs text-white/70"
+                >
                   {category}
                 </Badge>
               ))}
             </div>
           ) : null
         }
-        previewContent={
-          <div className="space-y-4">
-            <div className="glass-scrollbar max-h-80 overflow-y-auto rounded-lg border border-border/60 bg-card/70 p-4">
-              <div className="space-y-3">
-                <div>
-                  <h4 className="font-semibold text-sm text-slate-200 mb-2">
-                    Links de Acesso:
-                  </h4>
-                  <div className="space-y-2">
-                    {currentPlan?.driveLink && (
-                      <a
-                        href={currentPlan.driveLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block text-blue-400 hover:text-blue-300 text-sm underline"
-                      >
-                        📁 Acessar no Google Drive
-                      </a>
-                    )}
-                    {currentPlan?.notionLink && (
-                      <a
-                        href={currentPlan.notionLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block text-blue-400 hover:text-blue-300 text-sm underline"
-                      >
-                        📋 Ver no Notion
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                {currentPlan?.categories &&
-                  currentPlan.categories.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold text-sm text-slate-200 mb-2">
-                        Categorias:
-                      </h4>
-                      <div className="flex flex-wrap gap-1">
-                        {currentPlan.categories.map((category) => (
-                          <Badge
-                            key={category}
-                            variant="outline"
-                            className="text-xs"
-                          >
-                            {category}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-              </div>
-            </div>
-          </div>
-        }
-      />
+      >
+        {currentPlan && (
+          <ProductContent
+            product={currentPlan}
+            onComplete={() => setPreviewPlan(null)}
+          />
+        )}
+      </PurchaseDialog>
     </div>
   );
 }
