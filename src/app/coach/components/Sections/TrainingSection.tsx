@@ -39,6 +39,7 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
   const [plans, setPlans] = useState<TrainingPlan[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isBlockingClose, setIsBlockingClose] = useState(false);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -140,6 +141,16 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
     }).format(priceCents / 100);
   };
 
+  const handleSelectPlan = (plan: TrainingPlan) => {
+    setIsBlockingClose(false);
+    setPreviewPlan(plan);
+  };
+
+  const handleClosePreview = () => {
+    setIsBlockingClose(false);
+    setPreviewPlan(null);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -221,7 +232,7 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
                   <TableRow
                     key={plan.id}
                     className="group cursor-pointer hover:bg-accent/10 transition-colors"
-                    onClick={() => setPreviewPlan(plan)}
+                    onClick={() => handleSelectPlan(plan)}
                   >
                     <TableCell className="font-medium text-card-foreground">
                       <div className="relative flex flex-row items-center w-full">
@@ -291,7 +302,12 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
 
       <PurchaseDialog
         open={Boolean(previewPlan)}
-        onOpenChange={() => setPreviewPlan(null)}
+        onOpenChange={(open) => {
+          if (!open) {
+            handleClosePreview();
+          }
+        }}
+        blockClose={isBlockingClose}
         title={previewPlan?.title}
         description={previewPlan?.subtitle}
         size="large"
@@ -327,7 +343,8 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
         {currentPlan && (
           <ProductContent
             product={currentPlan}
-            onComplete={() => setPreviewPlan(null)}
+            onComplete={handleClosePreview}
+            onProcessingChange={setIsBlockingClose}
           />
         )}
       </PurchaseDialog>

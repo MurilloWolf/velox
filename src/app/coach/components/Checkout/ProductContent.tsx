@@ -7,11 +7,13 @@ import PremiumContent from "./PremiumContent";
 interface ProductContentProps {
   product: Product;
   onComplete?: () => void;
+  onProcessingChange?: (isProcessing: boolean) => void;
 }
 
 export default function ProductContent({
   product,
   onComplete,
+  onProcessingChange,
 }: ProductContentProps) {
   const handleTransactionComplete = () => {
     onComplete?.();
@@ -30,6 +32,7 @@ export default function ProductContent({
       product={product}
       onPurchaseComplete={handleTransactionComplete}
       onCancel={handleTransactionCancel}
+      onProcessingChange={onProcessingChange}
     />
   );
 }

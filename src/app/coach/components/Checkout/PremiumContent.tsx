@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   CreditCard,
   Shield,
@@ -11,6 +11,7 @@ import {
   User,
   ExternalLink,
   FileSpreadsheet,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,6 +22,7 @@ interface PremiumContentProps {
   product: Product;
   onPurchaseComplete?: () => void;
   onCancel?: () => void;
+  onProcessingChange?: (isProcessing: boolean) => void;
 }
 
 type PaymentProvider = "stripe" | "mercadopago";
@@ -34,6 +36,7 @@ export default function PremiumContent({
   product,
   onPurchaseComplete,
   onCancel,
+  onProcessingChange,
 }: PremiumContentProps) {
   const [selectedProvider, setSelectedProvider] =
     useState<PaymentProvider>("stripe");
@@ -45,6 +48,8 @@ export default function PremiumContent({
   });
   const [errors, setErrors] = useState<Partial<CustomerInfo>>({});
   const [previewError, setPreviewError] = useState<boolean>(false);
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
+  const emailInputRef = useRef<HTMLInputElement | null>(null);
 
   const contentReceived = [
     {
@@ -81,39 +86,60 @@ export default function PremiumContent({
     }).format(priceCents / 100);
   };
 
-  const validateForm = (): boolean => {
+  const validateForm = (): keyof CustomerInfo | null => {
     const newErrors: Partial<CustomerInfo> = {};
+    let firstInvalidField: keyof CustomerInfo | null = null;
 
     if (!customerInfo.name.trim()) {
       newErrors.name = "Nome é obrigatório";
+      firstInvalidField = firstInvalidField ?? "name";
     }
 
     if (!customerInfo.email.trim()) {
       newErrors.email = "Email é obrigatório";
+      firstInvalidField = firstInvalidField ?? "email";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerInfo.email)) {
       newErrors.email = "Email inválido";
+      firstInvalidField = firstInvalidField ?? "email";
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return firstInvalidField;
+  };
+
+  const scrollToField = (field: keyof CustomerInfo) => {
+    const fieldRef = field === "name" ? nameInputRef : emailInputRef;
+    const element = fieldRef.current;
+
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
+      element.focus({ preventScroll: true });
+    }
   };
 
   const handlePurchase = async () => {
-    if (!validateForm()) return;
+    const firstInvalidField = validateForm();
+
+    if (firstInvalidField) {
+      scrollToField(firstInvalidField);
+      return;
+    }
 
     setIsProcessing(true);
+    onProcessingChange?.(true);
     // TODO: Implementar lógica de pagamento aqui
 
-    // Simular processamento por enquanto
     setTimeout(() => {
       setIsProcessing(false);
       setShowConfirmation(true);
+      onProcessingChange?.(false);
     }, 2000);
   };
 
   const handleCancel = () => {
     if (!isProcessing) {
       onCancel?.();
+      onProcessingChange?.(false);
     }
   };
 
@@ -153,7 +179,7 @@ export default function PremiumContent({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto p-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:p-8">
       <div className="space-y-4">
         {previewError ? (
           <div className="aspect-video bg-gradient-to-br from-black/40 via-[#000c5a]/20 to-black/60 rounded-3xl mb-4 flex items-center justify-center border border-white/10 backdrop-blur-xl shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)]">
@@ -171,16 +197,17 @@ export default function PremiumContent({
               alt="preview planilha de treino"
               width={600}
               height={400}
-              className="rounded-3xl mb-4"
+              sizes="(max-width: 1024px) 100vw, 600px"
+              className="w-full h-auto rounded-3xl"
               onError={() => setPreviewError(true)}
             />
           </div>
         )}
 
-        <div className="rounded-3xl p-4 bg-white/[0.06] backdrop-blur-xl  shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)] relative">
+        <div className="rounded-3xl p-4 sm:p-5 bg-white/[0.06] backdrop-blur-xl  shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)] relative">
           <div className="absolute inset-0 bg-gradient-to-r from-[#d5fe46]/5 via-transparent to-[#f05a24]/5 rounded-3xl"></div>
           <div className="relative z-10">
-            <h4 className="font-bold text-white mb-6 text-2xl flex items-center gap-2">
+            <h4 className="font-bold text-white mb-6 text-xl md:text-2xl flex items-center gap-2">
               <span className="text-[#d5fe46] text-shadow-[0_0_8px_#d5fe46]">
                 ✨
               </span>
@@ -189,15 +216,17 @@ export default function PremiumContent({
             <div className="space-y-4 text-sm text-white/80">
               {contentReceived.map((item) => (
                 <div
-                  className="flex items-start gap-4 p-3 rounded-2xl bg-white/[0.04] backdrop-blur-sm hover:bg-white/[0.08] transition-all duration-300"
+                  className="flex items-start gap-4 p-2 md:p-3 rounded-2xl bg-white/[0.04] backdrop-blur-sm hover:bg-white/[0.08] transition-all duration-300"
                   key={item.title}
                 >
                   <CheckCircle2 className="w-5 h-5 text-[#d5fe46] mt-1 flex-shrink-0 drop-shadow-[0_0_4px_#d5fe46]" />
                   <div>
-                    <p className="font-semibold text-lg text-white/90">
+                    <p className="font-semibold text-md md:text-lg text-white/90">
                       {item.title}
                     </p>
-                    <p className="text-sm text-white/60">{item.description}</p>
+                    <p className="text-xs md:text-sm text-white/60">
+                      {item.description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -205,21 +234,21 @@ export default function PremiumContent({
           </div>
         </div>
 
-        <div className="rounded-3xl p-4 bg-gradient-to-br from-[#d5fe46]/20 via-[#d5fe46]/10 to-[#d5fe46]/5 backdrop-blur-xl  shadow-[0_25px_80px_-20px_rgba(213,254,70,0.3)] relative">
+        <div className="rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-[#d5fe46]/20 via-[#d5fe46]/10 to-[#d5fe46]/5 backdrop-blur-xl  shadow-[0_25px_80px_-20px_rgba(213,254,70,0.3)] relative">
           <div className="absolute inset-0 bg-gradient-to-r from-[#d5fe46]/10 to-transparent rounded-3xl"></div>
           <div className="relative z-10">
-            <h4 className="font-bold text-white mb-4 flex items-center gap-2 text-2xl">
+            <h4 className="font-bold text-white mb-4 flex items-center gap-2 text-lg md:text-2xl">
               <Mail className="w-6 h-6 text-[#d5fe46] text-shadow-[0_0_8px_#d5fe46]" />
               Como você receberá:
             </h4>
-            <div className="space-y-3 text-black/80 font-medium text-md">
+            <div className="space-y-3 text-black/80 font-medium text-sm md:text-md">
               {howToReceive.map((item) => (
                 <div
                   className="flex items-center gap-3 p-2 rounded-xl bg-white/5 backdrop-blur-sm"
                   key={item.method}
                 >
                   {item.icon && (
-                    <item.icon className="w-5 h-5 text-gray-200 flex-shrink-0" />
+                    <item.icon className="w-4 h-4 md:w-5 md:h-5 text-gray-200 flex-shrink-0" />
                   )}
                   <span className="font-semibold text-gray-200">
                     {item.method}
@@ -232,11 +261,11 @@ export default function PremiumContent({
       </div>
 
       <div className="space-y-6">
-        <div className="rounded-3xl p-8 bg-white/[0.06] backdrop-blur-xl  shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)] sticky top-4">
+        <div className="rounded-3xl p-6 sm:p-8 bg-white/[0.06] backdrop-blur-xl  shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)] lg:sticky lg:top-4">
           <div className="absolute inset-0 bg-gradient-to-br from-[#d5fe46]/5 via-transparent to-[#f05a24]/5 rounded-3xl"></div>
           <div className="relative z-10">
-            <div className="text-center mb-8">
-              <div className="text-4xl font-bold text-[#d5fe46] mb-3 text-shadow-[0_0_12px_#d5fe46]">
+            <div className="text-center mb-6 sm:mb-8">
+              <div className="text-3xl sm:text-4xl font-bold text-[#d5fe46] mb-3 text-shadow-[0_0_12px_#d5fe46]">
                 {formatPrice(product.priceCents, product.currency)}
               </div>
               <div className="flex items-center justify-center gap-2 text-white/60 text-sm">
@@ -245,7 +274,7 @@ export default function PremiumContent({
               </div>
             </div>
 
-            <div className="space-y-6 mb-8">
+            <div className="space-y-6 mb-6 sm:mb-8">
               <h5 className="font-semibold text-white/90 flex items-center gap-2 text-lg">
                 <User className="w-5 h-5 text-[#d5fe46]" />
                 Suas informações:
@@ -258,6 +287,7 @@ export default function PremiumContent({
                     placeholder="Seu nome completo"
                     value={customerInfo.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
+                    ref={nameInputRef}
                     className={`bg-white/[0.08] border-white/20 backdrop-blur-sm text-white placeholder:text-white/50 rounded-2xl h-12 ${
                       errors.name
                         ? "border-red-400 shadow-[0_0_8px_rgba(239,68,68,0.3)]"
@@ -276,6 +306,7 @@ export default function PremiumContent({
                     placeholder="seu@email.com"
                     value={customerInfo.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
+                    ref={emailInputRef}
                     className={`bg-white/[0.08] border-white/20 backdrop-blur-sm text-white placeholder:text-white/50 rounded-2xl h-12 ${
                       errors.email
                         ? "border-red-400 shadow-[0_0_8px_rgba(239,68,68,0.3)]"
@@ -351,7 +382,7 @@ export default function PremiumContent({
                 </TabsContent>
               </Tabs>
             </div>
-            <div className="bg-white/3 rounded-2xl p-6 backdrop-blur-sm mb-8">
+            <div className="bg-white/3 rounded-2xl p-5 sm:p-6 backdrop-blur-sm mb-8">
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between items-center">
                   <span className="text-white">Produto</span>
@@ -417,11 +448,11 @@ export default function PremiumContent({
           </div>
         </div>
       </div>
-      <div className="col-span-2 rounded-3xl p-6 bg-gradient-to-br from-[#f05a24]/10 via-red-500/5 to-red-600/10 backdrop-blur-xl shadow-[0_25px_80px_-20px_rgba(240,90,36,0.3)] relative">
+      <div className="lg:col-span-2 rounded-3xl p-4 sm:p-6 bg-gradient-to-br from-[#f05a24]/10 via-red-500/5 to-red-600/10 backdrop-blur-xl shadow-[0_25px_80px_-20px_rgba(240,90,36,0.3)] relative">
         <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent rounded-3xl"></div>
         <div className="relative z-10">
           <h5 className="font-bold text-red-400 mb-3 flex items-center gap-2 text-sm">
-            <span className="text-red-400">⚠️</span>
+            <AlertTriangle className="w-5 h-5 text-red-400" />
             Em caso de perda do link de acesso:
           </h5>
           <p className="text-red-300/90 font-normal text-sm leading-relaxed">

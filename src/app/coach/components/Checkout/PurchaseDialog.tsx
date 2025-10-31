@@ -38,9 +38,9 @@ export default function PurchaseDialog({
   blockClose = false,
 }: PurchaseDialogProps) {
   const sizeClasses = {
-    compact: "sm:max-w-lg px-5 py-6",
-    default: "sm:max-w-xl px-6 py-6",
-    large: "sm:max-w-5xl px-6 py-6",
+    compact: "sm:max-w-lg p-2 py-6 sm:px-5 sm:py-6",
+    default: "sm:max-w-xl p-2 py-6 sm:px-6 sm:py-6",
+    large: "sm:max-w-5xl p-2 py-6 sm:px-6 sm:py-6",
   }[size];
 
   useEffect(() => {
