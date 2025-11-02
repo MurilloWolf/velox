@@ -170,7 +170,7 @@ export default function PremiumContent({
         </div>
         <Button
           onClick={onPurchaseComplete}
-          className="bg-gradient-to-r from-[#d5fe46] to-[#b8e63a] hover:from-[#b8e63a] hover:to-[#d5fe46] text-black font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 shadow-[0_8px_32px_rgba(213,254,70,0.3)] hover:shadow-[0_12px_48px_rgba(213,254,70,0.4)]"
+          className="bg-gradient-to-r from-[#d5fe46] via-[#f6ff8d] to-[#f05a24] hover:from-[#f6ff8d] hover:via-[#d5fe46] hover:to-[#f05a24] text-black font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 shadow-[0_12px_40px_rgba(240,90,36,0.35)] hover:shadow-[0_16px_56px_rgba(240,90,36,0.45)]"
         >
           Finalizar
         </Button>
@@ -191,7 +191,7 @@ export default function PremiumContent({
             </div>
           </div>
         ) : (
-          <div className="relative rounded-3xl overflow-hidden  backdrop-blur-xl shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)]">
+          <div className="relative rounded-3xl overflow-hidden backdrop-blur-xl border border-white/5 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)]">
             <Image
               src={""}
               alt="preview planilha de treino"
@@ -204,10 +204,10 @@ export default function PremiumContent({
           </div>
         )}
 
-        <div className="rounded-3xl p-4 sm:p-5 bg-white/[0.06] backdrop-blur-xl  shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)] relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#d5fe46]/5 via-transparent to-[#f05a24]/5 rounded-3xl"></div>
-          <div className="relative z-10">
-            <h4 className="font-bold text-white mb-6 text-xl md:text-2xl flex items-center gap-2">
+        <div className="rounded-3xl p-4 sm:p-6 bg-white/[0.05] backdrop-blur-xl border border-white/5 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.6)] relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-[#d5fe46]/10 via-transparent to-[#f05a24]/10 rounded-3xl" />
+          <div className="relative z-10 space-y-5">
+            <h4 className="font-bold text-white text-xl md:text-2xl flex items-center gap-2">
               <span className="text-[#d5fe46] text-shadow-[0_0_8px_#d5fe46]">
                 ✨
               </span>
@@ -216,7 +216,7 @@ export default function PremiumContent({
             <div className="space-y-4 text-sm text-white/80">
               {contentReceived.map((item) => (
                 <div
-                  className="flex items-start gap-4 p-2 md:p-3 rounded-2xl bg-white/[0.04] backdrop-blur-sm hover:bg-white/[0.08] transition-all duration-300"
+                  className="flex items-start gap-4 p-2 md:p-3 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/5 hover:bg-white/[0.08] transition-all duration-300"
                   key={item.title}
                 >
                   <CheckCircle2 className="w-5 h-5 text-[#d5fe46] mt-1 flex-shrink-0 drop-shadow-[0_0_4px_#d5fe46]" />
@@ -234,9 +234,9 @@ export default function PremiumContent({
           </div>
         </div>
 
-        <div className="rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-[#d5fe46]/20 via-[#d5fe46]/10 to-[#d5fe46]/5 backdrop-blur-xl  shadow-[0_25px_80px_-20px_rgba(213,254,70,0.3)] relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#d5fe46]/10 to-transparent rounded-3xl"></div>
-          <div className="relative z-10">
+        <div className="rounded-3xl p-4 sm:p-6 bg-white/[0.05] backdrop-blur-xl border border-white/5 shadow-[0_25px_80px_-20px_rgba(213,254,70,0.25)] relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#d5fe46]/12 via-transparent to-[#f05a24]/12 rounded-3xl" />
+          <div className="relative z-10 space-y-4">
             <h4 className="font-bold text-white mb-4 flex items-center gap-2 text-lg md:text-2xl">
               <Mail className="w-6 h-6 text-[#d5fe46] text-shadow-[0_0_8px_#d5fe46]" />
               Como você receberá:
@@ -261,11 +261,11 @@ export default function PremiumContent({
       </div>
 
       <div className="space-y-6">
-        <div className="rounded-3xl p-6 sm:p-8 bg-white/[0.06] backdrop-blur-xl  shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)] lg:sticky lg:top-4">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#d5fe46]/5 via-transparent to-[#f05a24]/5 rounded-3xl"></div>
+        <div className="rounded-3xl p-6 sm:p-8 bg-white/[0.05] backdrop-blur-xl border border-white/5 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.65)] relative overflow-hidden lg:sticky lg:top-4">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#d5fe46]/10 via-transparent to-[#f05a24]/10 rounded-3xl" />
           <div className="relative z-10">
             <div className="text-center mb-6 sm:mb-8">
-              <div className="text-3xl sm:text-4xl font-bold text-[#d5fe46] mb-3 text-shadow-[0_0_12px_#d5fe46]">
+              <div className="text-3xl sm:text-4xl font-bold text-[#f6ff8d] mb-3 text-shadow-[0_0_16px_rgba(213,254,70,0.75)]">
                 {formatPrice(product.priceCents, product.currency)}
               </div>
               <div className="flex items-center justify-center gap-2 text-white/60 text-sm">
@@ -354,7 +354,7 @@ export default function PremiumContent({
                 </TabsList>
 
                 <TabsContent value="stripe" className="mt-2">
-                  <div className="bg-white/3 rounded-2xl p-4 backdrop-blur-sm">
+                  <div className="bg-white/5 rounded-2xl p-4 backdrop-blur-sm border border-white/10">
                     <div className="flex items-center gap-3 mb-2">
                       <Shield className="w-4 h-4 text-[#d5fe46]" />
                       <span className="text-sm font-medium text-white/90">
@@ -368,7 +368,7 @@ export default function PremiumContent({
                 </TabsContent>
 
                 <TabsContent value="mercadopago" className="mt-2">
-                  <div className="bg-white/3 rounded-2xl p-4 backdrop-blur-sm">
+                  <div className="bg-white/5 rounded-2xl p-4 backdrop-blur-sm border border-white/10">
                     <div className="flex items-center gap-3 mb-2">
                       <Shield className="w-4 h-4 text-[#d5fe46]" />
                       <span className="text-sm font-medium text-white/90">
@@ -382,7 +382,7 @@ export default function PremiumContent({
                 </TabsContent>
               </Tabs>
             </div>
-            <div className="bg-white/3 rounded-2xl p-5 sm:p-6 backdrop-blur-sm mb-8">
+            <div className="bg-white/5 rounded-2xl p-5 sm:p-6 backdrop-blur-sm border border-white/10 mb-8">
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between items-center">
                   <span className="text-white">Produto</span>
@@ -414,7 +414,7 @@ export default function PremiumContent({
                   !customerInfo.email.trim()
                 }
                 asChild
-                className="cursor-pointer w-full bg-gradient-to-r from-[#d5fe46] to-[#b8e63a] hover:from-[#b8e63a] hover:to-[#d5fe46] text-black font-bold py-4 h-14 rounded-2xl text-lg transition-all duration-300 shadow-[0_8px_32px_rgba(213,254,70,0.3)] hover:shadow-[0_12px_48px_rgba(213,254,70,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="cursor-pointer w-full bg-gradient-to-r from-[#d5fe46] via-[#f6ff8d] to-[#f05a24] hover:from-[#f6ff8d] hover:via-[#d5fe46] hover:to-[#f05a24] text-black font-bold py-4 h-14 rounded-2xl text-lg transition-all duration-300 shadow-[0_12px_40px_rgba(240,90,36,0.35)] hover:shadow-[0_16px_56px_rgba(240,90,36,0.45)] disabled:opacity-50 disabled:cursor-not-allowed"
                 size="lg"
               >
                 {isProcessing ? (
@@ -448,8 +448,8 @@ export default function PremiumContent({
           </div>
         </div>
       </div>
-      <div className="lg:col-span-2 rounded-3xl p-4 sm:p-6 bg-gradient-to-br from-[#f05a24]/10 via-red-500/5 to-red-600/10 backdrop-blur-xl shadow-[0_25px_80px_-20px_rgba(240,90,36,0.3)] relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent rounded-3xl"></div>
+      <div className="lg:col-span-2 rounded-3xl p-4 sm:p-6 bg-white/[0.05] backdrop-blur-xl border border-red-500/10 shadow-[0_25px_80px_-20px_rgba(240,90,36,0.35)] relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#f05a24]/15 via-transparent to-red-500/12 rounded-3xl" />
         <div className="relative z-10">
           <h5 className="font-bold text-red-400 mb-3 flex items-center gap-2 text-sm">
             <AlertTriangle className="w-5 h-5 text-red-400" />
