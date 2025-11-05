@@ -2,8 +2,14 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { MapPin, Clock, ExternalLink, Calendar } from "lucide-react";
+import {
+  MapPin,
+  Clock,
+  ExternalLink,
+  Calendar,
+  PinIcon,
+  Map,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -83,7 +89,7 @@ export default function EventDetailsModal({
     new Date(date.getFullYear(), date.getMonth(), date.getDate());
   const today = normalizeDate(new Date());
   const eventDate = normalizeDate(event.date);
-  const registrationClosed = eventDate <= today;
+  const registrationClosed = eventDate <= today || event.status === "CLOSED";
 
   const formattedDate = event.date.toLocaleDateString("pt-BR", {
     weekday: "long",
@@ -95,6 +101,24 @@ export default function EventDetailsModal({
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     event.location
   )}`;
+
+  const eventStatusMap = {
+    OPEN: "Aberto",
+    CLOSED: "Encerradas",
+    COMING_SOON: "Em Breve",
+    CANCELLED: "Evento Cancelado",
+  };
+
+  const badgeStyles = {
+    OPEN: "bg-green-500/20 text-green-400 border-green-400/30",
+    CLOSED: "bg-red-500/20 text-red-400 border-red-400/30",
+    COMING_SOON: "bg-yellow-500/20 text-yellow-400 border-yellow-400/30",
+    CANCELLED: "bg-gray-500/20 text-gray-400 border-gray-400/30",
+  };
+
+  const eventStatus =
+    eventStatusMap[event.status as keyof typeof eventStatusMap] ||
+    "Status Desconhecido";
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -115,80 +139,42 @@ export default function EventDetailsModal({
             <DialogHeader className="border-b border-white/10 px-6 py-4">
               <DialogTitle className="text-2xl font-bold text-white text-left">
                 {event.title}
-                <p className="text-sm leading-relaxed text-white/70">
-                  {event.description}
+                <p className="text-sm leading-relaxed text-white/80">
+                  {event.organization}
                 </p>
               </DialogTitle>
             </DialogHeader>
 
             <div className="flex-1 overflow-y-auto px-6 py-6">
               <div className="space-y-6">
-                {/* Cards de informações principais */}
-                <div className="grid gap-4">
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/[0.07]">
-                    <div className="flex items-center gap-3">
-                      <div className="rounded-lg bg-[#d5fe46]/10 p-2.5">
-                        <Clock className="h-5 w-5 text-[#d5fe46]" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-white/50 mb-0.5">Horário</p>
-                        <p className="text-lg font-semibold text-white">
-                          {event.time}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/[0.07]">
-                    <div className="flex items-center gap-3">
-                      <div className="rounded-lg bg-cyan-500/10 p-2.5">
-                        <MapPin className="h-5 w-5 text-cyan-400" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs text-white/50 mb-0.5">Local</p>
-                        <Link
-                          href={mapsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={handleLocationClick}
-                          className="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors group"
-                        >
-                          <span className="truncate">{event.location}</span>
-                          <ExternalLink className="h-3.5 w-3.5 shrink-0 group-hover:translate-x-0.5 transition-transform" />
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/[0.07]">
-                    <div className="flex items-center gap-3">
-                      <div className="rounded-lg bg-white/10 p-2.5">
-                        <Calendar className="h-5 w-5 text-white" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-white/50 mb-0.5">Data</p>
-                        <p className="text-sm font-semibold text-white capitalize">
-                          {formattedDate}
-                        </p>
-                      </div>
-                    </div>
+                <div className="space-y-3">
+                  <p className="text-sm uppercase tracking-wider text-white/70 font-medium">
+                    Inscrições
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge
+                      className={
+                        badgeStyles[event.status as keyof typeof badgeStyles]
+                      }
+                    >
+                      {eventStatus}
+                    </Badge>
                   </div>
                 </div>
 
-                {/* Distâncias disponíveis */}
                 {event.distances && event.distances.length > 0 && (
                   <div className="space-y-3">
-                    <p className="text-xs uppercase tracking-wider text-white/50 font-medium">
-                      Distâncias Disponíveis
+                    <p className="text-sm uppercase tracking-wider text-white/70 font-medium">
+                      Distâncias
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {event.distances.map((distance, index) => (
-                        <span
+                        <Badge
                           key={`${event.id}-distance-${index}`}
-                          className="rounded-lg border border-[#d5fe46]/30 bg-[#d5fe46]/10 px-3 py-1.5 text-sm font-semibold text-[#d5fe46] transition-colors hover:border-[#d5fe46]/50 hover:bg-[#d5fe46]/15"
+                          className="rounded-lg border border-[#d5fe46]/30 bg-transparent   text-[#d5fe46] transition-colors hover:border-[#d5fe46]/50 hover:bg-[#d5fe46]/15"
                         >
                           {distance}
-                        </span>
+                        </Badge>
                       ))}
                     </div>
                   </div>
@@ -196,7 +182,39 @@ export default function EventDetailsModal({
               </div>
             </div>
 
-            <div className="border-t border-white/10 px-6 py-4">
+            <div className=" ">
+              <div className="space-y-3 bg-white/5 border-t border-white/10 px-6 py-4">
+                <p className="text-sm uppercase tracking-wider text-white/70 font-bold">
+                  Endereço
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-col gap-2 font-medium text-sm rounded-xl text-cyan-400">
+                    <div>
+                      <span className="font-bold text-md">{event.uf}</span>,{" "}
+                      {event.city}
+                    </div>
+                    <span className="text-sm">{event.location}</span>
+                  </div>
+                </div>
+                <Button
+                  asChild
+                  className="w-full h-11 bg-transparent text-cyan-500 border-2 border-cyan-500/70 font-semibold hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:border-cyan-400 hover:[text-shadow:_0_0_10px_rgba(34,211,238,0.8)] transition-all rounded-lg"
+                >
+                  <Link
+                    href={mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={handleLocationClick}
+                    className="inline-flex items-center justify-center gap-2"
+                  >
+                    <Map className="h-4 w-4" />
+                    Ver no Maps
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="px-6 py-4">
               {event.link && (
                 <>
                   {registrationClosed ? (
@@ -209,7 +227,7 @@ export default function EventDetailsModal({
                   ) : (
                     <Button
                       asChild
-                      className="w-full h-11 bg-[#d5fe46] text-black font-semibold hover:bg-[#d5fe46]/70 transition-all rounded-lg"
+                      className="w-full h-11 bg-[#d5fe46] text-black font-semibold hover:shadow-[0_0_20px_rgba(213,254,70,0.6)] hover:[text-shadow:_0_0_8px_rgba(0,0,0,0.3)] hover:bg-[#e0ff55] transition-all rounded-lg"
                     >
                       <Link
                         href={event.link}

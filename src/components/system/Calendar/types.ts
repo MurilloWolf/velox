@@ -3,11 +3,13 @@ export interface Event {
   title: string;
   date: Date;
   time: string;
-  description: string;
+  organization: string;
   location: string;
   attendees: string[];
   link?: string;
   status?: string;
   distances?: string[];
   promoImageUrl?: string;
+  city: string;
+  uf: string;
 }

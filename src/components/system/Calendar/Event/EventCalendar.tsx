@@ -25,13 +25,15 @@ const toEvent = (race: RaceEvent): Event | null => {
     title: race.title,
     date,
     time: race.time,
-    description: race.description,
+    organization: race.organization,
     location: race.location,
     attendees: [],
     link: race.link,
     status: race.status,
     distances: race.distances,
     promoImageUrl: race.promoImageUrl,
+    city: race.city,
+    uf: race.state,
   };
 };
 
@@ -65,7 +67,6 @@ export function EventCalendar({ races, error }: EventCalendarProps) {
     if (showEventList) {
       setSelectedEvent(null);
     } else {
-      // Se veio direto do calendário, fecha tudo
       setSelectedEvent(null);
       setSelectedDayEvents(null);
     }

@@ -4,11 +4,13 @@ export type RaceEvent = {
   date: string;
   time: string;
   location: string;
-  description: string;
+  organization: string;
   link?: string;
   status?: string;
   distances?: string[];
   promoImageUrl?: string;
+  city: string;
+  state: string;
 };
 
 export type RaceApiItem = {
