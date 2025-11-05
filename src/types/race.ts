@@ -8,6 +8,7 @@ export type RaceEvent = {
   link?: string;
   status?: string;
   distances?: string[];
+  promoImageUrl?: string;
 };
 
 export type RaceApiItem = {
@@ -19,6 +20,7 @@ export type RaceApiItem = {
   location?: string;
   city?: string;
   state?: string;
+  promoImageUrl?: string;
   link?: string;
   time?: string | null;
   status?: string;

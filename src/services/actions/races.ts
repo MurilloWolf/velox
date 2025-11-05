@@ -42,6 +42,7 @@ const buildRaceSummary = (race: RaceApiItem): RaceEvent => ({
   time: normaliseTime(race.time),
   location: normaliseLocation(race),
   description: formatDescription(race),
+  promoImageUrl: race.promoImageUrl || undefined,
   link: race.link,
   status: race.status,
   distances: race.distances,
@@ -62,7 +63,6 @@ export async function fetchRacesAction(): Promise<FetchRacesResult> {
     if (!payload.success || !Array.isArray(payload.data)) {
       throw new Error("Invalid response received from race API.");
     }
-
     const races = payload.data.map(buildRaceSummary);
     return { races, error: null };
   } catch (error) {

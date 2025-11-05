@@ -31,6 +31,7 @@ const toEvent = (race: RaceEvent): Event | null => {
     link: race.link,
     status: race.status,
     distances: race.distances,
+    promoImageUrl: race.promoImageUrl,
   };
 };
 

@@ -9,4 +9,5 @@ export interface Event {
   link?: string;
   status?: string;
   distances?: string[];
+  promoImageUrl?: string;
 }

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { X, MapPin, Clock, ExternalLink, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useAnalytics from "@/tracking/useAnalytics";
@@ -128,6 +129,18 @@ export default function EventDetailsModal({
               </Button>
             </div>
           </div>
+          {event.promoImageUrl && (
+            <div className="relative border-b border-white/10">
+              <Image
+                src={event.promoImageUrl}
+                alt={`Imagem promocional - ${event.title}`}
+                width={800}
+                height={400}
+                className="w-full h-48 object-cover"
+                priority
+              />
+            </div>
+          )}
           <div className="max-h-[calc(90vh-140px)] overflow-y-auto px-8 py-6">
             <div className="space-y-6">
               <div className="grid gap-4 sm:grid-cols-6">
