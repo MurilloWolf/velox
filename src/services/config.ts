@@ -7,6 +7,7 @@ const BASE_URL =
 const ENDPOINTS = {
   RACES: `${BASE_URL}/races`,
   PRODUCTS: `${BASE_URL}/store-products`,
+  PURCHASES: `${BASE_URL}/purchases`,
 };
 
 export default ENDPOINTS;

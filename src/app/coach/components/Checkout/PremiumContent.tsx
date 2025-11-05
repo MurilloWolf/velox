@@ -12,11 +12,31 @@ import {
   ExternalLink,
   FileSpreadsheet,
   AlertTriangle,
+  Loader2,
+  Download,
 } from "lucide-react";
+import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Product } from "@/types/products";
+import {
+  checkoutPurchase,
+  CheckoutError,
+} from "@/services/purchases";
+import type {
+  CheckoutSuccessPayload,
+  PaymentProvider,
+} from "@/types/purchases";
+
+const STRIPE_PUBLISHABLE_KEY =
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
+
+const stripePromise =
+  STRIPE_PUBLISHABLE_KEY.length > 0
+    ? loadStripe(STRIPE_PUBLISHABLE_KEY)
+    : null;
 
 interface PremiumContentProps {
   product: Product;
@@ -24,8 +44,6 @@ interface PremiumContentProps {
   onCancel?: () => void;
   onProcessingChange?: (isProcessing: boolean) => void;
 }
-
-type PaymentProvider = "stripe" | "mercadopago";
 
 interface CustomerInfo {
   name: string;
@@ -42,6 +60,10 @@ export default function PremiumContent({
     useState<PaymentProvider>("stripe");
   const [isProcessing, setIsProcessing] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [checkoutResult, setCheckoutResult] =
+    useState<CheckoutSuccessPayload["data"] | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     name: "",
     email: "",
@@ -50,6 +72,14 @@ export default function PremiumContent({
   const [previewError, setPreviewError] = useState<boolean>(false);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
+
+  const resetPaymentState = () => {
+    setIsProcessing(false);
+    setClientSecret(null);
+    setCheckoutResult(null);
+    setShowConfirmation(false);
+    setErrorMessage(null);
+  };
 
   const contentReceived = [
     {
@@ -125,19 +155,69 @@ export default function PremiumContent({
       return;
     }
 
+    if (selectedProvider !== "stripe") {
+      setErrorMessage(
+        "No momento, apenas pagamentos com cartão via Stripe estão disponíveis."
+      );
+      return;
+    }
+
+    if (!stripePromise) {
+      setErrorMessage(
+        "Stripe não está configurado. Verifique a chave pública e tente novamente."
+      );
+      return;
+    }
+
+    if (clientSecret) {
+      setErrorMessage(
+        "Pagamento já iniciado. Preencha os dados do cartão para concluir."
+      );
+      return;
+    }
+
     setIsProcessing(true);
     onProcessingChange?.(true);
-    // TODO: Implementar lógica de pagamento aqui
+    setErrorMessage(null);
+    setCheckoutResult(null);
+    setShowConfirmation(false);
 
-    setTimeout(() => {
+    try {
+      const response = await checkoutPurchase({
+        productId: product.id,
+        buyerEmail: customerInfo.email.trim(),
+        buyerName: customerInfo.name.trim(),
+        paymentProvider: "stripe",
+      });
+
+      if (!response.data.intent?.clientSecret) {
+        throw new Error(
+          "Não foi possível iniciar o pagamento com a Stripe. Tente novamente."
+        );
+      }
+
+      setCheckoutResult(response.data);
+      setClientSecret(response.data.intent.clientSecret);
+    } catch (error) {
+      console.error("Erro ao iniciar pagamento:", error);
+      if (error instanceof CheckoutError) {
+        setErrorMessage(error.message);
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage(
+          "Não foi possível iniciar o pagamento. Tente novamente em instantes."
+        );
+      }
+    } finally {
       setIsProcessing(false);
-      setShowConfirmation(true);
       onProcessingChange?.(false);
-    }, 2000);
+    }
   };
 
   const handleCancel = () => {
     if (!isProcessing) {
+      resetPaymentState();
       onCancel?.();
       onProcessingChange?.(false);
     }
@@ -148,32 +228,147 @@ export default function PremiumContent({
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
+    if (errorMessage) {
+      setErrorMessage(null);
+    }
   };
 
   if (showConfirmation) {
+    const resolvedProduct = checkoutResult?.purchase.product ?? product;
+    const buyerEmail =
+      checkoutResult?.purchase.buyerEmail ?? customerInfo.email;
+    const driveLink = resolvedProduct.driveLink;
+    const notionLink = resolvedProduct.notionLink;
+    const imageLink = resolvedProduct.imageLink;
+
     return (
-      <div className="text-center space-y-6 py-12 max-w-md mx-auto">
-        <div className="rounded-full w-20 h-20 bg-gradient-to-br from-[#d5fe46]/20 to-[#d5fe46]/10 backdrop-blur-xl border border-[#d5fe46]/30 flex items-center justify-center mx-auto shadow-[0_25px_80px_-20px_rgba(213,254,70,0.3)]">
-          <CheckCircle2 className="w-10 h-10 text-[#d5fe46] drop-shadow-[0_0_8px_#d5fe46]" />
-        </div>
-        <div className="space-y-4">
-          <h3 className="text-2xl font-bold text-[#d5fe46] text-shadow-[0_0_8px_#d5fe46]">
-            Compra Realizada com Sucesso!
-          </h3>
-          <div className="bg-white/[0.06] backdrop-blur-xl border border-white/10 rounded-3xl p-6 text-left">
-            <p className="text-white/80 leading-relaxed">
-              Você receberá um email em{" "}
-              <strong className="text-[#d5fe46]">{customerInfo.email}</strong>{" "}
-              com os links de acesso em instantes.
+      <div className="space-y-8 py-12 max-w-4xl mx-auto">
+        <div className="text-center space-y-4">
+          <div className="rounded-full w-20 h-20 bg-gradient-to-br from-[#d5fe46]/20 to-[#f05a24]/10 backdrop-blur-xl border border-[#d5fe46]/30 flex items-center justify-center mx-auto shadow-[0_25px_80px_-20px_rgba(213,254,70,0.3)]">
+            <CheckCircle2 className="w-10 h-10 text-[#d5fe46] drop-shadow-[0_0_8px_#d5fe46]" />
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-2xl font-bold text-[#d5fe46] text-shadow-[0_0_8px_#d5fe46]">
+              Pagamento aprovado!
+            </h3>
+            <p className="text-white/80 leading-relaxed max-w-2xl mx-auto">
+              Enviamos uma confirmação para{" "}
+              <strong className="text-[#d5fe46]">{buyerEmail}</strong>. Você já
+              pode acessar o material exclusivo pelos links abaixo.
             </p>
           </div>
         </div>
-        <Button
-          onClick={onPurchaseComplete}
-          className="bg-gradient-to-r from-[#d5fe46] via-[#f6ff8d] to-[#f05a24] hover:from-[#f6ff8d] hover:via-[#d5fe46] hover:to-[#f05a24] text-black font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 shadow-[0_12px_40px_rgba(240,90,36,0.35)] hover:shadow-[0_16px_56px_rgba(240,90,36,0.45)]"
-        >
-          Finalizar
-        </Button>
+
+        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-3xl bg-white/[0.06] border border-white/10 backdrop-blur-xl p-6 space-y-5 shadow-[0_25px_90px_-20px_rgba(0,0,0,0.65)]">
+            <div>
+              <h4 className="text-lg font-semibold text-white flex items-center gap-2">
+                <ExternalLink className="w-5 h-5 text-[#d5fe46]" />
+                Seus links exclusivos
+              </h4>
+              <p className="text-sm text-white/60 mt-1">
+                Recomendamos criar uma cópia para garantir o acesso futuro.
+              </p>
+            </div>
+            <div className="space-y-3">
+              {driveLink ? (
+                <Button
+                  asChild
+                  className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-[#d5fe46]/15 text-[#d5fe46] hover:bg-[#d5fe46]/25"
+                  variant="outline"
+                >
+                  <a
+                    href={driveLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FileSpreadsheet className="w-4 h-4" />
+                    Planilha no Google Drive
+                  </a>
+                </Button>
+              ) : (
+                <p className="text-sm text-white/50">
+                  Link do Google Drive não disponível.
+                </p>
+              )}
+              {notionLink ? (
+                <Button
+                  asChild
+                  className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-white/10 text-white hover:bg-white/20"
+                  variant="outline"
+                >
+                  <a
+                    href={notionLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                    Template no Notion
+                  </a>
+                </Button>
+              ) : (
+                <p className="text-sm text-white/50">
+                  Link do Notion não disponível.
+                </p>
+              )}
+              {imageLink ? (
+                <Button
+                  asChild
+                  className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-[#f05a24]/15 text-[#f6ff8d] hover:bg-[#f05a24]/20"
+                  variant="outline"
+                >
+                  <a
+                    href={imageLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Download className="w-4 h-4" />
+                    Baixar visualização (PNG)
+                  </a>
+                </Button>
+              ) : (
+                <p className="text-sm text-white/50">
+                  Visualização da planilha não disponível.
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-3xl bg-white/[0.05] border border-white/10 backdrop-blur-xl p-6 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.65)]">
+            {resolvedProduct.imageLink && !previewError ? (
+              <div className="relative rounded-2xl overflow-hidden border border-white/10">
+                <Image
+                  src={resolvedProduct.imageLink}
+                  alt={resolvedProduct.title}
+                  width={560}
+                  height={360}
+                  className="w-full h-auto object-cover"
+                  onError={() => setPreviewError(true)}
+                />
+              </div>
+            ) : (
+              <div className="flex h-full min-h-[200px] flex-col items-center justify-center gap-3 rounded-2xl border border-white/10 bg-black/40">
+                <FileSpreadsheet className="w-10 h-10 text-[#d5fe46]/70" />
+                <p className="text-sm text-white/60">
+                  Visualização indisponível no momento
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center justify-center gap-4">
+          <p className="text-xs text-white/50">
+            Se precisar de suporte, responda o email recebido ou fale com nosso
+            time.
+          </p>
+          <Button
+            onClick={onPurchaseComplete}
+            className="bg-gradient-to-r from-[#d5fe46] via-[#f6ff8d] to-[#f05a24] hover:from-[#f6ff8d] hover:via-[#d5fe46] hover:to-[#f05a24] text-black font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 shadow-[0_12px_40px_rgba(240,90,36,0.35)] hover:shadow-[0_16px_56px_rgba(240,90,36,0.45)]"
+          >
+            Finalizar
+          </Button>
+        </div>
       </div>
     );
   }
@@ -332,9 +527,12 @@ export default function PremiumContent({
 
               <Tabs
                 value={selectedProvider}
-                onValueChange={(value) =>
-                  setSelectedProvider(value as PaymentProvider)
-                }
+                onValueChange={(value) => {
+                  const provider = value as PaymentProvider;
+                  setSelectedProvider(provider);
+                  resetPaymentState();
+                  onProcessingChange?.(false);
+                }}
               >
                 <TabsList className="grid w-full grid-cols-2 bg-white/[0.08] backdrop-blur-sm rounded-2xl border border-white/10">
                   <TabsTrigger
@@ -345,7 +543,7 @@ export default function PremiumContent({
                     Cartão
                   </TabsTrigger>
                   <TabsTrigger
-                    value="mercadopago"
+                    value="mercado_pago"
                     className="text-gray-300 flex items-center gap-2 text-sm data-[state=active]:bg-[#d5fe46]/20 data-[state=active]:text-[#d5fe46] data-[state=active]:shadow-[0_0_8px_rgba(213,254,70,0.3)] rounded-xl"
                   >
                     <CreditCard className="w-4 h-4" />
@@ -367,7 +565,7 @@ export default function PremiumContent({
                   </div>
                 </TabsContent>
 
-                <TabsContent value="mercadopago" className="mt-2">
+                <TabsContent value="mercado_pago" className="mt-2">
                   <div className="bg-white/5 rounded-2xl p-4 backdrop-blur-sm border border-white/10">
                     <div className="flex items-center gap-3 mb-2">
                       <Shield className="w-4 h-4 text-[#d5fe46]" />
@@ -406,29 +604,53 @@ export default function PremiumContent({
             </div>
 
             <div className="space-y-4">
-              <Button
-                onClick={handlePurchase}
-                disabled={
-                  isProcessing ||
-                  !customerInfo.name.trim() ||
-                  !customerInfo.email.trim()
-                }
-                asChild
-                className="cursor-pointer w-full bg-gradient-to-r from-[#d5fe46] via-[#f6ff8d] to-[#f05a24] hover:from-[#f6ff8d] hover:via-[#d5fe46] hover:to-[#f05a24] text-black font-bold py-4 h-14 rounded-2xl text-lg transition-all duration-300 shadow-[0_12px_40px_rgba(240,90,36,0.35)] hover:shadow-[0_16px_56px_rgba(240,90,36,0.45)] disabled:opacity-50 disabled:cursor-not-allowed"
-                size="lg"
-              >
-                {isProcessing ? (
-                  <div className="flex items-center gap-3">
-                    <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                    Processando...
+              {selectedProvider === "stripe" ? (
+                clientSecret && stripePromise ? (
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 space-y-4">
+                    <StripePaymentSection
+                      key={clientSecret}
+                      clientSecret={clientSecret}
+                      buyerEmail={customerInfo.email.trim()}
+                      onSuccess={() => {
+                        setShowConfirmation(true);
+                        onProcessingChange?.(false);
+                      }}
+                      onError={(message) => setErrorMessage(message)}
+                      isProcessing={isProcessing}
+                      setIsProcessing={setIsProcessing}
+                      onProcessingChange={onProcessingChange}
+                    />
                   </div>
                 ) : (
-                  <div className="flex items-center gap-3">
-                    <CreditCard className="w-5 h-5" />
-                    Finalizar Compra
-                  </div>
-                )}
-              </Button>
+                  <Button
+                    onClick={handlePurchase}
+                    disabled={
+                      isProcessing ||
+                      !customerInfo.name.trim() ||
+                      !customerInfo.email.trim()
+                    }
+                    className="cursor-pointer w-full bg-gradient-to-r from-[#d5fe46] via-[#f6ff8d] to-[#f05a24] hover:from-[#f6ff8d] hover:via-[#d5fe46] hover:to-[#f05a24] text-black font-bold py-4 h-14 rounded-2xl text-lg transition-all duration-300 shadow-[0_12px_40px_rgba(240,90,36,0.35)] hover:shadow-[0_16px_56px_rgba(240,90,36,0.45)] disabled:opacity-50 disabled:cursor-not-allowed"
+                    size="lg"
+                  >
+                    {isProcessing ? (
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                        Gerando pagamento...
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3">
+                        <CreditCard className="w-5 h-5" />
+                        Continuar para pagamento
+                      </div>
+                    )}
+                  </Button>
+                )
+              ) : (
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
+                  Integração com Mercado Pago em breve. Selecione &quot;Cartão&quot; para
+                  pagar com Stripe.
+                </div>
+              )}
 
               <Button
                 onClick={handleCancel}
@@ -439,6 +661,12 @@ export default function PremiumContent({
                 <X className="w-4 h-4 mr-2" />
                 Cancelar
               </Button>
+
+              {errorMessage ? (
+                <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
+                  {errorMessage}
+                </div>
+              ) : null}
 
               <div className="flex items-center justify-center gap-2 text-xs text-white/50 mt-6">
                 <Shield className="w-4 h-4 text-[#d5fe46]" />
@@ -462,5 +690,168 @@ export default function PremiumContent({
         </div>
       </div>
     </div>
+  );
+}
+
+interface StripePaymentSectionProps {
+  clientSecret: string;
+  buyerEmail: string;
+  onSuccess: () => void;
+  onError: (message: string | null) => void;
+  isProcessing: boolean;
+  setIsProcessing: (value: boolean) => void;
+  onProcessingChange?: (isProcessing: boolean) => void;
+}
+
+function StripePaymentSection({
+  clientSecret,
+  buyerEmail,
+  onSuccess,
+  onError,
+  isProcessing,
+  setIsProcessing,
+  onProcessingChange,
+}: StripePaymentSectionProps) {
+  if (!stripePromise) {
+    return (
+      <div className="rounded-xl border border-amber-400/40 bg-amber-500/10 p-4 text-sm text-amber-100">
+        Stripe não está configurado neste ambiente. Configure a variável{" "}
+        <code className="font-mono text-amber-200">
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+        </code>{" "}
+        e recarregue a página.
+      </div>
+    );
+  }
+
+  return (
+    <Elements
+      stripe={stripePromise}
+      options={{
+        clientSecret,
+        appearance: {
+          theme: "night",
+          variables: {
+            colorPrimary: "#d5fe46",
+            colorBackground: "#050714",
+            colorText: "#f8fafc",
+          },
+        },
+      }}
+    >
+      <StripePaymentForm
+        buyerEmail={buyerEmail}
+        onSuccess={onSuccess}
+        onError={onError}
+        isProcessing={isProcessing}
+        setIsProcessing={setIsProcessing}
+        onProcessingChange={onProcessingChange}
+      />
+    </Elements>
+  );
+}
+
+interface StripePaymentFormProps {
+  buyerEmail: string;
+  onSuccess: () => void;
+  onError: (message: string | null) => void;
+  isProcessing: boolean;
+  setIsProcessing: (value: boolean) => void;
+  onProcessingChange?: (isProcessing: boolean) => void;
+}
+
+function StripePaymentForm({
+  buyerEmail,
+  onSuccess,
+  onError,
+  isProcessing,
+  setIsProcessing,
+  onProcessingChange,
+}: StripePaymentFormProps) {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) {
+      onError(
+        "Stripe não está pronto no momento. Atualize a página e tente novamente."
+      );
+      return;
+    }
+
+    onError(null);
+    setIsProcessing(true);
+    onProcessingChange?.(true);
+
+    try {
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        onError(submitError.message ?? "Revise os dados do cartão e tente novamente.");
+        return;
+      }
+
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          receipt_email: buyerEmail,
+        },
+        redirect: "if_required",
+      });
+
+      if (error) {
+        onError(error.message ?? "Não foi possível confirmar o pagamento.");
+        return;
+      }
+
+      if (paymentIntent?.status === "processing") {
+        onError(
+          "Pagamento em processamento. Você será notificado por email assim que for confirmado."
+        );
+      } else {
+        onError(null);
+      }
+
+      onSuccess();
+    } catch (error) {
+      console.error("Erro ao confirmar pagamento com a Stripe:", error);
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Falha inesperada ao confirmar o pagamento.";
+      onError(message);
+    } finally {
+      setIsProcessing(false);
+      onProcessingChange?.(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="rounded-xl border border-white/10 bg-black/40 p-4">
+        <PaymentElement options={{ layout: "tabs" }} />
+      </div>
+      <Button
+        type="submit"
+        disabled={isProcessing || !stripe || !elements}
+        className="cursor-pointer w-full bg-gradient-to-r from-[#d5fe46] via-[#f6ff8d] to-[#f05a24] hover:from-[#f6ff8d] hover:via-[#d5fe46] hover:to-[#f05a24] text-black font-bold py-4 h-14 rounded-2xl text-lg transition-all duration-300 shadow-[0_12px_40px_rgba(240,90,36,0.35)] hover:shadow-[0_16px_56px_rgba(240,90,36,0.45)] disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isProcessing ? (
+          <div className="flex items-center gap-3">
+            <Loader2 className="h-5 w-5 animate-spin text-black" />
+            Confirmando pagamento...
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <CreditCard className="w-5 h-5" />
+            Confirmar pagamento
+          </div>
+        )}
+      </Button>
+      <p className="text-xs text-white/50 text-center">
+        Após a confirmação, você receberá os links e a nota fiscal no seu email.
+      </p>
+    </form>
   );
 }
