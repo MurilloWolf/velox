@@ -4,7 +4,6 @@ import {
   Header,
   Hero,
   CtaSection,
-  DonationSection,
   ContactSection,
   Footer,
   PlatformFeatures,
@@ -38,7 +37,6 @@ export default function Home() {
         <BotShowcase />
         <PlatformFeatures />
         <CtaSection />
-        <DonationSection />
         <ContactSection />
         <Footer />
       </main>

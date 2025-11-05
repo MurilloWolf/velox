@@ -1,7 +1,6 @@
 import Header from "./Header";
 import Hero from "./HomePage/Hero";
 import CtaSection from "./HomePage/CtaSection";
-import DonationSection from "./HomePage/DonationSection";
 import ContactSection from "./HomePage/ContactSection";
 import Footer from "./Footer";
 import BotShowcase from "./HomePage/BotShowCase";
@@ -19,7 +18,6 @@ export {
   Header,
   Hero,
   CtaSection,
-  DonationSection,
   ContactSection,
   Footer,
   BotShowcase,

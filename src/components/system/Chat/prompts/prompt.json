@@ -149,21 +149,7 @@
                 ]
               }
             },
-            {
-              "key": "donation",
-              "title": "Apoie a VELOX",
-              "description": "Plano de doações com três níveis e benefícios explicados.",
-              "link": "/#apoie",
-              "source": "src/components/system/DonationSection.tsx#L14",
-              "dataPoints": {
-                "tiers": [
-                  { "label": "Café", "valor": "R$ 10" },
-                  { "label": "Powerade", "valor": "R$ 25" },
-                  { "label": "Carbo gel", "valor": "R$ 50+" }
-                ],
-                "supportBenefits": "Mantém servidores, adiciona corridas, desenvolve novos recursos"
-              }
-            },
+
             {
               "key": "contact",
               "title": "Entre em Contato",
@@ -305,13 +291,7 @@
             "email": "velox.running.app@gmail.com"
           }
         },
-        {
-          "key": "donation.tiers",
-          "description": "Níveis de contribuição sugeridos e valores.",
-          "source": "src/components/system/DonationSection.tsx#L35",
-          "fields": ["Café R$10", "Powerade R$25", "Carbo gel R$50+"],
-          "format": "Card grid"
-        },
+
         {
           "key": "footer.social",
           "description": "Redes sociais e links rápidos exibidos no rodapé.",
