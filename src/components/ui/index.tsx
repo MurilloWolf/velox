@@ -48,6 +48,17 @@ import {
   DialogTrigger,
 } from "./dialog";
 
+import {
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from "./sheet";
+
 export {
   Select,
   SelectContent,
@@ -69,6 +80,14 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
+  Sheet,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
   Table,
   TableHeader,
   TableBody,
