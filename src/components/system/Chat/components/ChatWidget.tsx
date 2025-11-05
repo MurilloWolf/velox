@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import ChatPanel from "./ChatPanel";
 import useAnalytics from "@/tracking/useAnalytics";
 import { AnalyticsActions } from "@/tracking/types";
+import { Button } from "@/components/ui/button";
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,16 +47,17 @@ export default function ChatWidget() {
           />
         </div>
       ) : null}
-      <button
+      <Button
         type="button"
         onClick={toggleOpen}
-        className="flex items-center gap-2 rounded-full bg-[#2563EB] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:scale-105 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#93C5FD] active:scale-95"
+        variant="default"
+        className="flex items-center gap-2 rounded-full hover:bg-blue-500 bg-blue-700 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:scale-105 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#93C5FD] active:scale-95"
         aria-expanded={isOpen}
         aria-controls="chat-widget"
       >
         <MessageCircle className="h-5 w-5" />
         {isOpen ? "Minimizar chat" : "Fale com a gente"}
-      </button>
+      </Button>
     </div>
   );
 }
