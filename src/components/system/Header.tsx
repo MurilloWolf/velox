@@ -3,7 +3,6 @@ import type { MouseEvent } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
-import veloxLogo from "../../../public/velox-transparent.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useSmoothScroll } from "./hooks/useSmoothScroll";
@@ -76,7 +75,7 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src={veloxLogo}
+              src="https://velox-images-bucket.s3.sa-east-1.amazonaws.com/public/velox-transparent.png"
               alt="Logotipo do VELOX Corridas"
               width={150}
               height={32}

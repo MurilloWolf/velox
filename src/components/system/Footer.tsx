@@ -1,7 +1,6 @@
 "use client";
 import { Heart, Github, Twitter, Instagram } from "lucide-react";
 import Image from "next/image";
-import veloxLogo from "../../../public/Velox.png";
 import useAnalytics from "@/tracking/useAnalytics";
 import { AnalyticsActions } from "@/tracking/types";
 
@@ -36,7 +35,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="md:col-span-2">
             <Image
-              src={veloxLogo}
+              src="https://velox-images-bucket.s3.sa-east-1.amazonaws.com/public/logo-transparent-velox.png"
               alt="Logotipo do VELOX Corridas"
               width={120}
               height={40}

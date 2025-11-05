@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Zap, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import veloxLogo from "../../../../public/velox-low-ql.png";
 import useAnalytics from "@/tracking/useAnalytics";
 import { AnalyticsActions } from "@/tracking/types";
 
@@ -39,8 +38,8 @@ export default function Hero() {
         <div className="flex flex-col sm:flex-row justify-evenly items-center text-center">
           <div className="flex flex-col items-center max-w-4xl sm:mr-10">
             <Image
-              src={veloxLogo}
-              alt="Logo do CorridaGPT"
+              src="https://velox-images-bucket.s3.sa-east-1.amazonaws.com/public/velox-full-transparent.png"
+              alt="Logo da Velox corridas"
               width={400}
               height={400}
               className="mb-6 object-cover xl:min-w-96 xl:min-h-96 xl:h-[600px] xl:w-[600px]"

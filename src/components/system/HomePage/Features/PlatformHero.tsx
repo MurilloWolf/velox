@@ -5,14 +5,10 @@ import type { ComponentType, SVGProps } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar, Dumbbell, Droplets, Send } from "lucide-react";
 
-import FeatureCard from "./FeatureCard";
-import type { StaticImageData } from "next/image";
-import training from "../../../../../public/running-bg.jpg";
-import nutrition from "../../../../../public/nutrition.jpg";
-import womanPhone from "../../../../../public/woman-telephone.jpg";
-import calendar from "../../../../../public/calendar.jpg";
 import { AnalyticsActions } from "@/tracking/types";
 import useAnalytics from "@/tracking/useAnalytics";
+
+import FeatureCard from "./FeatureCard";
 
 function throttle<T extends (this: unknown, ...args: unknown[]) => void>(
   func: T,
@@ -44,24 +40,28 @@ type FeatureItem = {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   title: string;
   description: string;
-  img: StaticImageData;
+  img: string;
   section?: CoachRootSection;
   href?: string;
   externalUrl?: string;
 };
+
+const BASE_S3_URL =
+  "https://velox-images-bucket.s3.sa-east-1.amazonaws.com/public";
 
 export default function PlatformFeatures() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [showScroll, setShowScroll] = useState(false);
   const router = useRouter();
   const { trackEvent } = useAnalytics();
+
   const features: FeatureItem[] = [
     {
       icon: Calendar,
       title: "Calendário de Corridas",
       description:
         "Encontre corridas de 5km, 10km, meia maratona e maratona completa em todo o Brasil. Filtros por distância, cidade e data.",
-      img: calendar,
+      img: `${BASE_S3_URL}/calendar.jpg`,
       href: "/calendar",
     },
     {
@@ -69,7 +69,7 @@ export default function PlatformFeatures() {
       title: "Bot no Telegram",
       description:
         "Acesse todas as funcionalidades direto no Telegram. Notificações de novas corridas, lembretes e muito mais.",
-      img: womanPhone,
+      img: `${BASE_S3_URL}/woman-telephone.jpg`,
       externalUrl: "https://t.me/VeloxBot",
     },
     {
@@ -77,7 +77,7 @@ export default function PlatformFeatures() {
       title: "Planos de Treino",
       description:
         "Treinos estruturados para iniciantes e avançados. Prepare-se para sua próxima corrida com orientação profissional.",
-      img: training,
+      img: `${BASE_S3_URL}/running-bg.jpg`,
       section: "training",
     },
     {
@@ -85,7 +85,7 @@ export default function PlatformFeatures() {
       title: "Guia de Nutrição",
       description:
         "Aprenda quando e quanto beber antes, durante e depois das corridas. Dicas para diferentes distâncias e climas.",
-      img: nutrition,
+      img: `${BASE_S3_URL}/nutrition.jpg`,
       section: "nutrition",
     },
   ];

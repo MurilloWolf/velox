@@ -1,14 +1,13 @@
-import { Card } from "@/components/ui";
+import Image from "next/image";
 import { ChevronRight } from "lucide-react";
-import Image, { StaticImageData } from "next/image";
-import runningBg from "../../../../../public/running-bg.jpg";
+import { Card } from "@/components/ui";
 
 export interface IFeatureProps {
   feature: {
     title: string;
     description: string;
     icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-    img: StaticImageData;
+    img: string;
   };
   index: number;
   scrollNext: () => void;
@@ -35,7 +34,9 @@ export default function FeatureCard(props: IFeatureProps) {
     >
       <div className={`relative h-[80%] flex items-end p-6 rounded-t-2xl`}>
         <Image
-          src={feature.img || runningBg}
+          width={900}
+          height={900}
+          src={feature.img || ""}
           className="absolute inset-0 object-cover w-full h-full rounded-t-2xl opacity-60"
           alt={feature.title}
         />
