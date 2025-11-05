@@ -14,6 +14,8 @@ import {
 import useAnalytics from "@/tracking/useAnalytics";
 import { AnalyticsActions } from "@/tracking/types";
 import type { Event } from "../types";
+import { Badge } from "@/components/ui";
+import EventImagePreview from "./EventImagePreview";
 
 interface EventDetailsModalProps {
   isOpen: boolean;
@@ -100,35 +102,12 @@ export default function EventDetailsModal({
         <div className="flex flex-col lg:flex-row h-full">
           {/* Lado esquerdo - Imagem */}
           <div className="lg:w-1/2 relative">
-            {event.promoImageUrl ? (
-              <div className="relative h-64 lg:h-full">
-                <Image
-                  src={event.promoImageUrl}
-                  alt={`Imagem promocional - ${event.title}`}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="flex items-center gap-2 text-sm text-white/90 mb-2">
-                    <Calendar className="h-4 w-4" />
-                    <span className="capitalize">{formattedDate}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-white/90">
-                    <Clock className="h-4 w-4" />
-                    <span>{event.time}</span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="h-64 lg:h-full bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center">
-                <div className="text-center text-white/50">
-                  <Calendar className="h-16 w-16 mx-auto mb-4" />
-                  <p>Sem imagem disponível</p>
-                </div>
-              </div>
-            )}
+            <EventImagePreview
+              image={event.promoImageUrl}
+              formattedDate={formattedDate}
+              time={event.time}
+              title={event.title}
+            />
           </div>
 
           {/* Lado direito - Informações */}
@@ -136,6 +115,9 @@ export default function EventDetailsModal({
             <DialogHeader className="border-b border-white/10 px-6 py-4">
               <DialogTitle className="text-2xl font-bold text-white text-left">
                 {event.title}
+                <p className="text-sm leading-relaxed text-white/70">
+                  {event.description}
+                </p>
               </DialogTitle>
             </DialogHeader>
 
@@ -211,20 +193,9 @@ export default function EventDetailsModal({
                     </div>
                   </div>
                 )}
-
-                {/* Descrição do evento */}
-                <div className="space-y-3">
-                  <p className="text-xs uppercase tracking-wider text-white/50 font-medium">
-                    Sobre o Evento
-                  </p>
-                  <p className="text-sm leading-relaxed text-white/70">
-                    {event.description}
-                  </p>
-                </div>
               </div>
             </div>
 
-            {/* Footer com botão de inscrição */}
             <div className="border-t border-white/10 px-6 py-4">
               {event.link && (
                 <>

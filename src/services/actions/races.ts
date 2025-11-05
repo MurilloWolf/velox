@@ -8,16 +8,6 @@ import type {
 } from "@/types/race";
 import ENDPOINTS from "../config";
 
-const formatDescription = (race: RaceApiItem) => {
-  const pieces: string[] = [];
-
-  if (race.organization) {
-    pieces.push(`Organização: ${race.organization}`);
-  }
-
-  return pieces.join(" • ") || "Detalhes adicionais serão divulgados em breve.";
-};
-
 const normaliseLocation = (race: RaceApiItem) => {
   if (race.location) {
     return race.location;
@@ -41,7 +31,7 @@ const buildRaceSummary = (race: RaceApiItem): RaceEvent => ({
   date: race.date,
   time: normaliseTime(race.time),
   location: normaliseLocation(race),
-  description: formatDescription(race),
+  description: race.organization || "",
   promoImageUrl: race.promoImageUrl || undefined,
   link: race.link,
   status: race.status,
