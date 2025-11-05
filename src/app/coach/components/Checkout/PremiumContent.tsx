@@ -15,16 +15,18 @@ import {
   Loader2,
   Download,
 } from "lucide-react";
-import { Elements, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import {
+  Elements,
+  PaymentElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Product } from "@/types/products";
-import {
-  checkoutPurchase,
-  CheckoutError,
-} from "@/services/purchases";
+import { checkoutPurchase, CheckoutError } from "@/services/purchases";
 import type {
   CheckoutSuccessPayload,
   PaymentProvider,
@@ -34,9 +36,7 @@ const STRIPE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
 
 const stripePromise =
-  STRIPE_PUBLISHABLE_KEY.length > 0
-    ? loadStripe(STRIPE_PUBLISHABLE_KEY)
-    : null;
+  STRIPE_PUBLISHABLE_KEY.length > 0 ? loadStripe(STRIPE_PUBLISHABLE_KEY) : null;
 
 interface PremiumContentProps {
   product: Product;
@@ -61,8 +61,9 @@ export default function PremiumContent({
   const [isProcessing, setIsProcessing] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [checkoutResult, setCheckoutResult] =
-    useState<CheckoutSuccessPayload["data"] | null>(null);
+  const [checkoutResult, setCheckoutResult] = useState<
+    CheckoutSuccessPayload["data"] | null
+  >(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     name: "",
@@ -72,6 +73,8 @@ export default function PremiumContent({
   const [previewError, setPreviewError] = useState<boolean>(false);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
+
+  console.log("Product in PremiumContent:", product);
 
   const resetPaymentState = () => {
     setIsProcessing(false);
@@ -277,11 +280,7 @@ export default function PremiumContent({
                   className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-[#d5fe46]/15 text-[#d5fe46] hover:bg-[#d5fe46]/25"
                   variant="outline"
                 >
-                  <a
-                    href={driveLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={driveLink} target="_blank" rel="noopener noreferrer">
                     <FileSpreadsheet className="w-4 h-4" />
                     Planilha no Google Drive
                   </a>
@@ -317,11 +316,7 @@ export default function PremiumContent({
                   className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-[#f05a24]/15 text-[#f6ff8d] hover:bg-[#f05a24]/20"
                   variant="outline"
                 >
-                  <a
-                    href={imageLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={imageLink} target="_blank" rel="noopener noreferrer">
                     <Download className="w-4 h-4" />
                     Baixar visualização (PNG)
                   </a>
@@ -647,8 +642,8 @@ export default function PremiumContent({
                 )
               ) : (
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
-                  Integração com Mercado Pago em breve. Selecione &quot;Cartão&quot; para
-                  pagar com Stripe.
+                  Integração com Mercado Pago em breve. Selecione
+                  &quot;Cartão&quot; para pagar com Stripe.
                 </div>
               )}
 
@@ -788,7 +783,9 @@ function StripePaymentForm({
     try {
       const { error: submitError } = await elements.submit();
       if (submitError) {
-        onError(submitError.message ?? "Revise os dados do cartão e tente novamente.");
+        onError(
+          submitError.message ?? "Revise os dados do cartão e tente novamente."
+        );
         return;
       }
 

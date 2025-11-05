@@ -29,8 +29,9 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
   const [isAccessing, setIsAccessing] = useState(false);
   const [hasAccessed, setHasAccessed] = useState(false);
   const [previewError, setPreviewError] = useState(false);
-  const [checkoutResult, setCheckoutResult] =
-    useState<CheckoutSuccessPayload["data"] | null>(null);
+  const [checkoutResult, setCheckoutResult] = useState<
+    CheckoutSuccessPayload["data"] | null
+  >(null);
   const [customerInfo, setCustomerInfo] = useState<FreeCustomerInfo>({
     name: "",
     email: "",
@@ -39,6 +40,8 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
+
+  console.log("Product in FreeContent:", product);
 
   const contentReceived = [
     {
@@ -164,7 +167,8 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
                 Links de acesso
               </h4>
               <p className="text-sm text-white/60 mt-1">
-                Faça uma cópia para o seu Drive/Notion para preservar o conteúdo.
+                Faça uma cópia para o seu Drive/Notion para preservar o
+                conteúdo.
               </p>
             </div>
             <div className="space-y-3">
@@ -174,11 +178,7 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
                   className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-green-400/15 text-green-200 hover:bg-green-400/25"
                   variant="outline"
                 >
-                  <a
-                    href={driveLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={driveLink} target="_blank" rel="noopener noreferrer">
                     <FileSpreadsheet className="w-4 h-4" />
                     Abrir no Google Drive
                   </a>
@@ -214,11 +214,7 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
                   className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-white/10 text-white hover:bg-white/20"
                   variant="outline"
                 >
-                  <a
-                    href={imageLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={imageLink} target="_blank" rel="noopener noreferrer">
                     <Download className="w-4 h-4" />
                     Baixar visualização (PNG)
                   </a>

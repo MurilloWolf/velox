@@ -332,7 +332,11 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
                 <Badge
                   key={category}
                   variant="outline"
-                  className="text-xs text-white/70"
+                  className={`hover:bg-transparent ${
+                    currentPlan.isFree
+                      ? "bg-transparent  border-green-500  text-green-300"
+                      : "bg-transparent  border-amber-500  text-amber-300"
+                  }`}
                 >
                   {category}
                 </Badge>
