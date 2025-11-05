@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Product } from "@/types/products";
 import type { CheckoutSuccessPayload } from "@/types/purchases";
 import { checkoutPurchase, CheckoutError } from "@/services/purchases";
+import useAnalytics from "@/tracking/useAnalytics";
+import { AnalyticsActions } from "@/tracking/types";
 
 type FreeCustomerInfo = {
   name: string;
@@ -40,6 +42,7 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
+  const { trackEvent } = useAnalytics();
 
   console.log("Product in FreeContent:", product);
 
@@ -113,6 +116,19 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
         productId: product.id,
         buyerEmail: customerInfo.email.trim(),
         buyerName: customerInfo.name.trim(),
+      });
+
+      trackEvent({
+        action: AnalyticsActions.ACCESS_FREE_CONTENT,
+        targetType: "CHECKOUT_BUTTON",
+        targetId: product.id,
+        pagePath: `/coach`,
+        purchaseId: response.data.purchase.id,
+        props: {
+          email: customerInfo.email,
+          name: customerInfo.name,
+          productId: product.id,
+        },
       });
 
       setCheckoutResult(response.data);

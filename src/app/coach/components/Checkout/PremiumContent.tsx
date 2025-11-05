@@ -31,6 +31,8 @@ import type {
   CheckoutSuccessPayload,
   PaymentProvider,
 } from "@/types/purchases";
+import useAnalytics from "@/tracking/useAnalytics";
+import { AnalyticsActions } from "@/tracking/types";
 
 const STRIPE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
@@ -73,6 +75,7 @@ export default function PremiumContent({
   const [previewError, setPreviewError] = useState<boolean>(false);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
+  const { trackEvent } = useAnalytics();
 
   console.log("Product in PremiumContent:", product);
 
@@ -186,6 +189,14 @@ export default function PremiumContent({
     setShowConfirmation(false);
 
     try {
+      trackEvent({
+        action: AnalyticsActions.CHECKOUT_INTENT,
+        targetType: "CHECKOUT_BUTTON",
+        pagePath: "/coach",
+        props: {
+          paymentProvider: "stripe",
+        },
+      });
       const response = await checkoutPurchase({
         productId: product.id,
         buyerEmail: customerInfo.email.trim(),
@@ -224,6 +235,19 @@ export default function PremiumContent({
       onCancel?.();
       onProcessingChange?.(false);
     }
+  };
+
+  const handleSuccess = () => {
+    setShowConfirmation(true);
+    onProcessingChange?.(false);
+    trackEvent({
+      action: AnalyticsActions.CHECKOUT_COMPLETED,
+      targetType: "VIEW",
+      pagePath: "/coach",
+      props: {
+        paymentProvider: "stripe",
+      },
+    });
   };
 
   const handleInputChange = (field: keyof CustomerInfo, value: string) => {
@@ -369,7 +393,7 @@ export default function PremiumContent({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 max-w-6xl mx-auto px-4 py-6 sm:px-6 lg:p-8">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 max-w-6xl mx-auto px-0 md:px-4 py-6 sm:px-6 lg:p-8">
       <div className="space-y-4">
         {previewError ? (
           <div className="aspect-video bg-gradient-to-br from-black/40 via-[#000c5a]/20 to-black/60 rounded-3xl mb-4 flex items-center justify-center border border-white/10 backdrop-blur-xl shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)]">
@@ -606,10 +630,7 @@ export default function PremiumContent({
                       key={clientSecret}
                       clientSecret={clientSecret}
                       buyerEmail={customerInfo.email.trim()}
-                      onSuccess={() => {
-                        setShowConfirmation(true);
-                        onProcessingChange?.(false);
-                      }}
+                      onSuccess={handleSuccess}
                       onError={(message) => setErrorMessage(message)}
                       isProcessing={isProcessing}
                       setIsProcessing={setIsProcessing}
@@ -646,7 +667,11 @@ export default function PremiumContent({
                   &quot;Cartão&quot; para pagar com Stripe.
                 </div>
               )}
-
+              {errorMessage ? (
+                <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
+                  {errorMessage}
+                </div>
+              ) : null}
               <Button
                 onClick={handleCancel}
                 disabled={isProcessing}
@@ -656,12 +681,6 @@ export default function PremiumContent({
                 <X className="w-4 h-4 mr-2" />
                 Cancelar
               </Button>
-
-              {errorMessage ? (
-                <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
-                  {errorMessage}
-                </div>
-              ) : null}
 
               <div className="flex items-center justify-center gap-2 text-xs text-white/50 mt-6">
                 <Shield className="w-4 h-4 text-[#d5fe46]" />
@@ -728,7 +747,7 @@ function StripePaymentSection({
           theme: "night",
           variables: {
             colorPrimary: "#d5fe46",
-            colorBackground: "#050714",
+            colorBackground: "#000000",
             colorText: "#f8fafc",
           },
         },
@@ -826,7 +845,7 @@ function StripePaymentForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="rounded-xl border border-white/10 bg-black/40 p-4">
+      <div className="py-6 gap-2">
         <PaymentElement options={{ layout: "tabs" }} />
       </div>
       <Button
