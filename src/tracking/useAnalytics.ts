@@ -32,7 +32,12 @@ export interface TrackEventParams {
   userAgent?: string;
   isMobile?: boolean;
   // Additional information about the event
-  props?: Record<string, string>;
+
+  props?: Record<
+    string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    string | Record<string, any> | number | boolean | null
+  >;
 
   // Relations
   purchaseId?: string;
@@ -53,6 +58,7 @@ export default function useAnalytics() {
           sessionId,
           deviceId,
         });
+        return;
       }
 
       sendTrackEvent({
