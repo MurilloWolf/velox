@@ -3,8 +3,14 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { X, MapPin, Clock, ExternalLink, Calendar } from "lucide-react";
+import { MapPin, Clock, ExternalLink, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import useAnalytics from "@/tracking/useAnalytics";
 import { AnalyticsActions } from "@/tracking/types";
 import type { Event } from "../types";
@@ -21,17 +27,6 @@ export default function EventDetailsModal({
   event,
 }: EventDetailsModalProps) {
   const { trackEvent } = useAnalytics();
-
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
 
   useEffect(() => {
     if (isOpen && event) {
@@ -80,7 +75,7 @@ export default function EventDetailsModal({
     }
   };
 
-  if (!isOpen || !event) return null;
+  if (!event) return null;
 
   const normalizeDate = (date: Date) =>
     new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -100,112 +95,139 @@ export default function EventDetailsModal({
   )}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        className="absolute inset-0 bg-gradient-to-br from-black/90 via-black/80 to-black/85 backdrop-blur"
-        onClick={onClose}
-      />
-      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200">
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#d5fe46]/10 rounded-full blur-[100px] pointer-events-none" />
-        <div className="relative rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl overflow-hidden">
-          <div className="relative border-b border-white/10 px-8 py-6">
-            <div className="flex items-start justify-between gap-6">
-              <div className="flex-1 space-y-2">
-                <h2 className="text-3xl font-bold text-white text-balance leading-tight">
-                  {event.title}
-                </h2>
-                <div className="flex items-center gap-2 text-sm text-white/60">
-                  <Calendar className="h-4 w-4" />
-                  <span className="capitalize">{formattedDate}</span>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-6xl min-w-3xl w-full max-h-[90vh] overflow-hidden p-0 bg-gradient-to-br from-black via-black/60 to-black/80 border-white/10 text-white">
+        <div className="flex flex-col lg:flex-row h-full">
+          {/* Lado esquerdo - Imagem */}
+          <div className="lg:w-1/2 relative">
+            {event.promoImageUrl ? (
+              <div className="relative h-64 lg:h-full">
+                <Image
+                  src={event.promoImageUrl}
+                  alt={`Imagem promocional - ${event.title}`}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="flex items-center gap-2 text-sm text-white/90 mb-2">
+                    <Calendar className="h-4 w-4" />
+                    <span className="capitalize">{formattedDate}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-white/90">
+                    <Clock className="h-4 w-4" />
+                    <span>{event.time}</span>
+                  </div>
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="shrink-0 text-white/60 hover:text-white hover:bg-white/10 rounded-lg"
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
+            ) : (
+              <div className="h-64 lg:h-full bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center">
+                <div className="text-center text-white/50">
+                  <Calendar className="h-16 w-16 mx-auto mb-4" />
+                  <p>Sem imagem disponível</p>
+                </div>
+              </div>
+            )}
           </div>
-          {event.promoImageUrl && (
-            <div className="relative border-b border-white/10">
-              <Image
-                src={event.promoImageUrl}
-                alt={`Imagem promocional - ${event.title}`}
-                width={800}
-                height={400}
-                className="w-full h-48 object-cover"
-                priority
-              />
-            </div>
-          )}
-          <div className="max-h-[calc(90vh-140px)] overflow-y-auto px-8 py-6">
-            <div className="space-y-6">
-              <div className="grid gap-4 sm:grid-cols-6">
-                <div className="col-span-2 rounded-xl border border-white/10 bg-white/5 p-5 transition-colors hover:bg-white/[0.07]">
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-lg bg-[#d5fe46]/10 p-2.5">
-                      <Clock className="h-5 w-5 text-[#d5fe46]" />
+
+          {/* Lado direito - Informações */}
+          <div className="lg:w-1/2  flex flex-col">
+            <DialogHeader className="border-b border-white/10 px-6 py-4">
+              <DialogTitle className="text-2xl font-bold text-white text-left">
+                {event.title}
+              </DialogTitle>
+            </DialogHeader>
+
+            <div className="flex-1 overflow-y-auto px-6 py-6">
+              <div className="space-y-6">
+                {/* Cards de informações principais */}
+                <div className="grid gap-4">
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/[0.07]">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-lg bg-[#d5fe46]/10 p-2.5">
+                        <Clock className="h-5 w-5 text-[#d5fe46]" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/50 mb-0.5">Horário</p>
+                        <p className="text-lg font-semibold text-white">
+                          {event.time}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs text-white/50 mb-0.5">Horário</p>
-                      <p className="text-lg font-semibold text-white">
-                        {event.time}
-                      </p>
+                  </div>
+
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/[0.07]">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-lg bg-cyan-500/10 p-2.5">
+                        <MapPin className="h-5 w-5 text-cyan-400" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs text-white/50 mb-0.5">Local</p>
+                        <Link
+                          href={mapsUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={handleLocationClick}
+                          className="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors group"
+                        >
+                          <span className="truncate">{event.location}</span>
+                          <ExternalLink className="h-3.5 w-3.5 shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4 transition-colors hover:bg-white/[0.07]">
+                    <div className="flex items-center gap-3">
+                      <div className="rounded-lg bg-white/10 p-2.5">
+                        <Calendar className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/50 mb-0.5">Data</p>
+                        <p className="text-sm font-semibold text-white capitalize">
+                          {formattedDate}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="col-span-4 rounded-xl border border-white/10 bg-white/5 p-5 transition-colors hover:bg-white/[0.07]">
-                  <div className="flex items-center gap-3">
-                    <div className="rounded-lg bg-cyan-500/10 p-2.5">
-                      <MapPin className="h-5 w-5 text-cyan-400" />
-                    </div>
-                    <div className="min-w-0 flex-1 truncate">
-                      <p className="text-xs text-white/50 mb-0.5">Local</p>
-                      <Link
-                        href={mapsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={handleLocationClick}
-                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors group"
-                      >
-                        <span className="">{event.location}</span>
-                        <ExternalLink className="h-3.5 w-3.5 shrink-0 group-hover:translate-x-0.5 transition-transform" />
-                      </Link>
+
+                {/* Distâncias disponíveis */}
+                {event.distances && event.distances.length > 0 && (
+                  <div className="space-y-3">
+                    <p className="text-xs uppercase tracking-wider text-white/50 font-medium">
+                      Distâncias Disponíveis
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {event.distances.map((distance, index) => (
+                        <span
+                          key={`${event.id}-distance-${index}`}
+                          className="rounded-lg border border-[#d5fe46]/30 bg-[#d5fe46]/10 px-3 py-1.5 text-sm font-semibold text-[#d5fe46] transition-colors hover:border-[#d5fe46]/50 hover:bg-[#d5fe46]/15"
+                        >
+                          {distance}
+                        </span>
+                      ))}
                     </div>
                   </div>
-                </div>
-              </div>
-              {event.distances && event.distances.length > 0 && (
+                )}
+
+                {/* Descrição do evento */}
                 <div className="space-y-3">
                   <p className="text-xs uppercase tracking-wider text-white/50 font-medium">
-                    Distâncias Disponíveis
+                    Sobre o Evento
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    {event.distances.map((distance, index) => (
-                      <span
-                        key={`${event.id}-distance-${index}`}
-                        className="rounded-lg border border-[#d5fe46]/30 bg-[#d5fe46]/10 px-4 py-2 text-sm font-semibold text-[#d5fe46] transition-colors hover:border-[#d5fe46]/50 hover:bg-[#d5fe46]/15"
-                      >
-                        {distance}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="text-sm leading-relaxed text-white/70">
+                    {event.description}
+                  </p>
                 </div>
-              )}
-              <div className="space-y-3">
-                <p className="text-xs uppercase tracking-wider text-white/50 font-medium">
-                  Sobre o Evento
-                </p>
-                <p className="text-sm leading-relaxed text-white/70">
-                  {event.description}
-                </p>
               </div>
+            </div>
 
+            {/* Footer com botão de inscrição */}
+            <div className="border-t border-white/10 px-6 py-4">
               {event.link && (
-                <div className="pt-2">
+                <>
                   {registrationClosed ? (
                     <Button
                       disabled
@@ -230,12 +252,12 @@ export default function EventDetailsModal({
                       </Link>
                     </Button>
                   )}
-                </div>
+                </>
               )}
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
