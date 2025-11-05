@@ -25,16 +25,15 @@ export default function Header() {
   };
 
   const navItems: readonly NavItem[] = [
-    { label: "Recursos", href: "/#recursos", scrollTarget: "#recursos" },
-    { label: "Corridas", href: "/calendar" },
+    { label: "Plataforma", href: "/#recursos", scrollTarget: "#recursos" },
+    { label: "Calendário", href: "/calendar" },
     { label: "Bot", href: "/info" },
     { label: "Patrocínio", href: "/sponsors" },
-    { label: "FAQ", href: "/faq" },
     { label: "Contato", href: "/#contato", scrollTarget: "#contato" },
   ] as const;
 
   const handleSmoothNavigation = (
-    event: MouseEvent<HTMLAnchorElement>,
+    event: MouseEvent<HTMLElement>,
     href: string
   ) => {
     trackEvent({
@@ -70,7 +69,7 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full  bg-[#121212] backdrop-blur supports-[backdrop-filter]:bg-[#000]/90">
+    <header className="sticky top-0 z-50 w-full  bg-black backdrop-blur supports-[backdrop-filter]:bg-white/4">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -94,19 +93,21 @@ export default function Header() {
                   : pathname === item.href;
 
                 return (
-                  <li key={item.label} className="list-none">
-                    <Link
-                      href={item.href}
-                      onClick={(event) =>
-                        item.scrollTarget
-                          ? handleSmoothNavigation(event, item.scrollTarget)
-                          : undefined
-                      }
-                      className="transition-colors text-white hover:text-[#d5fe46]"
+                  <li
+                    onClick={(event) =>
+                      item.scrollTarget
+                        ? handleSmoothNavigation(event, item.scrollTarget)
+                        : undefined
+                    }
+                    key={item.label}
+                    className="list-none group hover:bg-[#d5fe46]/50 text-md px-4 py-2 rounded-md hover:rotate-2 cursor-pointer"
+                  >
+                    <p
+                      className="transition-colors text-white font-bold"
                       aria-current={isActive ? "page" : undefined}
                     >
                       {item.label}
-                    </Link>
+                    </p>
                   </li>
                 );
               })}
@@ -117,9 +118,9 @@ export default function Header() {
             onClick={handleTelegramClick}
             size="sm"
             aria-label="VELOX BOT Telegram"
-            className=" text-black bg-[#d5fe46] hover:bg-[#d5fe46]/100 hover:opacity-80  cursor-pointer uppercase font-semibold"
+            className="text-black bg-[#d5fe46] hover:bg-[#e0ff55] hover:rotate-2 hover:shadow-[0_0_20px_rgba(213,254,70,0.6)] hover:[text-shadow:_0_0_8px_rgba(0,0,0,0.3)] cursor-pointer uppercase font-semibold transition-all group"
           >
-            <Send className=" h-4 w-4" />
+            <Send className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:rotate-12" />
             Telegram
           </Button>
         </div>
