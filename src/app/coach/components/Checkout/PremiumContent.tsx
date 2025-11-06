@@ -33,6 +33,7 @@ import type {
 } from "@/types/purchases";
 import useAnalytics from "@/tracking/useAnalytics";
 import { AnalyticsActions } from "@/tracking/types";
+import { Badge } from "@/components/ui";
 
 const STRIPE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
@@ -357,11 +358,14 @@ export default function PremiumContent({
             {resolvedProduct.imageLink && !previewError ? (
               <div className="relative rounded-2xl overflow-hidden border border-white/10">
                 <Image
-                  src={resolvedProduct.imageLink}
+                  src={resolvedProduct.imageLink.replace(
+                    "originals",
+                    "previews"
+                  )}
                   alt={resolvedProduct.title}
                   width={560}
                   height={360}
-                  className="w-full h-auto object-cover"
+                  className="w-full h-auto object-cover max-h-[450px]"
                   onError={() => setPreviewError(true)}
                 />
               </div>
@@ -406,13 +410,16 @@ export default function PremiumContent({
           </div>
         ) : (
           <div className="relative rounded-3xl overflow-hidden backdrop-blur-xl border border-white/5 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)]">
+            <Badge className="absolute top-4 left-4 z-10 bg-black/60 text-[#d5fe46] border border-[#d5fe46]/30 backdrop-blur-sm">
+              Preview
+            </Badge>
             <Image
-              src={""}
+              src={product.imageLink.replace("originals", "previews")}
               alt="preview planilha de treino"
               width={600}
               height={400}
               sizes="(max-width: 1024px) 100vw, 600px"
-              className="w-full h-auto rounded-3xl"
+              className="w-full h-auto rounded-3xl max-h-[450px] object-cover"
               onError={() => setPreviewError(true)}
             />
           </div>
