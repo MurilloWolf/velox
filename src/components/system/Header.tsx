@@ -76,6 +76,15 @@ export default function Header() {
     window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
   };
 
+  const handleLinkClick = (href: string) => {
+    trackEvent({
+      targetType: "LINK",
+      action: AnalyticsActions.BUTTON_CLICK,
+      pagePath: window.location.pathname,
+      targetId: `HEADER_NAVIGATION:${href}`,
+    });
+  };
+
   const MobileNavigation = () => (
     <Sheet>
       <SheetTrigger asChild>
@@ -113,11 +122,13 @@ export default function Header() {
               <SheetClose asChild key={item.label}>
                 <Link
                   href={item.href}
-                  onClick={(event) =>
-                    item.scrollTarget
-                      ? handleSmoothNavigation(event, item.scrollTarget)
-                      : undefined
-                  }
+                  onClick={(event) => {
+                    if (item.scrollTarget) {
+                      handleSmoothNavigation(event, item.scrollTarget);
+                    } else {
+                      handleLinkClick(item.href);
+                    }
+                  }}
                   className={`
                     flex items-center px-4 py-3 rounded-lg text-white font-medium 
                     transition-all duration-200 hover:bg-[#d5fe46]/20 hover:text-[#d5fe46]
@@ -179,21 +190,31 @@ export default function Header() {
                 const isActive = !item.scrollTarget && pathname === item.href;
 
                 return (
-                  <li
-                    onClick={(event) =>
-                      item.scrollTarget
-                        ? handleSmoothNavigation(event, item.scrollTarget)
-                        : undefined
-                    }
-                    key={item.label}
-                    className="list-none group hover:bg-[#d5fe46]/50 text-md px-4 py-2 rounded-md hover:rotate-2 cursor-pointer"
-                  >
-                    <p
-                      className="transition-colors text-white font-bold"
-                      aria-current={isActive ? "page" : undefined}
-                    >
-                      {item.label}
-                    </p>
+                  <li key={item.label} className="list-none">
+                    {item.scrollTarget ? (
+                      <button
+                        onClick={(event) =>
+                          handleSmoothNavigation(event, item.scrollTarget!)
+                        }
+                        className="group hover:bg-[#d5fe46]/50 text-md px-4 py-2 rounded-md hover:rotate-2 cursor-pointer transition-colors text-white font-bold"
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        {item.label}
+                      </button>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        onClick={() => handleLinkClick(item.href)}
+                        className={`
+                          group hover:bg-[#d5fe46]/50 text-md px-4 py-2 rounded-md hover:rotate-2 cursor-pointer 
+                          transition-colors text-white font-bold block
+                          ${isActive ? "text-[#d5fe46]" : ""}
+                        `}
+                        aria-current={isActive ? "page" : undefined}
+                      >
+                        {item.label}
+                      </Link>
+                    )}
                   </li>
                 );
               })}
