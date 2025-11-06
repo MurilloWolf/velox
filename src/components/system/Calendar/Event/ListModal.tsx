@@ -84,7 +84,7 @@ export default function EventListModal({
                       </h3>
                     </div>
                     <p className="line-clamp-3 text-sm leading-relaxed text-white/70">
-                      {event.description}
+                      {event.organization}
                     </p>
                   </div>
                 </div>
