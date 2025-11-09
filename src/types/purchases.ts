@@ -26,6 +26,7 @@ export interface Purchase {
   createdAt: string;
   paidAt?: string | null;
   product: Product;
+  deliveryLink?: string | null;
 }
 
 export interface CheckoutRequestPayload {

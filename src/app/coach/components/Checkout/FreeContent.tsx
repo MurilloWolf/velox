@@ -54,12 +54,12 @@ export default function FreeContent({
 
   const contentReceived = [
     {
-      title: "Planilha completa",
-      description: "Organizada por semanas, com treinos distribuídos",
+      title: "Conteúdo completo",
+      description: "Todo o material organizado e pronto para uso",
     },
     {
-      title: "Formatos acessíveis",
-      description: "Disponível no Google Sheets e Notion",
+      title: "Formato acessível",
+      description: "Disponível em formato digital otimizado",
     },
     {
       title: "Atualizações vitalícias",
@@ -68,8 +68,8 @@ export default function FreeContent({
   ];
 
   const howToReceive = [
-    { method: "Links abrem em novas abas automaticamente", icon: ExternalLink },
-    { method: "Faça uma cópia para o seu drive/notion", icon: Download },
+    { method: "Link abre automaticamente em nova aba", icon: ExternalLink },
+    { method: "Faça download ou cópia do material", icon: Download },
     { method: "Salve o email para contato se precisar de suporte", icon: Mail },
   ];
 
@@ -161,8 +161,7 @@ export default function FreeContent({
     const resolvedProduct = checkoutResult?.purchase.product ?? product;
     const buyerEmail =
       checkoutResult?.purchase.buyerEmail ?? customerInfo.email;
-    const driveLink = resolvedProduct.driveLink;
-    const notionLink = resolvedProduct.notionLink;
+    const deliveryLink = checkoutResult?.purchase.deliveryLink;
     const imageLink = resolvedProduct.imageLink;
 
     return (
@@ -188,48 +187,31 @@ export default function FreeContent({
             <div>
               <h4 className="text-lg font-semibold text-white flex items-center gap-2">
                 <ExternalLink className="w-5 h-5 text-green-300" />
-                Links de acesso
+                Link de acesso
               </h4>
               <p className="text-sm text-white/60 mt-1">
-                Faça uma cópia para o seu Drive/Notion para preservar o
-                conteúdo.
+                Acesse o conteúdo completo através do link de entrega.
               </p>
             </div>
             <div className="space-y-3">
-              {driveLink ? (
+              {deliveryLink ? (
                 <Button
                   asChild
                   className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-green-400/15 text-green-200 hover:bg-green-400/25"
                   variant="outline"
                 >
-                  <a href={driveLink} target="_blank" rel="noopener noreferrer">
-                    <FileSpreadsheet className="w-4 h-4" />
-                    Abrir no Google Drive
-                  </a>
-                </Button>
-              ) : (
-                <p className="text-sm text-white/50">
-                  Link do Google Drive não disponível.
-                </p>
-              )}
-              {notionLink ? (
-                <Button
-                  asChild
-                  className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-cyan-400/10 text-cyan-100 hover:bg-cyan-400/20"
-                  variant="outline"
-                >
                   <a
-                    href={notionLink}
+                    href={deliveryLink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <ExternalLink className="w-4 h-4" />
-                    Abrir no Notion
+                    <FileSpreadsheet className="w-4 h-4" />
+                    Acessar conteúdo
                   </a>
                 </Button>
               ) : (
                 <p className="text-sm text-white/50">
-                  Link do Notion não disponível.
+                  Link de entrega não disponível.
                 </p>
               )}
               {imageLink ? (

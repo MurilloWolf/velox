@@ -2,8 +2,6 @@ export interface Product {
   id: string;
   title: string;
   subtitle: string;
-  driveLink: string;
-  notionLink: string;
   imageLink: string;
   priceCents: number;
   currency: string;

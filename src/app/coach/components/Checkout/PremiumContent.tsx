@@ -91,12 +91,8 @@ export default function PremiumContent({
 
   const contentReceived = [
     {
-      title: "Planilha de Treino Personalizada",
-      description: "Google Sheets com macros e fórmulas avançadas",
-    },
-    {
-      title: "Planilha para o Notion",
-      description: "Uma outra opção caso prefira usar o Notion",
+      title: "Conteúdo Completo",
+      description: "Todo o material prometido em formato digital",
     },
     {
       title: "Acesso Vitalício",
@@ -107,7 +103,7 @@ export default function PremiumContent({
       description: "Suporte dedicado para dúvidas e assistência",
     },
     {
-      title: "PNG da Planilha",
+      title: "Visualização em PNG",
       description: "PNG da planilha para fácil acesso no celular",
     },
   ];
@@ -266,8 +262,7 @@ export default function PremiumContent({
     const resolvedProduct = checkoutResult?.purchase.product ?? product;
     const buyerEmail =
       checkoutResult?.purchase.buyerEmail ?? customerInfo.email;
-    const driveLink = resolvedProduct.driveLink;
-    const notionLink = resolvedProduct.notionLink;
+    const deliveryLink = checkoutResult?.purchase.deliveryLink;
     const imageLink = resolvedProduct.imageLink;
 
     return (
@@ -293,47 +288,31 @@ export default function PremiumContent({
             <div>
               <h4 className="text-lg font-semibold text-white flex items-center gap-2">
                 <ExternalLink className="w-5 h-5 text-[#d5fe46]" />
-                Seus links exclusivos
+                Seu conteúdo exclusivo
               </h4>
               <p className="text-sm text-white/60 mt-1">
-                Recomendamos criar uma cópia para garantir o acesso futuro.
+                Acesse o material completo através do link de entrega.
               </p>
             </div>
             <div className="space-y-3">
-              {driveLink ? (
+              {deliveryLink ? (
                 <Button
                   asChild
                   className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-[#d5fe46]/15 text-[#d5fe46] hover:bg-[#d5fe46]/25"
                   variant="outline"
                 >
-                  <a href={driveLink} target="_blank" rel="noopener noreferrer">
-                    <FileSpreadsheet className="w-4 h-4" />
-                    Planilha no Google Drive
-                  </a>
-                </Button>
-              ) : (
-                <p className="text-sm text-white/50">
-                  Link do Google Drive não disponível.
-                </p>
-              )}
-              {notionLink ? (
-                <Button
-                  asChild
-                  className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-white/10 text-white hover:bg-white/20"
-                  variant="outline"
-                >
                   <a
-                    href={notionLink}
+                    href={deliveryLink}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <ExternalLink className="w-4 h-4" />
-                    Template no Notion
+                    <FileSpreadsheet className="w-4 h-4" />
+                    Acessar conteúdo
                   </a>
                 </Button>
               ) : (
                 <p className="text-sm text-white/50">
-                  Link do Notion não disponível.
+                  Link de entrega não disponível.
                 </p>
               )}
               {imageLink ? (

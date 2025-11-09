@@ -11,8 +11,6 @@ const buildProductSummary = (product: Product): Product => ({
   id: product.id,
   title: product.title,
   subtitle: product.subtitle,
-  driveLink: product.driveLink,
-  notionLink: product.notionLink,
   imageLink: product.imageLink,
   priceCents: product.priceCents,
   currency: product.currency,
