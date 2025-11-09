@@ -17,6 +17,7 @@ import { checkoutPurchase, CheckoutError } from "@/services/purchases";
 import useAnalytics from "@/tracking/useAnalytics";
 import { AnalyticsActions } from "@/tracking/types";
 import { getProductPreviewUrl, getProductDownloadUrl } from "@/lib/imageUtils";
+import { generatePurchaseSuccessUrl } from "@/lib/purchaseUtils";
 
 type FreeCustomerInfo = {
   name: string;
@@ -140,6 +141,15 @@ export default function FreeContent({
 
       setCheckoutResult(response.data);
       setHasAccessed(true);
+
+      setTimeout(() => {
+        const successUrl = generatePurchaseSuccessUrl({
+          purchaseId: response.data.purchase.id,
+          productName: response.data.purchase.product.title,
+          buyerEmail: response.data.purchase.buyerEmail || customerInfo.email,
+        });
+        window.location.href = successUrl;
+      }, 1500);
     } catch (error) {
       console.error("Erro ao acessar conteúdo:", error);
       if (error instanceof CheckoutError) {

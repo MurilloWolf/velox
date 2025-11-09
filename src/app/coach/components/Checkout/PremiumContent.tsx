@@ -35,6 +35,7 @@ import useAnalytics from "@/tracking/useAnalytics";
 import { AnalyticsActions } from "@/tracking/types";
 import { Badge } from "@/components/ui";
 import { getProductPreviewUrl, getProductDownloadUrl } from "@/lib/imageUtils";
+import { generatePurchaseSuccessUrl } from "@/lib/purchaseUtils";
 
 const STRIPE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
@@ -242,10 +243,23 @@ export default function PremiumContent({
       action: AnalyticsActions.CHECKOUT_COMPLETED,
       targetType: "VIEW",
       pagePath: "/coach",
+      purchaseId: checkoutResult?.purchase.id,
       props: {
-        paymentProvider: "stripe",
+        productId: product.id,
+        email: customerInfo.email,
       },
     });
+
+    if (checkoutResult?.purchase) {
+      setTimeout(() => {
+        const successUrl = generatePurchaseSuccessUrl({
+          purchaseId: checkoutResult.purchase.id,
+          productName: checkoutResult.purchase.product.title,
+          buyerEmail: checkoutResult.purchase.buyerEmail || customerInfo.email,
+        });
+        window.location.href = successUrl;
+      }, 2000);
+    }
   };
 
   const handleInputChange = (field: keyof CustomerInfo, value: string) => {
