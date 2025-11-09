@@ -45,17 +45,12 @@ export default function Header() {
     scrollTarget?: string
   ) => {
     trackNavigationClick("header", href.replace(/^\//, "").replace("#", ""));
-    
-    // Se tem scrollTarget e estamos na home, faz scroll suave
+
     if (scrollTarget && window.location.pathname === "/") {
       event.preventDefault();
       scrollTo(scrollTarget);
       return;
     }
-    
-    // Senão, deixa o Next.js navegar normalmente
-    // Se tem scrollTarget, ele vai para a URL com hash (ex: /#recursos)
-    // Se não tem, vai para a URL normal (ex: /calendar)
   };
 
   const handleTelegramClick = () => {
@@ -95,7 +90,6 @@ export default function Header() {
             />
           </SheetTitle>
         </SheetHeader>
-
         <nav className="flex flex-col gap-4 p-4">
           {navItems.map((item) => {
             const isActive = !item.scrollTarget && pathname === item.href;
@@ -123,7 +117,6 @@ export default function Header() {
               </SheetClose>
             );
           })}
-
           <div className="mt-8 pt-6 border-t border-gray-800">
             <SheetClose asChild>
               <Button
@@ -147,7 +140,6 @@ export default function Header() {
           <div className="md:hidden">
             <MobileNavigation />
           </div>
-
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="https://velox-images-bucket.s3.sa-east-1.amazonaws.com/public/velox-transparent.png"
@@ -158,7 +150,6 @@ export default function Header() {
               onClick={(event) => handleSmoothNavigation(event, "/")}
             />
           </Link>
-
           <nav
             className="hidden md:flex items-center gap-6 text-white"
             aria-label="Navegação principal"
@@ -172,7 +163,11 @@ export default function Header() {
                     <Link
                       href={item.href}
                       onClick={(event) =>
-                        handleSmoothNavigation(event, item.href, item.scrollTarget)
+                        handleSmoothNavigation(
+                          event,
+                          item.href,
+                          item.scrollTarget
+                        )
                       }
                       className={`
                         group hover:bg-[#d5fe46]/50 text-md px-4 py-2 rounded-md hover:rotate-2 cursor-pointer 
@@ -188,8 +183,6 @@ export default function Header() {
               })}
             </ul>
           </nav>
-
-          {/* Telegram Button */}
           <Button
             onClick={handleTelegramClick}
             size="sm"
