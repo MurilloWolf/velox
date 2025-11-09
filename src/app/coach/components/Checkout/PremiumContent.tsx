@@ -34,6 +34,7 @@ import type {
 import useAnalytics from "@/tracking/useAnalytics";
 import { AnalyticsActions } from "@/tracking/types";
 import { Badge } from "@/components/ui";
+import { getProductPreviewUrl, getProductDownloadUrl } from "@/lib/imageUtils";
 
 const STRIPE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
@@ -341,7 +342,11 @@ export default function PremiumContent({
                   className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-[#f05a24]/15 text-[#f6ff8d] hover:bg-[#f05a24]/20"
                   variant="outline"
                 >
-                  <a href={imageLink} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={getProductDownloadUrl(imageLink)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Download className="w-4 h-4" />
                     Baixar visualização (PNG)
                   </a>
@@ -358,10 +363,7 @@ export default function PremiumContent({
             {resolvedProduct.imageLink && !previewError ? (
               <div className="relative rounded-2xl overflow-hidden border border-white/10">
                 <Image
-                  src={resolvedProduct.imageLink.replace(
-                    "originals",
-                    "previews"
-                  )}
+                  src={getProductPreviewUrl(resolvedProduct.imageLink)}
                   alt={resolvedProduct.title}
                   width={560}
                   height={360}
@@ -414,7 +416,7 @@ export default function PremiumContent({
               Preview
             </Badge>
             <Image
-              src={product.imageLink.replace("originals", "previews")}
+              src={getProductPreviewUrl(product.imageLink)}
               alt="preview planilha de treino"
               width={600}
               height={400}

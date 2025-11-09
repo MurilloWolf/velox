@@ -16,6 +16,7 @@ import type { CheckoutSuccessPayload } from "@/types/purchases";
 import { checkoutPurchase, CheckoutError } from "@/services/purchases";
 import useAnalytics from "@/tracking/useAnalytics";
 import { AnalyticsActions } from "@/tracking/types";
+import { getProductPreviewUrl, getProductDownloadUrl } from "@/lib/imageUtils";
 
 type FreeCustomerInfo = {
   name: string;
@@ -230,7 +231,11 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
                   className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-white/10 text-white hover:bg-white/20"
                   variant="outline"
                 >
-                  <a href={imageLink} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={getProductDownloadUrl(imageLink)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Download className="w-4 h-4" />
                     Baixar visualização (PNG)
                   </a>
@@ -247,7 +252,7 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
             {resolvedProduct.imageLink && !previewError ? (
               <div className="relative rounded-2xl overflow-hidden border border-white/10">
                 <Image
-                  src={resolvedProduct.imageLink}
+                  src={getProductPreviewUrl(resolvedProduct.imageLink)}
                   alt={resolvedProduct.title}
                   width={560}
                   height={360}
@@ -288,7 +293,7 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
         {product.imageLink && !previewError ? (
           <div className="relative rounded-3xl overflow-hidden backdrop-blur-xl shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)] border border-white/5">
             <Image
-              src={product.imageLink}
+              src={getProductPreviewUrl(product.imageLink)}
               alt={product.title}
               width={640}
               height={400}

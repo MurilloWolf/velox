@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui";
 import { cn } from "@/lib/utils";
+import PurchaseProtection from "@/components/system/PurchaseProtection";
 
 type PurchaseDialogSize = "default" | "compact" | "large";
 
@@ -23,6 +24,7 @@ interface PurchaseDialogProps {
   bodyClassName?: string;
   size?: PurchaseDialogSize;
   blockClose?: boolean;
+  isPurchaseInProgress?: boolean;
 }
 
 export default function PurchaseDialog({
@@ -36,6 +38,7 @@ export default function PurchaseDialog({
   bodyClassName,
   size = "default",
   blockClose = false,
+  isPurchaseInProgress = false,
 }: PurchaseDialogProps) {
   const sizeClasses = {
     compact: "sm:max-w-lg p-2 py-6 sm:px-5 sm:py-6",
@@ -43,8 +46,10 @@ export default function PurchaseDialog({
     large: "sm:max-w-5xl p-2 py-6 sm:px-6 sm:py-6",
   }[size];
 
+  const shouldBlockClose = blockClose || isPurchaseInProgress;
+
   useEffect(() => {
-    if (!blockClose) return;
+    if (!shouldBlockClose) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -54,52 +59,60 @@ export default function PurchaseDialog({
     };
 
     document.addEventListener("keydown", handleKeyDown, true);
+
     return () => {
       document.removeEventListener("keydown", handleKeyDown, true);
     };
-  }, [blockClose]);
+  }, [shouldBlockClose]);
 
   const handleOpenChange = (newOpen: boolean) => {
-    if (blockClose && !newOpen) {
+    if (shouldBlockClose && !newOpen) {
       return;
     }
     onOpenChange(newOpen);
   };
 
+  console.log("isPurchaseInProgress:", isPurchaseInProgress);
+
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent
-        className={cn(
-          "glass-scrollbar max-h-[85vh] w-full overflow-y-auto overflow-x-hidden border-none bg-black/75  text-slate-100",
-          sizeClasses,
-          contentClassName
-        )}
-        onPointerDownOutside={(e) => {
-          if (blockClose) {
-            e.preventDefault();
-          }
-        }}
-        onInteractOutside={(e) => {
-          if (blockClose) {
-            e.preventDefault();
-          }
-        }}
-      >
-        <DialogHeader>
-          {title ? (
-            <DialogTitle className="text-3xl font-bold">{title}</DialogTitle>
-          ) : null}
-          {description ? (
-            <DialogDescription className="text-slate-300">
-              {description}
-            </DialogDescription>
-          ) : null}
-        </DialogHeader>
-        <div className={cn("space-y-6", bodyClassName)}>
-          {metadata}
-          {children}
-        </div>
-      </DialogContent>
-    </Dialog>
+    <>
+      <PurchaseProtection isActive={isPurchaseInProgress} />
+
+      <Dialog open={open} onOpenChange={handleOpenChange}>
+        <DialogContent
+          className={cn(
+            "glass-scrollbar max-h-[85vh] w-full overflow-y-auto overflow-x-hidden border-none bg-black/75  text-slate-100",
+            sizeClasses,
+            contentClassName
+          )}
+          showCloseButton={!shouldBlockClose}
+          onPointerDownOutside={(e) => {
+            if (shouldBlockClose) {
+              e.preventDefault();
+            }
+          }}
+          onInteractOutside={(e) => {
+            if (shouldBlockClose) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <DialogHeader>
+            {title ? (
+              <DialogTitle className="text-3xl font-bold">{title}</DialogTitle>
+            ) : null}
+            {description ? (
+              <DialogDescription className="text-slate-300">
+                {description}
+              </DialogDescription>
+            ) : null}
+          </DialogHeader>
+          <div className={cn("space-y-6", bodyClassName)}>
+            {metadata}
+            {children}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
