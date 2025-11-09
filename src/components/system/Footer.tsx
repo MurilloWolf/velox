@@ -2,30 +2,18 @@
 import { Heart, Github, Twitter, Instagram } from "lucide-react";
 import Image from "next/image";
 import useAnalytics from "@/tracking/useAnalytics";
-import { AnalyticsActions } from "@/tracking/types";
 
 export default function Footer() {
-  const { trackEvent } = useAnalytics();
+  const { trackSocialClick, trackNavigationClick } = useAnalytics();
 
-  const handleTrackClick = (
-    href: string,
-    targetType: string = "EXTERNAL_LINK"
-  ) => {
-    trackEvent({
-      action: AnalyticsActions.BUTTON_CLICK,
-      targetType: targetType,
-      targetId: "FOOTER:" + href,
-      pagePath: window.location.pathname,
-    });
-  };
-
-  const handleExternalLinkClick = (href: string, destiny: string) => {
-    handleTrackClick(destiny, "EXTERNAL_LINK");
+  const handleExternalLinkClick = (href: string, platform: string) => {
+    trackSocialClick(platform.toLowerCase());
     window.open(href, "_blank", "noopener,noreferrer");
   };
 
   const handleInternalLinkClick = (href: string) => {
-    handleTrackClick(href, "LINK");
+    const slug = href.replace(/^\//, "").replace("#", "");
+    trackNavigationClick("footer", slug);
     window.location.href = href;
   };
 
@@ -53,7 +41,7 @@ export default function Footer() {
                 onClick={() =>
                   handleExternalLinkClick(
                     "https://github.com/MurilloWolf",
-                    "GITHUB"
+                    "github"
                   )
                 }
                 aria-label="GitHub do VELOX"
@@ -65,7 +53,7 @@ export default function Footer() {
                 onClick={() =>
                   handleExternalLinkClick(
                     "https://twitter.com/RunningVelox",
-                    "TWITTER"
+                    "twitter"
                   )
                 }
                 aria-label="Perfil do VELOX no X"
@@ -77,7 +65,7 @@ export default function Footer() {
                 onClick={() =>
                   handleExternalLinkClick(
                     "https://www.instagram.com/runningvelox/",
-                    "INSTAGRAM"
+                    "instagram"
                   )
                 }
                 aria-label="Instagram do VELOX"

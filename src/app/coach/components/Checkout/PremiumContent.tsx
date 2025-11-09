@@ -32,7 +32,6 @@ import type {
   PaymentProvider,
 } from "@/types/purchases";
 import useAnalytics from "@/tracking/useAnalytics";
-import { AnalyticsActions } from "@/tracking/types";
 import { Badge } from "@/components/ui";
 import { getProductPreviewUrl, getProductDownloadUrl } from "@/lib/imageUtils";
 import { generatePurchaseSuccessUrl } from "@/lib/purchaseUtils";
@@ -78,7 +77,7 @@ export default function PremiumContent({
   const [previewError, setPreviewError] = useState<boolean>(false);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
-  const { trackEvent } = useAnalytics();
+  const { trackCheckoutStep, trackPurchase } = useAnalytics();
 
   console.log("Product in PremiumContent:", product);
 
@@ -188,13 +187,8 @@ export default function PremiumContent({
     setShowConfirmation(false);
 
     try {
-      trackEvent({
-        action: AnalyticsActions.CHECKOUT_INTENT,
-        targetType: "CHECKOUT_BUTTON",
-        pagePath: "/coach",
-        props: {
-          paymentProvider: "stripe",
-        },
+      trackCheckoutStep("customer_info", product.id, {
+        payment_provider: "stripe",
       });
       const response = await checkoutPurchase({
         productId: product.id,
@@ -239,18 +233,19 @@ export default function PremiumContent({
   const handleSuccess = () => {
     setShowConfirmation(true);
     onProcessingChange?.(false);
-    trackEvent({
-      action: AnalyticsActions.CHECKOUT_COMPLETED,
-      targetType: "VIEW",
-      pagePath: "/coach",
-      purchaseId: checkoutResult?.purchase.id,
-      props: {
-        productId: product.id,
-        email: customerInfo.email,
-      },
-    });
 
     if (checkoutResult?.purchase) {
+      trackPurchase(
+        product.id,
+        product.priceCents,
+        product.currency || "BRL",
+        "stripe",
+        checkoutResult.purchase.id,
+        {
+          buyer_email: customerInfo.email,
+        }
+      );
+
       setTimeout(() => {
         const successUrl = generatePurchaseSuccessUrl({
           purchaseId: checkoutResult.purchase.id,

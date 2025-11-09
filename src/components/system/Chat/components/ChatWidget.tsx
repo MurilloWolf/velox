@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 "use client";
 
 import { useState } from "react";
@@ -7,12 +8,11 @@ import { MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ChatPanel from "./ChatPanel";
 import useAnalytics from "@/tracking/useAnalytics";
-import { AnalyticsActions } from "@/tracking/types";
 import { Button } from "@/components/ui/button";
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
-  const { trackEvent } = useAnalytics();
+  const { trackModalOpen, trackModalClose } = useAnalytics();
   const pathname = usePathname();
 
   const isFaqPage = pathname?.startsWith("/faq");
@@ -22,14 +22,15 @@ export default function ChatWidget() {
   }
 
   const toggleOpen = () => {
-    setIsOpen((prev) => !prev);
-    trackEvent({
-      targetType: "CHAT_WIDGET",
-      action: isOpen
-        ? AnalyticsActions.CHAT_WIDGET_CLOSED
-        : AnalyticsActions.CHAT_WIDGET_OPENED,
-      pagePath: pathname || "",
-    });
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+
+    newIsOpen ? trackModalOpen("chat_widget") : trackModalClose("chat_widget");
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    trackModalClose("chat_widget");
   };
 
   return (
@@ -41,7 +42,7 @@ export default function ChatWidget() {
         >
           <ChatPanel
             variant="widget"
-            onClose={() => setIsOpen(false)}
+            onClose={handleClose}
             className="rounded-3xl border-white/30 bg-black/45"
             contentClassName="px-3 py-3 sm:px-4 sm:py-4"
           />

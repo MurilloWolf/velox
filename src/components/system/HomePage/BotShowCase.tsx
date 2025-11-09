@@ -2,20 +2,19 @@
 import FlurryBackground from "@/app/privacy/flurrybackground";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { AnalyticsActions } from "@/tracking/types";
 import useAnalytics from "@/tracking/useAnalytics";
 import { Send, MessageSquare, Bell, Star } from "lucide-react";
 
 export default function BotShowcase() {
   const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
-  const { trackEvent } = useAnalytics();
+  const { trackButtonClick } = useAnalytics();
+
   const handleTelegramClick = () => {
-    trackEvent({
-      targetType: "BOT_LINK",
-      action: AnalyticsActions.BUTTON_CLICK,
-      pagePath: window.location.pathname,
-      targetId: "SHOW_CASE_TELEGRAM_BUTTON",
-    });
+    trackButtonClick(
+      "bot_showcase:telegram_button",
+      "Abrir bot no Telegram",
+      TELEGRAM_BOT_URL
+    );
     window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
   };
 

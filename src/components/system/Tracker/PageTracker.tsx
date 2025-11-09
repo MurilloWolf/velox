@@ -6,10 +6,11 @@ import useDeviceInfo from "@/hooks/useDeviceInfo";
 
 interface PageTrackerProps {
   pagePath: string;
+  pageSlug?: string; // Para permitir personalizar o targetId
 }
 
-export default function PageTracker({ pagePath }: PageTrackerProps) {
-  const { trackEvent } = useAnalytics();
+export default function PageTracker({ pagePath, pageSlug }: PageTrackerProps) {
+  const { trackPageView } = useAnalytics();
   const deviceInfo = useDeviceInfo();
   const hasTracked = useRef(false);
   const lastTrackedPath = useRef<string>("");
@@ -23,18 +24,24 @@ export default function PageTracker({ pagePath }: PageTrackerProps) {
     }
 
     if (!hasTracked.current) {
-      trackEvent({
-        targetType: "PAGE",
-        action: "VIEW",
-        pagePath,
-        userAgent: deviceInfo.userAgent,
-        isMobile: deviceInfo.isMobile,
-        targetId: "coach_landing",
+      // Determina o slug da página baseado no caminho ou usa o fornecido
+      const slug =
+        pageSlug ||
+        (pagePath === "/"
+          ? "home"
+          : pagePath.replace(/^\//, "").replace(/\//g, "_").toLowerCase() ||
+            "unknown");
+
+      trackPageView(slug, {
+        path: pagePath,
+        user_agent: deviceInfo.userAgent,
+        browser: deviceInfo.browser,
+        os: deviceInfo.os,
       });
 
       hasTracked.current = true;
     }
-  }, [pagePath, deviceInfo, trackEvent]);
+  }, [pagePath, pageSlug, deviceInfo, trackPageView]);
 
   return null;
 }

@@ -15,7 +15,6 @@ import { Product } from "@/types/products";
 import type { CheckoutSuccessPayload } from "@/types/purchases";
 import { checkoutPurchase, CheckoutError } from "@/services/purchases";
 import useAnalytics from "@/tracking/useAnalytics";
-import { AnalyticsActions } from "@/tracking/types";
 import { getProductPreviewUrl, getProductDownloadUrl } from "@/lib/imageUtils";
 import { generatePurchaseSuccessUrl } from "@/lib/purchaseUtils";
 
@@ -49,7 +48,7 @@ export default function FreeContent({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
   const emailInputRef = useRef<HTMLInputElement | null>(null);
-  const { trackEvent } = useAnalytics();
+  const { trackFormSubmit } = useAnalytics();
 
   console.log("Product in FreeContent:", product);
 
@@ -126,17 +125,10 @@ export default function FreeContent({
         buyerName: customerInfo.name.trim(),
       });
 
-      trackEvent({
-        action: AnalyticsActions.ACCESS_FREE_CONTENT,
-        targetType: "CHECKOUT_BUTTON",
-        targetId: product.id,
-        pagePath: `/coach`,
-        purchaseId: response.data.purchase.id,
-        props: {
-          email: customerInfo.email,
-          name: customerInfo.name,
-          productId: product.id,
-        },
+      trackFormSubmit(`form:coach:free_access`, ["email", "name"], false, {
+        product_id: product.id,
+        product_slug: product.id,
+        purchase_id: response.data.purchase.id,
       });
 
       setCheckoutResult(response.data);

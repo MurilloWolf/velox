@@ -1,8 +1,34 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback } from "react";
 import { sendTrackEvent } from "@/services/actions/trackAnalytics";
 import useSessionId from "@/hooks/useSessionId";
+import useDeviceInfo from "@/hooks/useDeviceInfo";
 
 export type TrackChannel = "WEBSITE";
+
+export type TrackAction =
+  | "VIEW"
+  | "CLICK"
+  | "SUBMIT"
+  | "FILTER"
+  | "OPEN"
+  | "CLOSE"
+  | "PURCHASE";
+
+export type TrackTargetType =
+  | "PAGE"
+  | "SECTION"
+  | "BUTTON"
+  | "LINK"
+  | "FILTER"
+  | "MODAL"
+  | "CARD"
+  | "RACE_EVENT"
+  | "RACE_LOCATION"
+  | "RACE_REGISTRATION"
+  | "FORM"
+  | "PRODUCT"
+  | "CHECKOUT_STEP";
 
 export interface TrackEventParams {
   // PAGE, PRODUCT, PURCHASE, etc.
@@ -35,8 +61,7 @@ export interface TrackEventParams {
 
   props?: Record<
     string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    string | Record<string, any> | number | boolean | null
+    string | Record<string, any> | number | boolean | null | undefined
   >;
 
   // Relations
@@ -45,34 +70,347 @@ export interface TrackEventParams {
 
 export default function useAnalytics() {
   const { sessionId, deviceId, updateActivity } = useSessionId();
+  const deviceInfo = useDeviceInfo();
 
+  // Função genérica para track de eventos (mantida para compatibilidade)
   const trackEvent = useCallback(
     (
       trackEvent: Omit<TrackEventParams, "channel" | "sessionId" | "deviceId">
     ) => {
       updateActivity("track_event");
 
+      const eventData = {
+        ...trackEvent,
+        channel: "WEBSITE" as const,
+        sessionId: sessionId || undefined,
+        deviceId: deviceId || undefined,
+        pagePath:
+          trackEvent.pagePath ||
+          (typeof window !== "undefined"
+            ? window.location.pathname
+            : undefined),
+        isMobile: trackEvent.isMobile ?? deviceInfo?.isMobile,
+        userAgent: trackEvent.userAgent ?? deviceInfo?.userAgent,
+      };
+
       if (process.env.NODE_ENV === "development") {
-        console.log(`📊 Track Event: ${trackEvent.action}`, {
-          ...trackEvent,
-          sessionId,
-          deviceId,
-        });
+        console.log(`📊 Track Event: ${trackEvent.action}`, eventData);
         return;
       }
 
-      sendTrackEvent({
-        ...trackEvent,
-        channel: "WEBSITE",
-        sessionId: sessionId || undefined,
-        deviceId: deviceId || undefined,
+      sendTrackEvent(eventData);
+    },
+    [sessionId, deviceId, updateActivity, deviceInfo]
+  );
+
+  const trackPageView = useCallback(
+    (targetId: string, props?: Record<string, any>) => {
+      trackEvent({
+        action: "VIEW",
+        targetType: "PAGE",
+        targetId,
+        props,
       });
     },
-    [sessionId, deviceId, updateActivity]
+    [trackEvent]
+  );
+
+  const trackLinkClick = useCallback(
+    (
+      targetId: string,
+      linkText?: string,
+      linkHref?: string,
+      props?: Record<string, any>
+    ) => {
+      trackEvent({
+        action: "CLICK",
+        targetType: "LINK",
+        targetId,
+        props: {
+          link_text: linkText,
+          link_href: linkHref,
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackButtonClick = useCallback(
+    (
+      targetId: string,
+      linkText?: string,
+      linkHref?: string,
+      props?: Record<string, any>
+    ) => {
+      trackEvent({
+        action: "CLICK",
+        targetType: "BUTTON",
+        targetId,
+        props: {
+          link_text: linkText,
+          link_href: linkHref,
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackCardClick = useCallback(
+    (targetId: string, position?: number, props?: Record<string, any>) => {
+      trackEvent({
+        action: "CLICK",
+        targetType: "CARD",
+        targetId,
+        props: {
+          position,
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackSectionView = useCallback(
+    (targetId: string, props?: Record<string, any>) => {
+      trackEvent({
+        action: "VIEW",
+        targetType: "SECTION",
+        targetId,
+        props,
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackFormSubmit = useCallback(
+    (
+      targetId: string,
+      fields?: string[],
+      hasErrors?: boolean,
+      props?: Record<string, any>
+    ) => {
+      trackEvent({
+        action: "SUBMIT",
+        targetType: "FORM",
+        targetId,
+        props: {
+          fields,
+          errors: hasErrors,
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackFilter = useCallback(
+    (
+      targetId: string,
+      filterName: string,
+      filterValue: string,
+      isActive: boolean,
+      props?: Record<string, any>
+    ) => {
+      trackEvent({
+        action: "FILTER",
+        targetType: "FILTER",
+        targetId,
+        props: {
+          filter_name: filterName,
+          filter_value: filterValue,
+          active: isActive,
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackModalOpen = useCallback(
+    (targetId: string, props?: Record<string, any>) => {
+      trackEvent({
+        action: "OPEN",
+        targetType: "MODAL",
+        targetId: `modal:${targetId}`,
+        props,
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackModalClose = useCallback(
+    (targetId: string, props?: Record<string, any>) => {
+      trackEvent({
+        action: "CLOSE",
+        targetType: "MODAL",
+        targetId: `modal:${targetId}`,
+        props,
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackRaceView = useCallback(
+    (
+      raceSlug: string,
+      raceName?: string,
+      distance?: string | string[] | number[],
+      city?: string,
+      props?: Record<string, any>
+    ) => {
+      trackEvent({
+        action: "VIEW",
+        targetType: "RACE_EVENT",
+        targetId: `race:${raceSlug}`,
+        props: {
+          race_name: raceName,
+          distance,
+          city,
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackRaceLocationClick = useCallback(
+    (raceSlug: string, locationName?: string, props?: Record<string, any>) => {
+      trackEvent({
+        action: "CLICK",
+        targetType: "RACE_LOCATION",
+        targetId: `race:${raceSlug}`,
+        props: {
+          location_name: locationName,
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackRaceRegistrationClick = useCallback(
+    (
+      raceSlug: string,
+      raceName?: string,
+      registrationLink?: string,
+      provider?: string,
+      props?: Record<string, any>
+    ) => {
+      trackEvent({
+        action: "CLICK",
+        targetType: "RACE_REGISTRATION",
+        targetId: `race:${raceSlug}`,
+        props: {
+          race_name: raceName,
+          registration_link: registrationLink,
+          provider,
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackCheckoutStep = useCallback(
+    (step: string, productSlug?: string, props?: Record<string, any>) => {
+      trackEvent({
+        action: "VIEW",
+        targetType: "CHECKOUT_STEP",
+        targetId: `checkout:${step}`,
+        props: {
+          product_slug: productSlug,
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackCheckoutPaymentSubmit = useCallback(
+    (
+      provider: string,
+      paymentIntentId?: string,
+      props?: Record<string, any>
+    ) => {
+      trackEvent({
+        action: "SUBMIT",
+        targetType: "CHECKOUT_STEP",
+        targetId: "checkout:payment_submit",
+        props: {
+          provider,
+          payment_intent_id: paymentIntentId,
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackPurchase = useCallback(
+    (
+      productSlug: string,
+      amount: number,
+      currency: string,
+      provider: string,
+      purchaseId?: string,
+      props?: Record<string, any>
+    ) => {
+      trackEvent({
+        action: "PURCHASE",
+        targetType: "PRODUCT",
+        targetId: `product:${productSlug}`,
+        purchaseId,
+        props: {
+          amount,
+          currency,
+          provider,
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
+  const trackNavigationClick = useCallback(
+    (
+      area: "header" | "footer",
+      slug: string,
+      linkText?: string,
+      linkHref?: string
+    ) => {
+      trackLinkClick(`nav:${area}:${slug}`, linkText, linkHref);
+    },
+    [trackLinkClick]
+  );
+
+  const trackSocialClick = useCallback(
+    (platform: string, props?: Record<string, any>) => {
+      trackLinkClick(`social:${platform}`, undefined, undefined, props);
+    },
+    [trackLinkClick]
   );
 
   return {
     trackEvent,
+    trackPageView,
+    trackLinkClick,
+    trackButtonClick,
+    trackCardClick,
+    trackSectionView,
+    trackFormSubmit,
+    trackFilter,
+    trackModalOpen,
+    trackModalClose,
+    trackRaceView,
+    trackRaceLocationClick,
+    trackRaceRegistrationClick,
+    trackCheckoutStep,
+    trackCheckoutPaymentSubmit,
+    trackPurchase,
+    trackNavigationClick,
+    trackSocialClick,
     sessionId,
     deviceId,
     updateActivity,

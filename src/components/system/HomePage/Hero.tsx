@@ -4,12 +4,12 @@ import { Zap, ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import useAnalytics from "@/tracking/useAnalytics";
-import { AnalyticsActions } from "@/tracking/types";
 
 export default function Hero() {
   const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
   const [showScroll, setShowScroll] = useState(true);
-  const { trackEvent } = useAnalytics();
+  const { trackButtonClick } = useAnalytics();
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -24,12 +24,7 @@ export default function Hero() {
   }, []);
 
   const handleTelegramClick = () => {
-    trackEvent({
-      targetType: "BOT_LINK",
-      action: AnalyticsActions.BUTTON_CLICK,
-      pagePath: window.location.pathname,
-      targetId: "HERO_TELEGRAM_BUTTON",
-    });
+    trackButtonClick("hero:primary_cta", "Começar Agora", TELEGRAM_BOT_URL);
     window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
   };
   return (

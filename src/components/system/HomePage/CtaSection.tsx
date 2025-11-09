@@ -4,18 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Send, Bell, CalendarCheck, Sparkles } from "lucide-react";
 import MashGradiant from "../MashGradiant";
 import useAnalytics from "@/tracking/useAnalytics";
-import { AnalyticsActions } from "@/tracking/types";
 
 export default function CTASection() {
   const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
-  const { trackEvent } = useAnalytics();
+  const { trackButtonClick } = useAnalytics();
+
   const handleTelegramClick = () => {
-    trackEvent({
-      targetType: "BOT_LINK",
-      action: AnalyticsActions.BUTTON_CLICK,
-      pagePath: window.location.pathname,
-      targetId: "CTA_SECTION_TELEGRAM_BUTTON",
-    });
+    trackButtonClick(
+      "cta_section:telegram_button",
+      "Acessar bot no Telegram",
+      TELEGRAM_BOT_URL
+    );
     window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
   };
   return (

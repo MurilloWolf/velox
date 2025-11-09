@@ -2,14 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import {
-  MapPin,
-  Clock,
-  ExternalLink,
-  Calendar,
-  PinIcon,
-  Map,
-} from "lucide-react";
+import { ExternalLink, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,7 +11,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import useAnalytics from "@/tracking/useAnalytics";
-import { AnalyticsActions } from "@/tracking/types";
 import type { Event } from "../types";
 import { Badge } from "@/components/ui";
 import EventImagePreview from "./EventImagePreview";
@@ -34,52 +26,37 @@ export default function EventDetailsModal({
   onClose,
   event,
 }: EventDetailsModalProps) {
-  const { trackEvent } = useAnalytics();
+  const { trackRaceView, trackRaceLocationClick, trackRaceRegistrationClick } =
+    useAnalytics();
 
   useEffect(() => {
     if (isOpen && event) {
-      trackEvent({
-        action: AnalyticsActions.PAGE_VIEW,
-        targetType: "RACE_EVENT",
-        targetId: event.id,
-        pagePath: `/calendar`,
-        props: {
-          eventTitle: event.title,
-          eventDate: event.date.toISOString(),
-          eventLocation: event.location,
-        },
+      trackRaceView(event.id, event.title, event.distances, event.city, {
+        event_date: event.date.toISOString(),
+        event_location: event.location,
       });
     }
-  }, [isOpen, event, trackEvent]);
+  }, [isOpen, event, trackRaceView]);
 
   const handleLocationClick = () => {
     if (event) {
-      trackEvent({
-        action: AnalyticsActions.BUTTON_CLICK,
-        targetType: "RACE_LOCATION",
-        targetId: event.id,
-        pagePath: `/calendar`,
-        props: {
-          eventTitle: event.title,
-          eventLocation: event.location,
-        },
+      trackRaceLocationClick(event.id, event.location, {
+        event_title: event.title,
       });
     }
   };
 
   const handleRegistrationClick = () => {
     if (event) {
-      trackEvent({
-        action: AnalyticsActions.BUTTON_CLICK,
-        targetType: "RACE_REGISTRATION",
-        targetId: event.id,
-        pagePath: `/calendar`,
-        props: {
-          eventTitle: event.title,
-          eventDate: event.date.toISOString(),
-          registrationLink: event.link || "",
-        },
-      });
+      trackRaceRegistrationClick(
+        event.id,
+        event.title,
+        event.link || "",
+        "external",
+        {
+          event_date: event.date.toISOString(),
+        }
+      );
     }
   };
 

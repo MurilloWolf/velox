@@ -16,12 +16,11 @@ import Link from "next/link";
 import { useSmoothScroll } from "./hooks/useSmoothScroll";
 import { usePathname } from "next/navigation";
 import useAnalytics from "@/tracking/useAnalytics";
-import { AnalyticsActions } from "@/tracking/types";
 
 export default function Header() {
   const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
 
-  const { trackEvent } = useAnalytics();
+  const { trackNavigationClick, trackButtonClick } = useAnalytics();
 
   const scrollTo = useSmoothScroll();
   const pathname = usePathname();
@@ -42,47 +41,30 @@ export default function Header() {
 
   const handleSmoothNavigation = (
     event: MouseEvent<HTMLElement>,
-    href: string
+    href: string,
+    scrollTarget?: string
   ) => {
-    trackEvent({
-      targetType: "LINK",
-      action: AnalyticsActions.BUTTON_CLICK,
-      pagePath: window.location.pathname,
-      targetId: `HEADER_NAVIGATION:${href}`,
-    });
-    if (!href.startsWith("#")) {
+    trackNavigationClick("header", href.replace(/^\//, "").replace("#", ""));
+    
+    // Se tem scrollTarget e estamos na home, faz scroll suave
+    if (scrollTarget && window.location.pathname === "/") {
+      event.preventDefault();
+      scrollTo(scrollTarget);
       return;
     }
-
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    if (window.location.pathname !== "/") {
-      return;
-    }
-
-    event.preventDefault();
-    scrollTo(href);
+    
+    // Senão, deixa o Next.js navegar normalmente
+    // Se tem scrollTarget, ele vai para a URL com hash (ex: /#recursos)
+    // Se não tem, vai para a URL normal (ex: /calendar)
   };
 
   const handleTelegramClick = () => {
-    trackEvent({
-      targetType: "BOT_LINK",
-      action: AnalyticsActions.BUTTON_CLICK,
-      pagePath: window.location.pathname,
-      targetId: "HEADER_TELEGRAM_BUTTON",
-    });
+    trackButtonClick(
+      "header:telegram_button",
+      "VELOX BOT Telegram",
+      TELEGRAM_BOT_URL
+    );
     window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
-  };
-
-  const handleLinkClick = (href: string) => {
-    trackEvent({
-      targetType: "LINK",
-      action: AnalyticsActions.BUTTON_CLICK,
-      pagePath: window.location.pathname,
-      targetId: `HEADER_NAVIGATION:${href}`,
-    });
   };
 
   const MobileNavigation = () => (
@@ -122,13 +104,9 @@ export default function Header() {
               <SheetClose asChild key={item.label}>
                 <Link
                   href={item.href}
-                  onClick={(event) => {
-                    if (item.scrollTarget) {
-                      handleSmoothNavigation(event, item.scrollTarget);
-                    } else {
-                      handleLinkClick(item.href);
-                    }
-                  }}
+                  onClick={(event) =>
+                    handleSmoothNavigation(event, item.href, item.scrollTarget)
+                  }
                   className={`
                     flex items-center px-4 py-3 rounded-lg text-white font-medium 
                     transition-all duration-200 hover:bg-[#d5fe46]/20 hover:text-[#d5fe46]
@@ -191,30 +169,20 @@ export default function Header() {
 
                 return (
                   <li key={item.label} className="list-none">
-                    {item.scrollTarget ? (
-                      <button
-                        onClick={(event) =>
-                          handleSmoothNavigation(event, item.scrollTarget!)
-                        }
-                        className="group hover:bg-[#d5fe46]/50 text-md px-4 py-2 rounded-md hover:rotate-2 cursor-pointer transition-colors text-white font-bold"
-                        aria-current={isActive ? "page" : undefined}
-                      >
-                        {item.label}
-                      </button>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        onClick={() => handleLinkClick(item.href)}
-                        className={`
-                          group hover:bg-[#d5fe46]/50 text-md px-4 py-2 rounded-md hover:rotate-2 cursor-pointer 
-                          transition-colors text-white font-bold block
-                          ${isActive ? "text-[#d5fe46]" : ""}
-                        `}
-                        aria-current={isActive ? "page" : undefined}
-                      >
-                        {item.label}
-                      </Link>
-                    )}
+                    <Link
+                      href={item.href}
+                      onClick={(event) =>
+                        handleSmoothNavigation(event, item.href, item.scrollTarget)
+                      }
+                      className={`
+                        group hover:bg-[#d5fe46]/50 text-md px-4 py-2 rounded-md hover:rotate-2 cursor-pointer 
+                        transition-colors text-white font-bold block
+                        ${isActive ? "text-[#d5fe46]" : ""}
+                      `}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      {item.label}
+                    </Link>
                   </li>
                 );
               })}

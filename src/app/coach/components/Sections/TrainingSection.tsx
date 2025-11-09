@@ -45,48 +45,47 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
     const loadProducts = async () => {
       try {
         setLoading(true);
-        const result = {
-          products: [
-            {
-              id: "cmhchihz8000tz47pl9n0kq2s",
-              title: "Primeiros 10km",
-              subtitle: "Planilha de 8 semanas para correr seus primeiros 10km",
-              priceCents: 0,
-              currency: "BRL",
-              isAvailable: true,
-              isFree: true,
-              categories: ["10km", "iniciante"],
-              driveLink:
-                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
-              notionLink:
-                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
-              imageLink:
-                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
-              createdAt: "2025-10-29T21:05:20.427Z",
-              updatedAt: "2025-10-29T21:05:20.427Z",
-            },
-            {
-              id: "cmhchdjxe000sz47p35pbqgrk",
-              title: "Primeiros 5km",
-              subtitle: "Planilha de 4 semanas para os seus primeiros 5km",
-              priceCents: 10000,
-              currency: "BRL",
-              isAvailable: true,
-              isFree: false,
-              categories: ["5km"],
-              driveLink:
-                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
-              notionLink:
-                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
-              imageLink:
-                "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
-              createdAt: "2025-10-29T21:01:29.731Z",
-              updatedAt: "2025-10-29T21:04:14.121Z",
-            },
-          ],
-        };
-        // const result = await fetchAvailableProducts();
-
+        // const result = {
+        //   products: [
+        //     {
+        //       id: "cmhchihz8000tz47pl9n0kq2s",
+        //       title: "Primeiros 10km",
+        //       subtitle: "Planilha de 8 semanas para correr seus primeiros 10km",
+        //       priceCents: 0,
+        //       currency: "BRL",
+        //       isAvailable: true,
+        //       isFree: true,
+        //       categories: ["10km", "iniciante"],
+        //       driveLink:
+        //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+        //       notionLink:
+        //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+        //       imageLink:
+        //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+        //       createdAt: "2025-10-29T21:05:20.427Z",
+        //       updatedAt: "2025-10-29T21:05:20.427Z",
+        //     },
+        //     {
+        //       id: "cmhchdjxe000sz47p35pbqgrk",
+        //       title: "Primeiros 5km",
+        //       subtitle: "Planilha de 4 semanas para os seus primeiros 5km",
+        //       priceCents: 10000,
+        //       currency: "BRL",
+        //       isAvailable: true,
+        //       isFree: false,
+        //       categories: ["5km"],
+        //       driveLink:
+        //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+        //       notionLink:
+        //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+        //       imageLink:
+        //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
+        //       createdAt: "2025-10-29T21:01:29.731Z",
+        //       updatedAt: "2025-10-29T21:04:14.121Z",
+        //     },
+        //   ],
+        // };
+        const result = await fetchAvailableProducts();
         // @ts-expect-error --- IGNORE ---
         if (result.error) {
           // @ts-expect-error --- IGNORE ---
@@ -308,7 +307,7 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
             handleClosePreview();
           }
         }}
-        blockClose={isBlockingClose}
+        isPurchaseInProgress={isBlockingClose}
         title={previewPlan?.title}
         description={previewPlan?.subtitle}
         size="large"
