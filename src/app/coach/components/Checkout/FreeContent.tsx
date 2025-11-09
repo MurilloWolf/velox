@@ -26,9 +26,14 @@ type FreeCustomerInfo = {
 interface FreeContentProps {
   product: Product;
   onComplete?: () => void;
+  onProcessingChange?: (isProcessing: boolean) => void;
 }
 
-export default function FreeContent({ product, onComplete }: FreeContentProps) {
+export default function FreeContent({
+  product,
+  onComplete,
+  onProcessingChange,
+}: FreeContentProps) {
   const [isAccessing, setIsAccessing] = useState(false);
   const [hasAccessed, setHasAccessed] = useState(false);
   const [previewError, setPreviewError] = useState(false);
@@ -108,6 +113,7 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
     if (!validateForm()) return;
 
     setIsAccessing(true);
+    onProcessingChange?.(true); // 👈 Notifica que o processamento iniciou
     setErrorMessage(null);
     setCheckoutResult(null);
     setHasAccessed(false);
@@ -147,6 +153,7 @@ export default function FreeContent({ product, onComplete }: FreeContentProps) {
       }
     } finally {
       setIsAccessing(false);
+      onProcessingChange?.(false); // 👈 Notifica que o processamento terminou
     }
   };
 

@@ -24,7 +24,13 @@ export default function ProductContent({
   };
 
   if (product.isFree) {
-    return <FreeContent product={product} onComplete={onComplete} />;
+    return (
+      <FreeContent
+        product={product}
+        onComplete={onComplete}
+        onProcessingChange={onProcessingChange}
+      />
+    );
   }
 
   return (
