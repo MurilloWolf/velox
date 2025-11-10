@@ -2,6 +2,7 @@ import Header from "./Header";
 import Hero from "./HomePage/Hero";
 import CtaSection from "./HomePage/CtaSection";
 import ContactSection from "./HomePage/ContactSection";
+import TrainingSheets from "./HomePage/TrainingSheets";
 import Footer from "./Footer";
 import BotShowcase from "./HomePage/BotShowCase";
 import PlatformFeatures from "./HomePage/Features/PlatformHero";
@@ -20,6 +21,7 @@ export {
   Hero,
   CtaSection,
   ContactSection,
+  TrainingSheets,
   Footer,
   BotShowcase,
   PlatformFeatures,

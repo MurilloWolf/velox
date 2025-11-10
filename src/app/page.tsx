@@ -9,6 +9,7 @@ import {
   PlatformFeatures,
   BotShowcase,
   PageTracker,
+  TrainingSheets,
 } from "@/components/system";
 import { buildMetadata } from "@/lib/seo";
 
@@ -36,6 +37,7 @@ export default function Home() {
         <Hero />
         <BotShowcase />
         <PlatformFeatures />
+        <TrainingSheets />
         <CtaSection />
         <ContactSection />
         <Footer />
