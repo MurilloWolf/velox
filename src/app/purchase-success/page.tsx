@@ -9,7 +9,11 @@ import {
   Hash,
   Sparkles,
   ArrowRight,
+  AlertTriangle,
+  UserCircle2,
+  Send,
 } from "lucide-react";
+import { MashGradiant } from "@/components/system";
 
 interface PurchaseData {
   purchaseId: string;
@@ -56,7 +60,7 @@ export default function PurchaseSuccessPage() {
 
   if (isValidAccess === null) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-[#000c5a]/80 to-black relative overflow-hidden flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br relative overflow-hidden flex items-center justify-center">
         {/* Background particles */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-20 h-32 w-32 bg-[#d5fe46]/20 rounded-full blur-3xl animate-pulse" />
@@ -80,34 +84,72 @@ export default function PurchaseSuccessPage() {
 
   if (!isValidAccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-black via-[#000c5a]/80 to-black relative overflow-hidden flex items-center justify-center">
-        {/* Background particles */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 h-32 w-32 bg-red-500/20 rounded-full blur-3xl animate-pulse" />
-          <div
-            className="absolute bottom-20 right-20 h-40 w-40 bg-red-400/15 rounded-full blur-3xl animate-pulse"
-            style={{ animationDelay: "1s" }}
-          />
-        </div>
+      <MashGradiant>
+        <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
+          <div className="absolute inset-0">
+            <div className="absolute top-20 left-20 h-32 w-32 bg-red-500/20 rounded-full blur-3xl animate-pulse" />
+            <div
+              className="absolute bottom-20 right-20 h-40 w-40 bg-red-400/15 rounded-full blur-3xl animate-pulse"
+              style={{ animationDelay: "1s" }}
+            />
+          </div>
 
-        <div className="relative z-10 max-w-md w-full mx-4">
-          <div className="bg-white/[0.08] backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-center shadow-[0_25px_80px_-20px_rgba(0,0,0,0.65)]">
-            <div className="text-red-400 text-6xl mb-6">⚠️</div>
-            <h1 className="text-3xl font-bold text-white mb-4">
-              Acesso Negado
-            </h1>
-            <p className="text-white/70 leading-relaxed">
-              Este link é inválido ou expirou. Por favor, refaça sua compra ou
-              entre em contato conosco.
-            </p>
+          <div className="relative z-10 max-w-md w-full mx-4">
+            <div className="bg-black/40 backdrop-blur-xl  rounded-xl p-8 text-center shadow-[0_25px_80px_-20px_#ff000050]">
+              <div className="text-red-400 text-6xl mb-6 w-full flex justify-center">
+                <AlertTriangle className="w-16 h-16" />
+              </div>
+              <h2 className="text-red-400 text-3xl font-bold">Acesso Negado</h2>
+              <p className="text-white/70 leading-relaxed font-semibold">
+                Este link é inválido ou expirou.
+              </p>
+              <div className="relative z-10 space-y-5 mt-12">
+                <div className="space-y-4 text-sm text-white/80">
+                  <div className="flex items-start gap-4 p-2 md:p-3 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/5 hover:bg-white/[0.08] transition-all duration-300">
+                    <Mail className="w-5 h-5 text-[#d5fe46] mt-1 flex-shrink-0 drop-shadow-[0_0_4px_#d5fe46]" />
+                    <div className="text-left">
+                      <p className="font-semibold text-md  text-white/90">
+                        Verifique seu email
+                      </p>
+                      <p className="text-xs md:text-sm text-white/60">
+                        Todos os produtos são enviados por email.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 p-2 md:p-3 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/5 hover:bg-white/[0.08] transition-all duration-300">
+                    <Send className="w-5 h-5 text-[#d5fe46] mt-1 flex-shrink-0 drop-shadow-[0_0_4px_#d5fe46]" />
+                    <div className="text-left">
+                      <p className="font-semibold text-md  text-white/90">
+                        Verifique a caixa de spam
+                      </p>
+                      <p className="text-xs md:text-sm text-white/60">
+                        Em alguns casos, nossos emails podem ir para a caixa de
+                        spam.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-4 p-2 md:p-3 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/5 hover:bg-white/[0.08] transition-all duration-300">
+                    <UserCircle2 className="w-5 h-5 text-[#d5fe46] mt-1 flex-shrink-0 drop-shadow-[0_0_4px_#d5fe46]" />
+                    <div className="text-left">
+                      <p className="font-semibold text-md  text-white/90">
+                        Se o problema persistir, contate o suporte
+                      </p>
+                      <p className="text-xs md:text-sm text-white/60">
+                        velox.running.app@gmail.com
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </MashGradiant>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-[#000c5a]/80 to-black relative overflow-hidden">
+    <div className="min-h-screen  relative overflow-hidden">
       {/* Background effects */}
       <div className="absolute inset-0">
         {/* Animated background particles */}
