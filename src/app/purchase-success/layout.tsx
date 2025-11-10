@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Header, Footer } from "@/components/system";
 
 export const metadata: Metadata = {
   title: "Compra Realizada - Velox",
@@ -14,5 +15,11 @@ export default function PurchaseSuccessLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <div className="bg-black min-h-screen">
+      <Header />
+      {children}
+      <Footer />
+    </div>
+  );
 }
