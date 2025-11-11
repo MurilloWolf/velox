@@ -63,15 +63,15 @@ export function Calendar({
     today.getDate() === day;
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)]">
+    <div className="rounded-2xl lg:rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-xl shadow-[0_25px_80px_-20px_rgba(0,0,0,0.75)]">
       <div className="overflow-hidden">
-        <div className="overflow-x-auto md:overflow-visible">
-          <div className="min-w-[560px] lg:min-w-0">
-            <div className="grid grid-cols-7 border-b rounded-t-3xl border-white/10 bg-white/[0.08]">
+        <div className="overflow-x-auto">
+          <div className="min-w-[320px] sm:min-w-[480px] lg:min-w-0">
+            <div className="grid grid-cols-7 border-b rounded-t-2xl lg:rounded-t-3xl border-white/10 bg-white/[0.08]">
               {WEEKDAYS.map((day) => (
                 <div
                   key={day}
-                  className="px-2 py-2 text-center text-[0.7rem] font-semibold uppercase tracking-wide text-white/70 md:text-xs"
+                  className="px-1 sm:px-2 py-2 text-center text-[0.65rem] sm:text-[0.7rem] md:text-xs font-semibold uppercase tracking-wide text-white/70"
                 >
                   {day}
                 </div>
@@ -90,16 +90,16 @@ export function Calendar({
                 return (
                   <div
                     key={index}
-                    className={`min-h-[88px] border-b border-r border-white/10 px-2 py-2 transition-colors md:min-h-[110px] ${
+                    className={`min-h-[70px] sm:min-h-[80px] md:min-h-[90px] lg:min-h-[110px] border-b border-r border-white/10 px-1 sm:px-2 py-1 sm:py-2 transition-colors ${
                       isToday ? "bg-[#d5fe46]/30 " : "hover:bg-white/[0.08]"
                     }`}
                     onClick={() => day && handleDayClick(day)}
                   >
                     {day && (
                       <>
-                        <div className="mb-2 flex items-center justify-between text-sm font-semibold text-white">
+                        <div className="mb-1 sm:mb-2 flex items-center justify-between">
                           <span
-                            className={`flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
+                            className={`flex h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 items-center justify-center rounded-full text-xs sm:text-sm font-semibold transition-colors ${
                               isToday
                                 ? "bg-white/20 text-white shadow-lg shadow-primary/30"
                                 : "bg-white/10 text-white/90"
@@ -108,14 +108,14 @@ export function Calendar({
                             {day}
                           </span>
                         </div>
-                        <div className="space-y-1">
+                        <div className="space-y-0.5 sm:space-y-1">
                           {showViewMore ? (
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
                                 onViewMoreClick(dayEvents);
                               }}
-                              className="w-full cursor-pointer rounded-md border border-[#d5fe46]/80 bg-[#d5fe46] px-3 py-2 text-left text-[0.8rem] font-medium text-black transition-colors hover:bg-[#d5fe46]/80"
+                              className="w-full cursor-pointer rounded-sm sm:rounded-md border border-[#d5fe46]/80 bg-[#d5fe46] px-1 sm:px-2 md:px-3 py-1 sm:py-1.5 md:py-2 text-left text-[0.6rem] sm:text-[0.7rem] md:text-[0.8rem] font-medium text-black transition-colors hover:bg-[#d5fe46]/80"
                             >
                               Ver mais ({dayEvents.length})
                             </button>

@@ -48,13 +48,13 @@ export function MonthSelector({
         variant="ghost"
         size="icon"
         onClick={handlePreviousMonth}
-        className="hover:bg-secondary cursor-pointer"
+        className="hover:bg-secondary cursor-pointer h-8 w-8 sm:h-10 sm:w-10"
       >
-        <ChevronLeft className="h-5 w-5" />
+        <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
       </Button>
 
-      <div className="text-center">
-        <h2 className="text-2xl font-bold">
+      <div className="text-center flex-1">
+        <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold truncate">
           {MONTHS[currentMonth]} {currentYear}
         </h2>
       </div>
@@ -63,9 +63,9 @@ export function MonthSelector({
         variant="ghost"
         size="icon"
         onClick={handleNextMonth}
-        className="hover:bg-secondary cursor-pointer"
+        className="hover:bg-secondary cursor-pointer h-8 w-8 sm:h-10 sm:w-10"
       >
-        <ChevronRight className="h-5 w-5" />
+        <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
       </Button>
     </div>
   );

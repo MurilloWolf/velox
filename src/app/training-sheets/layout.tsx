@@ -23,11 +23,11 @@ export default function TrainingSheetsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="flex min-h-screen flex-col bg-black">
       <Header />
       <ChatWidget />
       {children}
       <Footer />
-    </>
+    </div>
   );
 }

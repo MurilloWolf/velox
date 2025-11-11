@@ -12,8 +12,13 @@ import {
   AlertTriangle,
   UserCircle2,
   Send,
+  ArrowLeft,
+  ExternalLink,
+  Download,
 } from "lucide-react";
 import { MashGradiant } from "@/components/system";
+import { Badge } from "@/components/ui";
+import Link from "next/link";
 
 interface PurchaseData {
   purchaseId: string;
@@ -61,7 +66,6 @@ export default function PurchaseSuccessPage() {
   if (isValidAccess === null) {
     return (
       <div className="min-h-screen bg-gradient-to-br relative overflow-hidden flex items-center justify-center">
-        {/* Background particles */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-20 h-32 w-32 bg-[#d5fe46]/20 rounded-full blur-3xl animate-pulse" />
           <div
@@ -149,158 +153,187 @@ export default function PurchaseSuccessPage() {
   }
 
   return (
-    <div className="min-h-screen  relative overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0">
-        {/* Animated background particles */}
-        <div className="absolute top-20 left-20 h-32 w-32 bg-[#d5fe46]/20 rounded-full blur-3xl animate-pulse" />
-        <div
-          className="absolute top-40 right-32 h-24 w-24 bg-[#f05a24]/15 rounded-full blur-2xl animate-pulse"
-          style={{ animationDelay: "1s" }}
-        />
-        <div
-          className="absolute bottom-32 left-32 h-40 w-40 bg-purple-500/10 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "2s" }}
-        />
-        <div
-          className="absolute bottom-20 right-20 h-28 w-28 bg-blue-500/15 rounded-full blur-2xl animate-pulse"
-          style={{ animationDelay: "3s" }}
-        />
-
-        <div
-          className="absolute inset-0 bg-gradient-to-r from-[#d5fe46]/5 via-transparent to-[#f05a24]/5 animate-pulse"
-          style={{ animationDelay: "0.5s" }}
-        />
-      </div>
-
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <div
-          className={`w-full max-w-2xl transition-all duration-1000 ${
-            isAnimating
-              ? "translate-y-0 opacity-100"
-              : "translate-y-8 opacity-0"
-          }`}
-        >
-          <div className="bg-white/[0.08] backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.65)] relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#d5fe46]/10 via-transparent to-[#f05a24]/10 rounded-3xl" />
-
-            <div className="relative z-10 text-center space-y-8">
-              <div className="relative inline-flex items-center justify-center">
-                <div className="absolute inset-0 bg-[#d5fe46]/30 rounded-full blur-xl animate-pulse" />
-                <div className="relative bg-gradient-to-br from-[#d5fe46]/20 to-[#d5fe46]/10 backdrop-blur-xl border border-[#d5fe46]/30 rounded-full p-6 shadow-[0_20px_70px_-20px_rgba(213,254,70,0.5)]">
-                  <CheckCircle className="w-16 h-16 text-[#d5fe46] drop-shadow-[0_0_8px_rgba(213,254,70,0.8)]" />
-                </div>
-
-                <Sparkles
-                  className="absolute -top-2 -right-2 w-6 h-6 text-[#d5fe46] animate-bounce"
-                  style={{ animationDelay: "0.5s" }}
-                />
-                <Sparkles
-                  className="absolute -bottom-1 -left-1 w-4 h-4 text-[#f05a24] animate-bounce"
-                  style={{ animationDelay: "1s" }}
-                />
-                <Sparkles
-                  className="absolute top-2 left-12 w-3 h-3 text-purple-400 animate-bounce"
-                  style={{ animationDelay: "1.5s" }}
-                />
-              </div>
-
-              <div className="space-y-4">
-                <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#d5fe46] to-[#f05a24] bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(213,254,70,0.3)]">
-                  Compra Realizada!
-                </h1>
-                <div className="inline-flex items-center gap-2 rounded-full bg-[#d5fe46]/15 backdrop-blur-sm border border-[#d5fe46]/30 px-4 py-2">
-                  <span className="text-[#d5fe46] font-medium">
-                    Hello World!
-                  </span>
-                  <ArrowRight className="w-4 h-4 text-[#d5fe46] animate-pulse" />
-                </div>
-                <p className="text-white/80 text-lg leading-relaxed max-w-md mx-auto">
-                  Sua compra foi processada com sucesso e você já pode acessar
-                  seu conteúdo.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Purchase details card */}
-          {purchaseData && (
-            <div
-              className={`mt-6 transition-all duration-1000 delay-300 ${
-                isAnimating
-                  ? "translate-y-0 opacity-100"
-                  : "translate-y-4 opacity-0"
-              }`}
-            >
-              <div className="bg-white/[0.05] backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)]">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2">
-                    <Package className="w-5 h-5 text-[#d5fe46]" />
+    <MashGradiant>
+      <div className="min-h-screen  relative overflow-hidden bg-black/30">
+        <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+          <div
+            className={`w-full max-w-2xl transition-all duration-1000 ${
+              isAnimating
+                ? "translate-y-0 opacity-100"
+                : "translate-y-8 opacity-0"
+            }`}
+          >
+            <div className="bg-white/5 backdrop-blur-xl  rounded-xl p-8 md:p-12 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.65)] relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#d5fe46]/10 via-transparent to-[#f05a24]/10 rounded-3xl" />
+              <div className="relative z-10 text-center space-y-8">
+                <div className="relative inline-flex items-center justify-center">
+                  <div className="absolute inset-0 bg-[#d5fe46]/30 rounded-full blur-xl animate-pulse" />
+                  <div className="relative bg-gradient-to-br from-[#d5fe46]/20 to-[#d5fe46]/10 backdrop-blur-xl border border-[#d5fe46]/30 rounded-full p-6 shadow-[0_20px_70px_-20px_rgba(213,254,70,0.5)]">
+                    <CheckCircle className="w-16 h-16 text-[#d5fe46] drop-shadow-[0_0_8px_rgba(213,254,70,0.8)]" />
                   </div>
-                  <h3 className="text-white font-semibold text-lg">
-                    Detalhes da Compra
-                  </h3>
+
+                  <Sparkles
+                    className="absolute -top-2 -right-2 w-6 h-6 text-[#d5fe46] animate-bounce"
+                    style={{ animationDelay: "0.5s" }}
+                  />
+                  <Sparkles
+                    className="absolute -bottom-1 -left-1 w-4 h-4 text-[#f05a24] animate-bounce"
+                    style={{ animationDelay: "1s" }}
+                  />
                 </div>
 
                 <div className="space-y-4">
-                  <div className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.04] backdrop-blur-sm border border-white/5">
-                    <div className="bg-[#d5fe46]/15 backdrop-blur-sm rounded-lg p-2">
-                      <Package className="w-4 h-4 text-[#d5fe46]" />
-                    </div>
-                    <div>
-                      <p className="text-white/60 text-sm font-medium">
-                        Produto
-                      </p>
-                      <p className="text-white font-semibold">
-                        {purchaseData.productName}
-                      </p>
-                    </div>
-                  </div>
+                  <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#d5fe46] to-[#f05a24] bg-clip-text text-transparent drop-shadow-[0_0_8px_rgba(213,254,70,0.3)]">
+                    Compra Realizada!
+                  </h2>
 
-                  <div className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.04] backdrop-blur-sm border border-white/5">
-                    <div className="bg-[#f05a24]/15 backdrop-blur-sm rounded-lg p-2">
-                      <Mail className="w-4 h-4 text-[#f05a24]" />
-                    </div>
-                    <div>
-                      <p className="text-white/60 text-sm font-medium">Email</p>
-                      <p className="text-white font-semibold">
-                        {purchaseData.buyerEmail}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.04] backdrop-blur-sm border border-white/5">
-                    <div className="bg-purple-500/15 backdrop-blur-sm rounded-lg p-2">
-                      <Hash className="w-4 h-4 text-purple-400" />
-                    </div>
-                    <div>
-                      <p className="text-white/60 text-sm font-medium">
-                        ID da Compra
-                      </p>
-                      <p className="text-white font-mono text-sm">
-                        {purchaseData.purchaseId}
-                      </p>
-                    </div>
-                  </div>
+                  <p className="text-white/80 text-lg leading-relaxed max-w-md mx-auto">
+                    Sua compra foi processada com sucesso e você já pode acessar
+                    seu conteúdo.
+                  </p>
                 </div>
               </div>
             </div>
-          )}
+            {purchaseData && (
+              <div
+                className={`mt-6 transition-all duration-1000 delay-300 ${
+                  isAnimating
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-4 opacity-0"
+                }`}
+              >
+                {" "}
+                <div className="bg-white/5 backdrop-blur-xl mb-4  rounded-xl p-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)]">
+                  <div className="mb-4">
+                    <h4 className="text-white font-semibold text-2xl flex items-center gap-2">
+                      Como acessar seu produto
+                    </h4>
+                    <p className="text-white/70">
+                      Todos os produtos são entregues por email
+                    </p>
+                  </div>
+                  <div className="p-2 mt-4">
+                    <h3 className="text-lg text-[#d5fe46] font-semibold">
+                      <Link
+                        href={
+                          "https://docs.google.com/spreadsheets/d/1A2B3C4D5E6F7G8H9I0J/edit?usp=sharing"
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center  hover:scale-110 transition-transform duration-200"
+                      >
+                        Google Sheets
+                        <ExternalLink className=" ml-2 w-4 h-4 " />
+                      </Link>
+                    </h3>
+                    <p className="text-white/70">
+                      Fazer a cópia para seu prórpio drive ou baixar a planilha
+                      para seu computador/celulcar
+                    </p>
+                  </div>
+                  <div className="p-2 mt-4">
+                    <h3 className="text-lg text-[#d5fe46] font-semibold group hover:underline cursor-pointer">
+                      <Link
+                        href="https://www.notion.so/veloxrunning/Modelo-de-Planilha-de-Treino-Velox-Run-7cf5f3f3e8e04f2e8e4f5b1e8e4f5b1e"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center  hover:scale-110 transition-transform duration-200"
+                      >
+                        Notion
+                        <ExternalLink className=" ml-2 w-4 h-4 " />
+                      </Link>
+                    </h3>
+                    <p className="text-white/70">
+                      Basta fazer a cópia do modelo para o seu próprio Notion
+                    </p>
+                  </div>
+                  <div className="p-2 mt-4">
+                    <h3 className="text-lg text-[#d5fe46] font-semibold">
+                      <div className="block items-center gap-2 w-fit hover:scale-110 transition-transform duration-200 cursor-pointer">
+                        Download da Imagem
+                        <Download className=" ml-2 w-4 h-4 inline-block " />
+                      </div>
+                    </h3>
+                    <p className="text-white/70 text-xs">
+                      A imagem da planilha fica disponivel somente para download
+                      por um tempo limitado, caso deseje fazer o download
+                      novamente entre em contato com nosso suporte
+                    </p>
+                  </div>
+                </div>
+                {/* Details */}
+                <div className="bg-white/5 backdrop-blur-xl rounded-xl p-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)]">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="bg-white/3 backdrop-blur-sm rounded-lg p-2">
+                      <Package className="w-8 h-8 text-[#d5fe46]" />
+                    </div>
+                    <div className="flex flex-col">
+                      <h3 className="text-white font-semibold text-lg">
+                        Detalhes da Compra
+                      </h3>
+                      <Badge className="text-xs bg-transparent text-[#d5fe46] border border-[#d5fe46]/30">
+                        <Hash className="w-4 h-4 text-[#d5fe46]" />
 
-          {/* Footer message */}
-          <div
-            className={`mt-8 text-center transition-all duration-1000 delay-600 ${
-              isAnimating
-                ? "translate-y-0 opacity-100"
-                : "translate-y-2 opacity-0"
-            }`}
-          >
-            <p className="text-white/50 text-sm">
-              Você receberá um email de confirmação em breve
-            </p>
+                        {purchaseData.purchaseId
+                          .trim()
+                          .slice(0, 8)
+                          .toUpperCase()}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-3 p-3 rounded-xl bg-white/3 backdrop-blur-sm ">
+                      <div className="bg-[#d5fe46]/15 backdrop-blur-sm rounded-lg p-2">
+                        <Package className="w-4 h-4 text-[#d5fe46]" />
+                      </div>
+                      <div>
+                        <p className="text-white/60 text-sm font-medium">
+                          Produto
+                        </p>
+                        <p className="text-white font-semibold">
+                          {purchaseData.productName}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-3 p-3 rounded-xl bg-white/3 backdrop-blur-sm ">
+                      <div className="bg-[#f05a24]/15 backdrop-blur-sm rounded-lg p-2">
+                        <Mail className="w-4 h-4 text-[#f05a24]" />
+                      </div>
+                      <div>
+                        <p className="text-white/60 text-sm font-medium">
+                          Entregue para
+                        </p>
+                        <p className="text-white font-semibold">
+                          {purchaseData.buyerEmail}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* Alert */}
+                <div className="mt-12 lg:col-span-2 rounded-xl p-4 sm:p-6 bg-white/5 backdrop-blur-xl shadow-[0_25px_80px_-20px_rgba(240,90,36,0.35)] relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#f05a24]/15 via-transparent to-red-500/12 rounded-xl" />
+                  <div className="relative z-10">
+                    <h5 className="font-bold text-red-400 mb-3 flex items-center gap-2 text-sm">
+                      <AlertTriangle className="w-12 h-12 text-red-400" />
+                      Se algum link não estiver funcionando ou não recebeu o
+                      email com o seu produto solicite o reenvio:
+                    </h5>
+                    <p className="inline-flex gap-2 text-red-300/90 font-normal text-sm leading-relaxed">
+                      Entre em contato pelo email
+                      <span className="text-red-400 font-semibold">
+                        velox.running.app@gmail.com
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-    </div>
+    </MashGradiant>
   );
 }
