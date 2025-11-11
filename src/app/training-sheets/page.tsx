@@ -233,6 +233,7 @@ export default function TrainingSheetsPage() {
               </p>
               <Button
                 asChild
+                size="lg"
                 className="bg-gradient-to-r from-[#d5fe46]/20 to-green-400/20 text-[#d5fe46] border border-[#d5fe46]/30 hover:bg-[#d5fe46]/10 transition-all duration-300"
               >
                 <Link
@@ -240,7 +241,7 @@ export default function TrainingSheetsPage() {
                   className="flex items-center gap-2"
                 >
                   <ExternalLink className="w-4 h-4" />
-                  Ver Todas no Coach
+                  Ver Todas as Planilhas
                 </Link>
               </Button>
             </div>
@@ -502,81 +503,6 @@ export default function TrainingSheetsPage() {
                   </div>
                 </div>
               ))}
-            </div>
-
-            {/* Final CTA with multiple actions */}
-            <div className="text-center">
-              <div className="rounded-3xl border border-[#d5fe46]/20 bg-gradient-to-br from-[#d5fe46]/10 via-black/50 to-black/80 backdrop-blur-xl p-12 shadow-[0_0_60px_rgba(213,254,70,0.2)] relative overflow-hidden">
-                {/* Background pattern */}
-                <div className="absolute inset-0 opacity-5">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_#d5fe46,_transparent_50%)]" />
-                </div>
-
-                <div className="relative z-10 space-y-8">
-                  <h3 className="text-3xl md:text-4xl font-bold text-white">
-                    Comece Sua{" "}
-                    <span className="text-[#d5fe46]">Transformação</span>
-                  </h3>
-
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <Button
-                      asChild
-                      size="lg"
-                      className="group bg-gradient-to-r from-[#d5fe46] to-green-400 hover:from-green-400 hover:to-[#d5fe46] text-black font-bold text-lg px-8 py-6 h-auto rounded-2xl shadow-[0_0_40px_rgba(213,254,70,0.4)] hover:shadow-[0_0_60px_rgba(213,254,70,0.6)] transition-all duration-500 hover:scale-105"
-                    >
-                      <Link
-                        href="/coach?section=training"
-                        className="flex items-center gap-3"
-                      >
-                        <Target className="w-5 h-5" />
-                        Explorar Planilhas
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                      </Link>
-                    </Button>
-
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="lg"
-                      className="border-[#d5fe46]/30 text-[#d5fe46] hover:bg-[#d5fe46]/10 px-8 py-6 h-auto rounded-2xl"
-                    >
-                      <Link href="/coach" className="flex items-center gap-3">
-                        <Sparkles className="w-5 h-5" />
-                        Acessar Coach
-                      </Link>
-                    </Button>
-                  </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto text-sm">
-                    {[
-                      {
-                        icon: <Clock className="w-5 h-5" />,
-                        text: "Acesso Imediato",
-                      },
-                      {
-                        icon: <Users className="w-5 h-5" />,
-                        text: "1000+ Corredores",
-                      },
-                      {
-                        icon: <Target className="w-5 h-5" />,
-                        text: "Resultados Garantidos",
-                      },
-                      {
-                        icon: <Award className="w-5 h-5" />,
-                        text: "Suporte Especializado",
-                      },
-                    ].map((feature, index) => (
-                      <div
-                        key={index}
-                        className="flex flex-col items-center gap-2 text-white/70"
-                      >
-                        <div className="text-[#d5fe46]">{feature.icon}</div>
-                        <span>{feature.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>

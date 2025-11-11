@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Zap, ChevronDown } from "lucide-react";
+import { Zap, ChevronDown, Calendar } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import useAnalytics from "@/tracking/useAnalytics";
@@ -23,9 +23,9 @@ export default function Hero() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleTelegramClick = () => {
-    trackButtonClick("hero:primary_cta", "Começar Agora", TELEGRAM_BOT_URL);
-    window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
+  const handleCalendarClick = () => {
+    trackButtonClick("hero:primary_cta", "Encontrar Provas Agora", "/calendar");
+    window.open("/calendar", "_self");
   };
   return (
     <section className="min-h-[900px] max-h-[calc(100vh-40vh)] h-full relative overflow-hidden bg-black/40 py-24 md:py-32">
@@ -75,12 +75,12 @@ export default function Hero() {
             </div>
             <Button
               size="lg"
-              onClick={handleTelegramClick}
+              onClick={handleCalendarClick}
               variant="outline"
               className="border-[#d5fe46] text-[#d5fe46] mt-16 bg-transparent ease-in-out duration-150 cursor-pointer uppercase text-lg py-4 px-7 h-auto transition-all hover:bg-[#d5fe46] hover:text-black"
             >
-              <Zap className="mr-2 h-4 w-4" />
-              Começar Agora
+              <Calendar className="mr-2 h-4 w-4" />
+              Encontrar Provas Agora
             </Button>
           </div>
         </div>
