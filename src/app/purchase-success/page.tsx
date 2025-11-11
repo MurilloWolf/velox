@@ -232,22 +232,6 @@ export default function PurchaseSuccessPage() {
                     </p>
                   </div>
                   <div className="p-2 mt-4">
-                    <h3 className="text-lg text-[#d5fe46] font-semibold group hover:underline cursor-pointer">
-                      <Link
-                        href="https://www.notion.so/veloxrunning/Modelo-de-Planilha-de-Treino-Velox-Run-7cf5f3f3e8e04f2e8e4f5b1e8e4f5b1e"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center  hover:scale-110 transition-transform duration-200"
-                      >
-                        Notion
-                        <ExternalLink className=" ml-2 w-4 h-4 " />
-                      </Link>
-                    </h3>
-                    <p className="text-white/70">
-                      Basta fazer a cópia do modelo para o seu próprio Notion
-                    </p>
-                  </div>
-                  <div className="p-2 mt-4">
                     <h3 className="text-lg text-[#d5fe46] font-semibold">
                       <div className="block items-center gap-2 w-fit hover:scale-110 transition-transform duration-200 cursor-pointer">
                         Download da Imagem

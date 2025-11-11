@@ -261,7 +261,6 @@ export default function TrainingSheetsPage() {
                     className="group relative rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 via-black/50 to-black/80 backdrop-blur-xl shadow-[0_0_40px_rgba(0,0,0,0.3)] hover:shadow-[0_0_60px_rgba(213,254,70,0.2)] transition-all duration-500 hover:scale-105 cursor-pointer overflow-hidden"
                     onClick={() => handleProductClick(product)}
                   >
-                    {/* Product Image */}
                     {product.imageLink && (
                       <div className="relative h-48 overflow-hidden rounded-t-3xl">
                         {!previewError[product.id] ? (

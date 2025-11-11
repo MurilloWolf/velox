@@ -58,8 +58,6 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
         //       categories: ["10km", "iniciante"],
         //       driveLink:
         //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
-        //       notionLink:
-        //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
         //       imageLink:
         //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
         //       createdAt: "2025-10-29T21:05:20.427Z",
@@ -76,8 +74,6 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
         //       categories: ["5km"],
         //       driveLink:
         //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
-        //       notionLink:
-        //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
         //       imageLink:
         //         "https://docs.google.com/spreadsheets/d/1f1_6VFua6xLUXp7zHDmypwiDu71mFs-D/edit?usp=sharing&ouid=106148854244649472480&rtpof=true&sd=true",
         //       createdAt: "2025-10-29T21:01:29.731Z",
@@ -86,9 +82,7 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
         //   ],
         // };
         const result = await fetchAvailableProducts();
-        // @ts-expect-error --- IGNORE ---
         if (result.error) {
-          // @ts-expect-error --- IGNORE ---
           setError(result.error);
         } else {
           setPlans(result.products || []);
