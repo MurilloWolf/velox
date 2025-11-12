@@ -3,6 +3,8 @@ interface PurchaseTokenData {
   productName: string;
   buyerEmail: string;
   timestamp: number;
+  driveLink?: string;
+  imageLink?: string;
 }
 
 /**

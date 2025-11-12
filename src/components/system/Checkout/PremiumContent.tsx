@@ -13,7 +13,6 @@ import {
   FileSpreadsheet,
   AlertTriangle,
   Loader2,
-  Download,
 } from "lucide-react";
 import {
   Elements,
@@ -33,8 +32,9 @@ import type {
 } from "@/types/purchases";
 import useAnalytics from "@/tracking/useAnalytics";
 import { Badge } from "@/components/ui";
-import { getProductPreviewUrl, getProductDownloadUrl } from "@/lib/imageUtils";
+import { getProductPreviewUrl } from "@/lib/imageUtils";
 import { generatePurchaseSuccessUrl } from "@/lib/purchaseUtils";
+import { ErrorDisplay, PurchaseSuccessState } from "./shared";
 
 const STRIPE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
@@ -207,7 +207,16 @@ export default function PremiumContent({
       setClientSecret(response.data.intent.clientSecret);
     } catch (error) {
       console.error("Erro ao iniciar pagamento:", error);
-      if (error instanceof CheckoutError) {
+
+      const errorMessage = error instanceof Error ? error.message : "";
+      const isAlreadyPurchased =
+        errorMessage.toLowerCase().includes("purchase already exists") ||
+        errorMessage.toLowerCase().includes("já adquiriu") ||
+        errorMessage.toLowerCase().includes("already purchased");
+
+      if (isAlreadyPurchased) {
+        setErrorMessage("already_purchased");
+      } else if (error instanceof CheckoutError) {
         setErrorMessage(error.message);
       } else if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -251,6 +260,8 @@ export default function PremiumContent({
           purchaseId: checkoutResult.purchase.id,
           productName: checkoutResult.purchase.product.title,
           buyerEmail: checkoutResult.purchase.buyerEmail || customerInfo.email,
+          driveLink: checkoutResult.purchase.deliveryLink as string,
+          imageLink: checkoutResult.purchase.product.imageLink as string,
         });
         window.location.href = successUrl;
       }, 2000);
@@ -267,122 +278,17 @@ export default function PremiumContent({
     }
   };
 
-  if (showConfirmation) {
-    const resolvedProduct = checkoutResult?.purchase.product ?? product;
-    const buyerEmail =
-      checkoutResult?.purchase.buyerEmail ?? customerInfo.email;
-    const deliveryLink = checkoutResult?.purchase.deliveryLink;
-    const imageLink = resolvedProduct.imageLink;
-
+  if (showConfirmation && checkoutResult) {
     return (
-      <div className="space-y-8 py-12 max-w-4xl mx-auto">
-        <div className="text-center space-y-4">
-          <div className="rounded-full w-20 h-20 bg-gradient-to-br from-[#d5fe46]/20 to-[#f05a24]/10 backdrop-blur-xl border border-[#d5fe46]/30 flex items-center justify-center mx-auto shadow-[0_25px_80px_-20px_rgba(213,254,70,0.3)]">
-            <CheckCircle2 className="w-10 h-10 text-[#d5fe46] drop-shadow-[0_0_8px_#d5fe46]" />
-          </div>
-          <div className="space-y-4">
-            <h3 className="text-2xl font-bold text-[#d5fe46] text-shadow-[0_0_8px_#d5fe46]">
-              Pagamento aprovado!
-            </h3>
-            <p className="text-white/80 leading-relaxed max-w-2xl mx-auto">
-              Enviamos uma confirmação para{" "}
-              <strong className="text-[#d5fe46]">{buyerEmail}</strong>. Você já
-              pode acessar o material exclusivo pelos links abaixo.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-3xl bg-white/[0.06] border border-white/10 backdrop-blur-xl p-6 space-y-5 shadow-[0_25px_90px_-20px_rgba(0,0,0,0.65)]">
-            <div>
-              <h4 className="text-lg font-semibold text-white flex items-center gap-2">
-                <ExternalLink className="w-5 h-5 text-[#d5fe46]" />
-                Seu conteúdo exclusivo
-              </h4>
-              <p className="text-sm text-white/60 mt-1">
-                Acesse o material completo através do link de entrega.
-              </p>
-            </div>
-            <div className="space-y-3">
-              {deliveryLink ? (
-                <Button
-                  asChild
-                  className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-[#d5fe46]/15 text-[#d5fe46] hover:bg-[#d5fe46]/25"
-                  variant="outline"
-                >
-                  <a
-                    href={deliveryLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <FileSpreadsheet className="w-4 h-4" />
-                    Acessar conteúdo
-                  </a>
-                </Button>
-              ) : (
-                <p className="text-sm text-white/50">
-                  Link de entrega não disponível.
-                </p>
-              )}
-              {imageLink ? (
-                <Button
-                  asChild
-                  className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-[#f05a24]/15 text-[#f6ff8d] hover:bg-[#f05a24]/20"
-                  variant="outline"
-                >
-                  <a
-                    href={getProductDownloadUrl(imageLink)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Download className="w-4 h-4" />
-                    Baixar visualização (PNG)
-                  </a>
-                </Button>
-              ) : (
-                <p className="text-sm text-white/50">
-                  Visualização da planilha não disponível.
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="rounded-3xl bg-white/[0.05] border border-white/10 backdrop-blur-xl p-6 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.65)]">
-            {resolvedProduct.imageLink && !previewError ? (
-              <div className="relative rounded-2xl overflow-hidden border border-white/10">
-                <Image
-                  src={getProductPreviewUrl(resolvedProduct.imageLink)}
-                  alt={resolvedProduct.title}
-                  width={560}
-                  height={360}
-                  className="w-full h-auto object-cover max-h-[450px]"
-                  onError={() => setPreviewError(true)}
-                />
-              </div>
-            ) : (
-              <div className="flex h-full min-h-[200px] flex-col items-center justify-center gap-3 rounded-2xl border border-white/10 bg-black/40">
-                <FileSpreadsheet className="w-10 h-10 text-[#d5fe46]/70" />
-                <p className="text-sm text-white/60">
-                  Visualização indisponível no momento
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center justify-center gap-4">
-          <p className="text-xs text-white/50">
-            Se precisar de suporte, responda o email recebido ou fale com nosso
-            time.
-          </p>
-          <Button
-            onClick={onPurchaseComplete}
-            className="bg-gradient-to-r from-[#d5fe46] via-[#f6ff8d] to-[#f05a24] hover:from-[#f6ff8d] hover:via-[#d5fe46] hover:to-[#f05a24] text-black font-bold py-4 px-8 rounded-2xl text-lg transition-all duration-300 shadow-[0_12px_40px_rgba(240,90,36,0.35)] hover:shadow-[0_16px_56px_rgba(240,90,36,0.45)]"
-          >
-            Finalizar
-          </Button>
-        </div>
-      </div>
+      <PurchaseSuccessState
+        product={product}
+        checkoutResult={checkoutResult}
+        customerEmail={customerInfo.email}
+        accentColor="yellow"
+        onComplete={onPurchaseComplete || (() => {})}
+        title="Pagamento aprovado!"
+        subtitle="você já pode acessar o material exclusivo"
+      />
     );
   }
 
@@ -664,11 +570,12 @@ export default function PremiumContent({
                   &quot;Cartão&quot; para pagar com Stripe.
                 </div>
               )}
-              {errorMessage ? (
-                <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
-                  {errorMessage}
-                </div>
-              ) : null}
+              <ErrorDisplay
+                errorMessage={errorMessage}
+                customerEmail={customerInfo.email}
+                productTitle={product.title}
+                accentColor="yellow"
+              />
               <Button
                 onClick={handleCancel}
                 disabled={isProcessing}

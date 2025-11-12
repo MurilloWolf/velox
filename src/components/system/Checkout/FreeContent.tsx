@@ -15,8 +15,9 @@ import { Product } from "@/types/products";
 import type { CheckoutSuccessPayload } from "@/types/purchases";
 import { checkoutPurchase, CheckoutError } from "@/services/purchases";
 import useAnalytics from "@/tracking/useAnalytics";
-import { getProductPreviewUrl, getProductDownloadUrl } from "@/lib/imageUtils";
+import { getProductPreviewUrl } from "@/lib/imageUtils";
 import { generatePurchaseSuccessUrl } from "@/lib/purchaseUtils";
+import { LoadingState, ErrorDisplay } from "./shared";
 
 type FreeCustomerInfo = {
   name: string;
@@ -25,13 +26,11 @@ type FreeCustomerInfo = {
 
 interface FreeContentProps {
   product: Product;
-  onComplete?: () => void;
   onProcessingChange?: (isProcessing: boolean) => void;
 }
 
 export default function FreeContent({
   product,
-  onComplete,
   onProcessingChange,
 }: FreeContentProps) {
   const [isAccessing, setIsAccessing] = useState(false);
@@ -113,7 +112,7 @@ export default function FreeContent({
     if (!validateForm()) return;
 
     setIsAccessing(true);
-    onProcessingChange?.(true); // 👈 Notifica que o processamento iniciou
+    onProcessingChange?.(true);
     setErrorMessage(null);
     setCheckoutResult(null);
     setHasAccessed(false);
@@ -134,17 +133,32 @@ export default function FreeContent({
       setCheckoutResult(response.data);
       setHasAccessed(true);
 
+      // Redirect after showing loading state
       setTimeout(() => {
         const successUrl = generatePurchaseSuccessUrl({
           purchaseId: response.data.purchase.id,
           productName: response.data.purchase.product.title,
           buyerEmail: response.data.purchase.buyerEmail || customerInfo.email,
+          driveLink: `https://docs.google.com/spreadsheets/d/${response.data.purchase.product.id}/edit?usp=sharing`,
+          imageLink:
+            response.data.purchase.product.imageLink ||
+            response.data.purchase.deliveryLink ||
+            undefined,
         });
         window.location.href = successUrl;
-      }, 1500);
+      }, 2000);
     } catch (error) {
       console.error("Erro ao acessar conteúdo:", error);
-      if (error instanceof CheckoutError) {
+
+      const errorMessage = error instanceof Error ? error.message : "";
+      const isAlreadyPurchased =
+        errorMessage.toLowerCase().includes("purchase already exists") ||
+        errorMessage.toLowerCase().includes("já adquiriu") ||
+        errorMessage.toLowerCase().includes("already purchased");
+
+      if (isAlreadyPurchased) {
+        setErrorMessage("already_purchased");
+      } else if (error instanceof CheckoutError) {
         setErrorMessage(error.message);
       } else if (error instanceof Error) {
         setErrorMessage(error.message);
@@ -155,126 +169,21 @@ export default function FreeContent({
       }
     } finally {
       setIsAccessing(false);
-      onProcessingChange?.(false); // 👈 Notifica que o processamento terminou
+      onProcessingChange?.(false);
     }
   };
 
   if (hasAccessed) {
-    const resolvedProduct = checkoutResult?.purchase.product ?? product;
     const buyerEmail =
       checkoutResult?.purchase.buyerEmail ?? customerInfo.email;
-    const deliveryLink = checkoutResult?.purchase.deliveryLink;
-    const imageLink = resolvedProduct.imageLink;
 
     return (
-      <div className="space-y-8 py-10 px-4 sm:px-6">
-        <div className="text-center space-y-4">
-          <div className="rounded-full w-20 h-20 bg-gradient-to-br from-green-400/20 to-green-500/10 backdrop-blur-xl border border-green-400/30 flex items-center justify-center mx-auto shadow-[0_20px_70px_-20px_rgba(74,222,128,0.35)]">
-            <CheckCircle className="w-10 h-10 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
-          </div>
-          <div className="space-y-3">
-            <h3 className="text-2xl font-bold text-green-400">
-              Conteúdo liberado!
-            </h3>
-            <p className="text-slate-200 text-base leading-relaxed max-w-2xl mx-auto">
-              Enviamos os detalhes para{" "}
-              <strong className="text-green-200">{buyerEmail}</strong> e você
-              também pode acessar os materiais pelos links abaixo.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-3xl bg-white/[0.05] border border-white/10 backdrop-blur-xl p-6 space-y-5 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.65)]">
-            <div>
-              <h4 className="text-lg font-semibold text-white flex items-center gap-2">
-                <ExternalLink className="w-5 h-5 text-green-300" />
-                Link de acesso
-              </h4>
-              <p className="text-sm text-white/60 mt-1">
-                Acesse o conteúdo completo através do link de entrega.
-              </p>
-            </div>
-            <div className="space-y-3">
-              {deliveryLink ? (
-                <Button
-                  asChild
-                  className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-green-400/15 text-green-200 hover:bg-green-400/25"
-                  variant="outline"
-                >
-                  <a
-                    href={deliveryLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <FileSpreadsheet className="w-4 h-4" />
-                    Acessar conteúdo
-                  </a>
-                </Button>
-              ) : (
-                <p className="text-sm text-white/50">
-                  Link de entrega não disponível.
-                </p>
-              )}
-              {imageLink ? (
-                <Button
-                  asChild
-                  className="cursor-pointer w-full justify-start gap-3 rounded-2xl bg-white/10 text-white hover:bg-white/20"
-                  variant="outline"
-                >
-                  <a
-                    href={getProductDownloadUrl(imageLink)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Download className="w-4 h-4" />
-                    Baixar visualização (PNG)
-                  </a>
-                </Button>
-              ) : (
-                <p className="text-sm text-white/50">
-                  Visualização da planilha não disponível.
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="rounded-3xl bg-white/[0.05] border border-white/10 backdrop-blur-xl p-6 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.65)]">
-            {resolvedProduct.imageLink && !previewError ? (
-              <div className="relative rounded-2xl overflow-hidden border border-white/10">
-                <Image
-                  src={getProductPreviewUrl(resolvedProduct.imageLink)}
-                  alt={resolvedProduct.title}
-                  width={560}
-                  height={360}
-                  className="w-full h-auto object-cover"
-                  onError={() => setPreviewError(true)}
-                />
-              </div>
-            ) : (
-              <div className="flex h-full min-h-[200px] flex-col items-center justify-center gap-3 rounded-2xl border border-white/10 bg-black/40">
-                <FileSpreadsheet className="w-10 h-10 text-green-300/80" />
-                <p className="text-sm text-white/60">
-                  Visualização indisponível no momento
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center justify-center gap-4">
-          <p className="text-xs text-white/50">
-            Caso precise de suporte, responda o email recebido com sua dúvida.
-          </p>
-          <Button
-            onClick={onComplete}
-            variant="outline"
-            className="cursor-pointer border-green-400/40 text-green-200 hover:bg-green-400/10 hover:text-green-100 rounded-2xl"
-          >
-            Fechar
-          </Button>
-        </div>
-      </div>
+      <LoadingState
+        email={buyerEmail}
+        title="Finalizando seu acesso..."
+        description="Estamos preparando tudo para você!"
+        accentColor="green"
+      />
     );
   }
 
@@ -428,11 +337,12 @@ export default function FreeContent({
               )}
             </Button>
 
-            {errorMessage ? (
-              <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-200">
-                {errorMessage}
-              </div>
-            ) : null}
+            <ErrorDisplay
+              errorMessage={errorMessage}
+              customerEmail={customerInfo.email}
+              productTitle={product.title}
+              accentColor="green"
+            />
 
             <div className="rounded-2xl bg-white/[0.04] border border-white/5 p-5 space-y-3 text-sm text-white/70">
               <p className="font-semibold text-white flex items-center gap-2">

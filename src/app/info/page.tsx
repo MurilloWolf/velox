@@ -14,7 +14,6 @@ import {
   Search,
   Send,
   Settings,
-  Sparkles,
   Star,
   Trophy,
 } from "lucide-react";
@@ -40,13 +39,11 @@ export default function InfoPage() {
   const { trackButtonClick } = useAnalytics();
   const {
     hero,
-    quickStats,
+    // quickStats,
     howItWorksCard,
     howItWorks,
     commandsSection,
     categories,
-    proTipsSection,
-    proTips,
   } = infoPageContent;
 
   const commands = useMemo(
@@ -121,7 +118,7 @@ export default function InfoPage() {
                   {hero.primaryCta}
                 </Button>
               </div>
-              <div className="grid gap-4 sm:grid-cols-3">
+              {/* <div className="grid gap-4 sm:grid-cols-3">
                 {quickStats.map((stat) => (
                   <Card
                     key={stat.label}
@@ -138,7 +135,7 @@ export default function InfoPage() {
                     </CardContent>
                   </Card>
                 ))}
-              </div>
+              </div> */}
             </div>
 
             <Card className="relative overflow-hidden border border-[#242424] bg-[#0e0e0e]/90 shadow-[0_20px_60px_-25px_rgba(0,0,0,0.7)] lg:ml-auto">
@@ -291,39 +288,6 @@ export default function InfoPage() {
                 })
               )}
             </div>
-          </section>
-
-          <section className="grid gap-8 lg:grid-cols-[1fr_1.1fr]">
-            <Card className="border border-[#1e1e1e] bg-[#0d0d0d]/90 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.8)]">
-              <CardContent className="space-y-6 p-8">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#d5fe46]/60 text-[#050505]">
-                    <Sparkles className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-semibold text-white">
-                      {proTipsSection.title}
-                    </h2>
-                    <p className="text-sm text-slate-400">
-                      {proTipsSection.description}
-                    </p>
-                  </div>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {proTips.map((tip, index) => (
-                    <div
-                      key={tip}
-                      className="flex items-start gap-3 rounded-2xl border border-transparent bg-[#151515] p-4 text-sm text-slate-300 transition-all hover:-translate-y-1 hover:border-[#d5fe46]/50 hover:bg-[#1b1b1b]"
-                    >
-                      <span className="mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-[#d5fe46] text-xs font-bold text-[#050505]">
-                        {index + 1}
-                      </span>
-                      <p>{tip}</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
           </section>
         </div>
       </main>

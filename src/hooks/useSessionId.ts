@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 
 const SESSION_STORAGE_KEY = "velox_session_id";
 const DEVICE_STORAGE_KEY = "velox_device_id";
-const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutos
+const SESSION_TIMEOUT = 30 * 60 * 1000;
 const LAST_ACTIVITY_KEY = "velox_last_activity";
 
 function generateSessionId(): string {
@@ -68,10 +68,6 @@ export default function useSessionId() {
       if (timeSinceLastActivity > oneSecond) {
         lastActivityRef.current = now;
         updateLastActivity();
-
-        if (process.env.NODE_ENV === "development" && eventType) {
-          console.log(`🎯 User activity: ${eventType} - Session: ${sessionId}`);
-        }
       }
     },
     [sessionId]
@@ -80,7 +76,6 @@ export default function useSessionId() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // 1. DEVICE ID - Persiste para sempre (identifica pessoa/dispositivo)
     let currentDeviceId = localStorage.getItem(DEVICE_STORAGE_KEY);
     if (!currentDeviceId) {
       currentDeviceId = generateSessionId();
@@ -88,7 +83,6 @@ export default function useSessionId() {
     }
     setDeviceId(currentDeviceId);
 
-    // 2. SESSION ID - Controla expiração por inatividade
     let currentSessionId = localStorage.getItem(SESSION_STORAGE_KEY);
 
     if (!currentSessionId || isSessionExpired()) {

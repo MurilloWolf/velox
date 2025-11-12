@@ -1,13 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Zap, ChevronDown, Calendar } from "lucide-react";
+import { ChevronDown, Calendar } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import useAnalytics from "@/tracking/useAnalytics";
 
 export default function Hero() {
-  const TELEGRAM_BOT_URL =
-    process.env.NEXT_PUBLIC_BOT_URL || "https://web.telegram.org/a/#8475526575";
   const [showScroll, setShowScroll] = useState(true);
   const { trackButtonClick } = useAnalytics();
 
@@ -48,7 +46,7 @@ export default function Hero() {
             <p className="mt-2 sm:mt-2 mb-10 max-w-3xl text-pretty text-xl text-white/85 md:text-2xl leading-relaxed font-medium">
               Sua plataforma completa de corridas
             </p>
-            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+            {/* <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-[#d5fe46] text-shadow-[0_0_8px_#d5fe46] mb-2">
                   500+
@@ -73,7 +71,7 @@ export default function Hero() {
                 </div>
                 <div className="text-sm text-white/80">Disponível</div>
               </div>
-            </div>
+            </div> */}
             <Button
               size="lg"
               onClick={handleCalendarClick}

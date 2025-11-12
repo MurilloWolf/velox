@@ -18,8 +18,7 @@ import {
   TableRow,
 } from "@/components/ui";
 
-import PurchaseDialog from "../Checkout/PurchaseDialog";
-import ProductContent from "../Checkout/ProductContent";
+import { PurchaseDialog, ProductContent } from "@/components/system";
 import { Product } from "@/types/products";
 import { fetchAvailableProducts } from "@/services/actions/products";
 

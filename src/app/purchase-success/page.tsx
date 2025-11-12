@@ -1,37 +1,63 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import {
   CheckCircle,
   Package,
   Mail,
   Hash,
   Sparkles,
-  ArrowRight,
   AlertTriangle,
   UserCircle2,
   Send,
-  ArrowLeft,
   ExternalLink,
   Download,
 } from "lucide-react";
 import { MashGradiant } from "@/components/system";
-import { Badge } from "@/components/ui";
+import { Badge, Button } from "@/components/ui";
 import Link from "next/link";
+import Image from "next/image";
 
 interface PurchaseData {
   purchaseId: string;
   productName: string;
   buyerEmail: string;
   timestamp: number;
+  driveLink?: string;
+  imageLink?: string;
 }
 
-export default function PurchaseSuccessPage() {
+function PurchaseSuccessContent() {
   const searchParams = useSearchParams();
   const [isValidAccess, setIsValidAccess] = useState<boolean | null>(null);
   const [purchaseData, setPurchaseData] = useState<PurchaseData | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleDownloadImage = async () => {
+    if (!purchaseData) return;
+    try {
+      if (!purchaseData.imageLink) return;
+
+      const response = await fetch(purchaseData.imageLink);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `planilha-${purchaseData.productName
+        .toLowerCase()
+        .replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Erro ao baixar imagem:", error);
+      window.open(purchaseData.imageLink!, "_blank");
+    }
+  };
 
   useEffect(() => {
     const token = searchParams.get("token");
@@ -43,6 +69,7 @@ export default function PurchaseSuccessPage() {
 
     try {
       const decodedData = JSON.parse(atob(token));
+      console.log("Dados decodificados:", decodedData);
 
       const currentTime = Date.now();
       const tokenAge = currentTime - decodedData.timestamp;
@@ -202,47 +229,114 @@ export default function PurchaseSuccessPage() {
                     : "translate-y-4 opacity-0"
                 }`}
               >
-                {" "}
-                <div className="bg-white/5 backdrop-blur-xl mb-4  rounded-xl p-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)]">
+                {purchaseData.imageLink && (
+                  <div className="bg-white/5 backdrop-blur-xl mb-4 rounded-xl p-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)]">
+                    <div className="mb-6">
+                      <h4 className="text-white font-semibold text-2xl flex items-center gap-2">
+                        Preview da Planilha
+                      </h4>
+                      <p className="text-white/70">
+                        Visualize sua planilha de treinos
+                      </p>
+                    </div>
+
+                    <div className="rounded-xl bg-white/5 border border-white/10">
+                      <Image
+                        src={purchaseData.imageLink}
+                        alt="Planilha de Treinos"
+                        width={800}
+                        height={600}
+                        className="w-full h-auto max-h-[620px] object-contain rounded-xl"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = "none";
+                        }}
+                      />
+                      <p className="text-white/70 text-xs m-1 p-2  md:m-4 md:p-4">
+                        A imagem da planilha fica disponível somente para
+                        download por um tempo limitado. Caso deseje fazer o
+                        download novamente, entre em contato com nosso suporte.
+                      </p>
+                    </div>
+
+                    <div className="mt-4 flex gap-3 flex-wrap">
+                      <Button
+                        onClick={handleDownloadImage}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-[#d5fe46]/20 hover:bg-[#d5fe46]/30 text-[#d5fe46] border border-[#d5fe46]/30 rounded-lg transition-all duration-200 hover:scale-105 font-medium"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download da Imagem
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                <div className="bg-white/5 backdrop-blur-xl mb-4 rounded-xl p-6 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.5)]">
                   <div className="mb-4">
                     <h4 className="text-white font-semibold text-2xl flex items-center gap-2">
                       Como acessar seu produto
                     </h4>
                     <p className="text-white/70">
-                      Todos os produtos são entregues por email
+                      Todos os produtos também são entregues por email
                     </p>
                   </div>
-                  <div className="p-2 mt-4">
-                    <h3 className="text-lg text-[#d5fe46] font-semibold">
-                      <Link
-                        href={
-                          "https://docs.google.com/spreadsheets/d/1A2B3C4D5E6F7G8H9I0J/edit?usp=sharing"
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center  hover:scale-110 transition-transform duration-200"
-                      >
-                        Google Sheets
-                        <ExternalLink className=" ml-2 w-4 h-4 " />
-                      </Link>
-                    </h3>
-                    <p className="text-white/70">
-                      Fazer a cópia para seu prórpio drive ou baixar a planilha
-                      para seu computador/celulcar
-                    </p>
-                  </div>
-                  <div className="p-2 mt-4">
-                    <h3 className="text-lg text-[#d5fe46] font-semibold">
-                      <div className="block items-center gap-2 w-fit hover:scale-110 transition-transform duration-200 cursor-pointer">
-                        Download da Imagem
-                        <Download className=" ml-2 w-4 h-4 inline-block " />
+
+                  <div className="space-y-4">
+                    {purchaseData.driveLink && (
+                      <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                        <h3 className="text-lg text-[#d5fe46] font-semibold mb-2">
+                          Google Sheets - Planilha Online
+                        </h3>
+                        <p className="text-white/70 text-sm mb-4">
+                          Acesse e faça uma cópia da planilha para seu próprio
+                          Google Drive
+                        </p>
+                        <div className="flex gap-3 flex-wrap">
+                          <Link
+                            href={purchaseData.driveLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-[#d5fe46] hover:bg-[#d5fe46]/90 text-black rounded-lg transition-all duration-200 hover:scale-105 font-medium"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            Acessar Planilha
+                          </Link>
+                          <Link
+                            href={purchaseData.driveLink.replace(
+                              "/edit",
+                              "/export?format=xlsx"
+                            )}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-lg transition-all duration-200 hover:scale-105 font-medium"
+                          >
+                            <Download className="w-4 h-4" />
+                            Download Excel
+                          </Link>
+                        </div>
                       </div>
-                    </h3>
-                    <p className="text-white/70 text-xs">
-                      A imagem da planilha fica disponivel somente para download
-                      por um tempo limitado, caso deseje fazer o download
-                      novamente entre em contato com nosso suporte
-                    </p>
+                    )}
+
+                    {!purchaseData.driveLink && (
+                      <div className="p-2 mt-4">
+                        <h3 className="text-lg text-[#d5fe46] font-semibold">
+                          <Link
+                            href={
+                              "https://docs.google.com/spreadsheets/d/1A2B3C4D5E6F7G8H9I0J/edit?usp=sharing"
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center hover:scale-110 transition-transform duration-200"
+                          >
+                            Google Sheets
+                            <ExternalLink className="ml-2 w-4 h-4" />
+                          </Link>
+                        </h3>
+                        <p className="text-white/70">
+                          Fazer a cópia para seu próprio drive ou baixar a
+                          planilha para seu computador/celular
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
                 {/* Details */}
@@ -296,7 +390,6 @@ export default function PurchaseSuccessPage() {
                     </div>
                   </div>
                 </div>
-                {/* Alert */}
                 <div className="mt-12 lg:col-span-2 rounded-xl p-4 sm:p-6 bg-white/5 backdrop-blur-xl shadow-[0_25px_80px_-20px_rgba(240,90,36,0.35)] relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-r from-[#f05a24]/15 via-transparent to-red-500/12 rounded-xl" />
                   <div className="relative z-10">
@@ -305,10 +398,10 @@ export default function PurchaseSuccessPage() {
                       Se algum link não estiver funcionando ou não recebeu o
                       email com o seu produto solicite o reenvio:
                     </h5>
-                    <p className="inline-flex gap-2 text-red-300/90 font-normal text-sm leading-relaxed">
+                    <p className="md:inline-flex gap-2 text-red-300/90 font-normal text-sm leading-relaxed">
                       Entre em contato pelo email
                       <span className="text-red-400 font-semibold">
-                        velox.running.app@gmail.com
+                        {` `} velox.running.app@gmail.com
                       </span>
                     </p>
                   </div>
@@ -319,5 +412,34 @@ export default function PurchaseSuccessPage() {
         </div>
       </div>
     </MashGradiant>
+  );
+}
+
+export default function PurchaseSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br relative overflow-hidden flex items-center justify-center">
+          <div className="absolute inset-0">
+            <div className="absolute top-20 left-20 h-32 w-32 bg-[#d5fe46]/20 rounded-full blur-3xl animate-pulse" />
+            <div
+              className="absolute bottom-20 right-20 h-40 w-40 bg-[#f05a24]/15 rounded-full blur-3xl animate-pulse"
+              style={{ animationDelay: "1s" }}
+            />
+            <div
+              className="absolute top-1/2 left-1/3 h-24 w-24 bg-purple-500/10 rounded-full blur-2xl animate-pulse"
+              style={{ animationDelay: "2s" }}
+            />
+          </div>
+
+          <div className="relative z-10 text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-2 border-[#d5fe46]/30 border-t-[#d5fe46] mx-auto mb-4" />
+            <p className="text-white/70 text-lg">Carregando...</p>
+          </div>
+        </div>
+      }
+    >
+      <PurchaseSuccessContent />
+    </Suspense>
   );
 }

@@ -13,6 +13,12 @@ import MashGradiant from "./MashGradiant";
 import PageTracker from "./Tracker/PageTracker";
 import SessionProvider from "./SessionProvider";
 import PurchaseProtection from "./PurchaseProtection";
+import {
+  PurchaseDialog,
+  ProductContent,
+  FreeContent,
+  PremiumContent,
+} from "./Checkout";
 
 export {
   MashGradiant,
@@ -30,4 +36,8 @@ export {
   PageTracker,
   SessionProvider,
   PurchaseProtection,
+  PurchaseDialog,
+  ProductContent,
+  FreeContent,
+  PremiumContent,
 };

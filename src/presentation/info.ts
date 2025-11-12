@@ -41,9 +41,9 @@ export const infoPageContent = {
     },
     {
       step: "2",
-      title: "Personalize alertas",
+      title: "Procure suas corridas",
       description:
-        "Combine cidade, distância e data ideal para receber só o que importa.",
+        "Filtre por distância, cidade ou data para encontrar as provas que mais combinam com você.",
     },
     {
       step: "3",
@@ -117,15 +117,5 @@ export const infoPageContent = {
       example: "/favoritos",
       category: "Corrida",
     },
-  ],
-  proTipsSection: {
-    title: "Dicas para aproveitar melhor",
-    description: "Um atalho para explorar todo o potencial do bot.",
-  },
-  proTips: [
-    "Use /notificar on para receber alertas de novas corridas",
-    "Salve suas corridas favoritas para acesso rápido",
-    "Combine filtros de distância e cidade para busca precisa",
-    "O bot é atualizado diariamente com novas corridas",
   ],
 } as const;

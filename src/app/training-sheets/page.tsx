@@ -5,7 +5,6 @@ import {
   TrendingUp,
   Zap,
   ArrowRight,
-  Clock,
   Target,
   Award,
   Sparkles,
@@ -18,13 +17,15 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Header, Footer, PageTracker, ChatWidget } from "@/components/system";
+import {
+  PageTracker,
+  PurchaseDialog,
+  PremiumContent,
+  FreeContent,
+} from "@/components/system";
 import useAnalytics from "@/tracking/useAnalytics";
 import { fetchAvailableProducts } from "@/services/actions/products";
 import { Product } from "@/types/products";
-import PurchaseDialog from "@/app/coach/components/Checkout/PurchaseDialog";
-import PremiumContent from "@/app/coach/components/Checkout/PremiumContent";
-import FreeContent from "@/app/coach/components/Checkout/FreeContent";
 import { getProductPreviewUrl } from "@/lib/imageUtils";
 
 export default function TrainingSheetsPage() {
@@ -54,12 +55,10 @@ export default function TrainingSheetsPage() {
       observer.observe(heroRef.current);
     }
 
-    // Load products from backend
     const loadProducts = async () => {
       try {
         const result = await fetchAvailableProducts();
         if (result.products && result.error === null) {
-          // Filter for training-related products if categories include "training" or similar
           const trainingProducts = result.products.filter(
             (product) =>
               product.categories?.some(
@@ -68,7 +67,7 @@ export default function TrainingSheetsPage() {
                   cat.toLowerCase().includes("treino") ||
                   cat.toLowerCase().includes("planilha")
               ) ||
-              (result.products && result.products.length <= 6) // If few products, show all
+              (result.products && result.products.length <= 6)
           );
           setProducts(
             trainingProducts.length > 0 ? trainingProducts : result.products
@@ -98,7 +97,8 @@ export default function TrainingSheetsPage() {
   const formatPrice = (priceCents: number, currency: string) => {
     if (priceCents === 0) return "Gratuito";
     const price = priceCents / 100;
-    return `${currency} ${price.toFixed(2).replace(".", ",")}`;
+    const formmatedCurrency = currency === "BRL" ? "R$" : "$";
+    return `${formmatedCurrency} ${price.toFixed(2).replace(".", ",")}`;
   };
 
   const benefits = [
@@ -127,7 +127,6 @@ export default function TrainingSheetsPage() {
   return (
     <div className="bg-black min-h-screen">
       <PageTracker pagePath="/training-sheets" />
-
       <main className="min-h-screen bg-gradient-to-br from-black via-[#001122] to-black relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-black via-[#001122] to-black" />
@@ -145,7 +144,6 @@ export default function TrainingSheetsPage() {
             style={{ animationDelay: "6s" }}
           />
         </div>
-
         <section ref={heroRef} className="relative pt-32 pb-20 px-4">
           <div className="container mx-auto max-w-6xl">
             <div
@@ -168,36 +166,11 @@ export default function TrainingSheetsPage() {
                   </span>
                 </h1>
                 <p className="text-xl md:text-2xl text-white/80 leading-relaxed max-w-4xl mx-auto">
-                  Do seu primeiro 5K à sua primeira maratona. Planilhas
-                  estruturadas, progressivas e testadas por milhares de
-                  corredores.
+                  Do seu primeiro 5K à maratonas. Planilhas estruturadas,
+                  progressivas e testadas para você alcançar seus objetivos.
                 </p>
               </div>
 
-              {/* Stats */}
-              <div
-                className={`grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto mt-12 transition-all duration-1000 delay-300 ${
-                  isVisible
-                    ? "translate-y-0 opacity-100"
-                    : "translate-y-8 opacity-0"
-                }`}
-              >
-                {[
-                  { number: "1000+", label: "Corredores" },
-                  { number: "95%", label: "Sucesso" },
-                  { number: "50+", label: "Planilhas" },
-                  { number: "24/7", label: "Suporte" },
-                ].map((stat) => (
-                  <div key={stat.label} className="text-center">
-                    <div className="text-3xl md:text-4xl font-bold text-[#d5fe46] drop-shadow-[0_0_10px_rgba(213,254,70,0.5)]">
-                      {stat.number}
-                    </div>
-                    <div className="text-white/60 text-sm uppercase tracking-wide">
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
               <div
                 className={`mt-12 transition-all duration-1000 delay-500 ${
                   isVisible
@@ -245,7 +218,6 @@ export default function TrainingSheetsPage() {
                 </Link>
               </Button>
             </div>
-
             {loading ? (
               <div className="flex justify-center items-center py-20">
                 <Loader2 className="w-8 h-8 animate-spin text-[#d5fe46]" />
@@ -343,8 +315,6 @@ export default function TrainingSheetsPage() {
             )}
           </div>
         </section>
-
-        {/* Purchase Dialog */}
         <PurchaseDialog
           open={purchaseDialogOpen}
           onOpenChange={setPurchaseDialogOpen}
@@ -357,7 +327,6 @@ export default function TrainingSheetsPage() {
             (selectedProduct.isFree ? (
               <FreeContent
                 product={selectedProduct}
-                onComplete={() => setPurchaseDialogOpen(false)}
                 onProcessingChange={setIsPurchaseProcessing}
               />
             ) : (
@@ -369,8 +338,6 @@ export default function TrainingSheetsPage() {
               />
             ))}
         </PurchaseDialog>
-
-        {/* Benefits Section */}
         <section className="py-20 px-4">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
@@ -400,8 +367,6 @@ export default function TrainingSheetsPage() {
             </div>
           </div>
         </section>
-
-        {/* Success Stories & Gallery */}
         <section className="py-20 px-4 relative">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
@@ -453,8 +418,6 @@ export default function TrainingSheetsPage() {
                 </div>
               ))}
             </div>
-
-            {/* Testimonials with Stats */}
             <div className="grid md:grid-cols-3 gap-8 mb-16">
               {[
                 {

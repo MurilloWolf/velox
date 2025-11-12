@@ -36,6 +36,7 @@ export async function checkoutPurchase(
 
   try {
     data = (await response.json()) as CheckoutResponsePayload;
+    console.log("Checkout response data:", data);
   } catch {
     throw new CheckoutError(
       "Erro ao processar a resposta do checkout.",
