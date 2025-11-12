@@ -6,7 +6,8 @@ import useAnalytics from "@/tracking/useAnalytics";
 import { Send, MessageSquare, Bell, Star } from "lucide-react";
 
 export default function BotShowcase() {
-  const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
+  const TELEGRAM_BOT_URL =
+    process.env.NEXT_PUBLIC_BOT_URL || "https://web.telegram.org/a/#8475526575";
   const { trackButtonClick } = useAnalytics();
 
   const handleTelegramClick = () => {

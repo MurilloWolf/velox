@@ -18,6 +18,7 @@ import {
   Star,
   Trophy,
 } from "lucide-react";
+import useAnalytics from "@/tracking/useAnalytics";
 
 const commandIconMap = {
   send: Send,
@@ -30,10 +31,13 @@ const commandIconMap = {
 } as const;
 
 export default function InfoPage() {
+  const TELEGRAM_BOT_URL =
+    process.env.NEXT_PUBLIC_BOT_URL || "https://web.telegram.org/a/#8475526575";
+
   const [activeCategory, setActiveCategory] = useState("Todos");
   const [hoveredCommand, setHoveredCommand] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const { trackButtonClick } = useAnalytics();
   const {
     hero,
     quickStats,
@@ -43,7 +47,6 @@ export default function InfoPage() {
     categories,
     proTipsSection,
     proTips,
-    feedbackCard,
   } = infoPageContent;
 
   const commands = useMemo(
@@ -54,6 +57,15 @@ export default function InfoPage() {
       })),
     []
   );
+
+  const handleTelegramClick = () => {
+    trackButtonClick(
+      "bot_showcase:telegram_button",
+      "Abrir bot no Telegram",
+      TELEGRAM_BOT_URL
+    );
+    window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
+  };
 
   const filteredCommands = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
@@ -101,7 +113,10 @@ export default function InfoPage() {
                 {hero.description}
               </p>
               <div className="flex flex-wrap items-center gap-4">
-                <Button className="cursor-pointer rounded-lg bg-[#d5fe46] px-6 py-5 text-base font-semibold uppercase tracking-wide text-[#050505] shadow-[0_15px_45px_-20px_rgba(213,254,70,0.7)] transition-transform hover:-translate-y-0.5 hover:bg-[#d5fe46]/90">
+                <Button
+                  onClick={handleTelegramClick}
+                  className="cursor-pointer rounded-lg bg-[#d5fe46] px-6 py-5 text-base font-semibold uppercase tracking-wide text-[#050505] shadow-[0_15px_45px_-20px_rgba(213,254,70,0.7)] transition-transform hover:-translate-y-0.5 hover:bg-[#d5fe46]/90"
+                >
                   <Send className="mr-2 h-5 w-5" />
                   {hero.primaryCta}
                 </Button>
@@ -306,31 +321,6 @@ export default function InfoPage() {
                       <p>{tip}</p>
                     </div>
                   ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border border-[#252525] bg-gradient-to-br from-[#111111] via-[#0c0c0c] to-[#060606] shadow-[0_25px_80px_-40px_rgba(213,254,70,0.6)]">
-              <CardContent className="flex h-full flex-col justify-between space-y-6 p-8">
-                <div className="space-y-4">
-                  <h2 className="text-2xl font-semibold text-white">
-                    {feedbackCard.title}
-                  </h2>
-                  <p className="text-sm text-slate-300">
-                    {feedbackCard.description}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  <Button className="rounded-lg bg-[#d5fe46]  hover:bg-[#d5fe46]/80 cursor-pointer px-6 py-3 text-sm font-semibold uppercase tracking-wide text-[#050505] transition-transform hover:-translate-y-0.5">
-                    <Send className="mr-2 h-4 w-4" />
-                    {feedbackCard.primaryCta}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="rounded-lg border border-[#2c2c2c] bg-transparent px-6 py-3 text-sm font-semibold text-slate-200 transition-all hover:bg-transparent cursor-pointer hover:border-[#d5fe46]/60 hover:text-[#d5fe46]"
-                  >
-                    {feedbackCard.secondaryCta}
-                  </Button>
                 </div>
               </CardContent>
             </Card>

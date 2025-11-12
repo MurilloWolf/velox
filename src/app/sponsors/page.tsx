@@ -9,22 +9,28 @@ import {
   Button,
 } from "@/components/ui";
 import { sponsorsPageContent } from "@/presentation";
+import { downloadGoogleDriveFile } from "@/lib/utils";
+import useAnalytics from "@/tracking/useAnalytics";
 import {
   Sparkles,
   Target,
   MessageSquare,
   TrendingUp,
   Send,
+  ChartColumn,
 } from "lucide-react";
 
 const differentiatorIconMap = {
   target: Target,
   "message-square": MessageSquare,
   "trending-up": TrendingUp,
+  "chart-column-increasing": ChartColumn,
 } as const;
 
 export default function SponsorsPage() {
   const { hero, differentiatorsSection, ctaCard } = sponsorsPageContent;
+  const { trackMediaKitDownload } = useAnalytics();
+
   const differentiatorItems = differentiatorsSection.cards.map((card) => ({
     ...card,
     icon: differentiatorIconMap[card.icon],
@@ -34,8 +40,21 @@ export default function SponsorsPage() {
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
     message
   )}`;
-  const mediaKitUrl = "";
-  const isMediaKitAvailable = Boolean(mediaKitUrl);
+
+  const mediaKitFileId = "1XgAViZrE26H6zy-xjDWi2y68bGSsH9pa";
+
+  const handleMediaKitDownload = async () => {
+    trackMediaKitDownload();
+
+    const success = await downloadGoogleDriveFile(
+      mediaKitFileId,
+      "Velox_Media_Kit.pdf"
+    );
+
+    if (!success) {
+      console.error("Failed to download media kit");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-[#050807] to-black text-white">
@@ -70,7 +89,7 @@ export default function SponsorsPage() {
               <Button
                 asChild
                 variant="outline"
-                className="cursor-pointer h-12 px-6 text-base font-semibold text-[#d5fe46] border-[#d5fe46]/60 bg-transparent hover:bg-[#d5fe46] hover:text-black"
+                className="cursor-pointer h-12 px-6 text-base font-semibold  border-[#d5fe46]/60 bg-[#d5fe46] hover:bg-[#d5fe46] text-black"
               >
                 <a
                   href={whatsappUrl}
@@ -82,23 +101,12 @@ export default function SponsorsPage() {
                 </a>
               </Button>
               <Button
-                asChild={isMediaKitAvailable}
+                asChild={false}
                 variant="secondary"
-                className="cursor-pointer h-12 px-6 text-base font-semibold border border-[#d5fe46]/30 bg-[#d5fe46]/15 text-white hover:bg-[#d5fe46]/25 disabled:cursor-not-allowed disabled:opacity-60"
-                disabled={!isMediaKitAvailable}
+                className="cursor-pointer h-12 px-6 text-base font-semibold border border-[#d5fe46]/30 bg-[#d5fe46]/15 text-[#d5fe46] hover:bg-[#d5fe46]/25"
+                onClick={handleMediaKitDownload}
               >
-                {isMediaKitAvailable ? (
-                  <a
-                    href={mediaKitUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Baixar o media kit do VELOX"
-                  >
-                    {hero.secondaryCta}
-                  </a>
-                ) : (
-                  <span aria-live="polite">{hero.secondaryCta}</span>
-                )}
+                <span aria-live="polite">{hero.secondaryCta}</span>
               </Button>
             </div>
           </div>
@@ -115,7 +123,7 @@ export default function SponsorsPage() {
                 <h3 className="mt-3 text-lg font-semibold text-white">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-sm text-white/70 leading-relaxed">
+                <p className="mt-3 text-md text-white/70 leading-relaxed">
                   {item.description}
                 </p>
               </div>
@@ -151,7 +159,7 @@ export default function SponsorsPage() {
                     <CardTitle className="text-xl text-white">
                       {item.title}
                     </CardTitle>
-                    <CardDescription className="text-sm text-white/70">
+                    <CardDescription className="text-md text-white/70">
                       {item.description}
                     </CardDescription>
                   </CardHeader>

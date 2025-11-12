@@ -1,52 +1,52 @@
 export const sponsorsPageContent = {
   hero: {
     badgeLabel: "Programa de Patrocínio",
-    title: "Construa o futuro da corrida conversacional com a VELOX",
+    title: "Construa o futuro com a VELOX",
     description:
       "Estamos abrindo espaço para marcas se conectarem com corredores através de maneira mais orgânica. Sem métricas infladas: falamos em cocriação, entregas personalizadas e proximidade real desde o primeiro contato.",
     primaryCta: "Quero ser parceiro fundador",
-    secondaryCta: "Receber media kit (em breve)",
+    secondaryCta: "Receber media kit",
     highlights: [
       {
         label: "Momento",
-        title: "Programa piloto aberto",
+        title: "Ecossistema em crescimento",
         description:
-          "Selecionamos até 3 marcas fundadoras para cocriar ativações e indicadores de sucesso com a nossa equipe.",
+          "Estamos na fase inicial de construção do nosso ecossistema, com oportunidades únicas para marcas que desejam se posicionar desde o começo.",
       },
       {
-        label: "Audiência",
+        label: "Alcance",
         title: "Base em expansão orgânica",
         description:
-          "Comunidade de corredores engajada via Telegram, com captação contínua em provas, grupos e conteúdo editorial.",
+          "Crescendo a cada dia nós estamos se tornando a referência para corredores que buscam facilidade e praticidade na hora de escolher suas provas e treinos.",
       },
       {
-        label: "Entrega",
-        title: "Narrativas multicanal",
+        label: "Eventos",
+        title: "Somos o único no Brasil",
         description:
-          "Experiências conversacionais + conteúdos editoriais + ativações presenciais alinhadas ao calendário de corridas.",
+          "Estamos realizando um trabalho jamais visto, conectando uma grande base de eventos de corrida em um só lugar.",
       },
     ],
   },
   differentiatorsSection: {
     title: "Por que sua marca cabe na VELOX",
     description:
-      "Construímos um ecossistema que combina tecnologia, dados e proximidade para fortalecer o relacionamento com corredores em todo o Brasil.",
+      "Estamos construido um publico engajado e apaixonado por corrida. Veja alguns dos diferenciais que tornam nossa plataforma o ambiente ideal para sua marca se conectar com esse público.",
     cards: [
       {
         icon: "target",
-        title: "Contexto e relevância",
+        title: "Relevância",
         description:
-          "Atinja o corredor certo no momento da decisão sobre provas e treinos.",
+          "Seu evento ou marca sendo apresentado para o público certo.",
         detail:
-          "Entenda as preferências individuais de cada atleta para entregar ofertas alinhadas ao seu perfil e objetivos.",
+          "Ao invés de anúncios genéricos, sua marca é promovida diretamente para corredores que já demonstraram interesse em eventos e produtos esportivos semelhantes.",
       },
       {
-        icon: "message-square",
-        title: "Facilidade e agilidade",
+        icon: "chart-column-increasing",
+        title: "Métricas precisas",
         description:
-          "Entregue mensagens e ofertas diretamente aos usuários interessados em seu evento esportivo.",
+          "Conseguimos mensurar o engajamento de todas as campanhas de forma transparente.",
         detail:
-          "Divulgue campanhas e promoções em minutos, sem depender de aprovações de plataformas ou apps de terceiros.",
+          "Possibilitando inclusive a comparação direta com outros eventos esportivos da plataforma.",
       },
       {
         icon: "trending-up",
@@ -54,7 +54,7 @@ export const sponsorsPageContent = {
         description:
           "Métricas claras para avaliar engajamento, interesse e conversão.",
         detail:
-          "Relatórios quinzenais com perguntas respondidas, cliques e interesses ajudam a ajustar campanhas de forma ágil.",
+          "Relatórios detalhados sobre o desempenho de seu evento ou campanha, permitindo ajustes rápidos e eficazes para maximizar resultados.",
       },
     ],
   },

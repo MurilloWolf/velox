@@ -392,6 +392,22 @@ export default function useAnalytics() {
     [trackLinkClick]
   );
 
+  const trackMediaKitDownload = useCallback(
+    (props?: Record<string, any>) => {
+      trackEvent({
+        action: "CLICK",
+        targetType: "BUTTON",
+        targetId: "sponsors:media_kit_download",
+        props: {
+          file_type: "media_kit",
+          download_source: "sponsors_page",
+          ...props,
+        },
+      });
+    },
+    [trackEvent]
+  );
+
   return {
     trackEvent,
     trackPageView,
@@ -411,6 +427,7 @@ export default function useAnalytics() {
     trackPurchase,
     trackNavigationClick,
     trackSocialClick,
+    trackMediaKitDownload,
     sessionId,
     deviceId,
     updateActivity,

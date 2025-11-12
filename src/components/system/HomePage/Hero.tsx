@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import useAnalytics from "@/tracking/useAnalytics";
 
 export default function Hero() {
-  const TELEGRAM_BOT_URL = "https://web.telegram.org/a/#8475526575";
+  const TELEGRAM_BOT_URL =
+    process.env.NEXT_PUBLIC_BOT_URL || "https://web.telegram.org/a/#8475526575";
   const [showScroll, setShowScroll] = useState(true);
   const { trackButtonClick } = useAnalytics();
 

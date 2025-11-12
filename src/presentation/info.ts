@@ -29,7 +29,8 @@ export const infoPageContent = {
   ],
   howItWorksCard: {
     title: "Comece em três passos rápidos",
-    description: "Interaja com o bot como se estivesse em um aplicativo próprio.",
+    description:
+      "Interaja com o bot como se estivesse em um aplicativo próprio.",
   },
   howItWorks: [
     {
@@ -81,15 +82,6 @@ export const infoPageContent = {
       category: "Basico",
     },
     {
-      id: "config",
-      command: "/config",
-      icon: "settings",
-      description:
-        "Abre as opções de preferências do usuário para distâncias, notificações e lembretes.",
-      example: "/config distancias 5,10,21",
-      category: "Configuracao",
-    },
-    {
       id: "corridas",
       command: "/corridas",
       icon: "trophy",
@@ -136,11 +128,4 @@ export const infoPageContent = {
     "Combine filtros de distância e cidade para busca precisa",
     "O bot é atualizado diariamente com novas corridas",
   ],
-  feedbackCard: {
-    title: "Falta algo no bot?",
-    description:
-      "Estamos sempre adicionando novas corridas e recursos. Compartilhe ideias, reporte eventos e ajude a comunidade VELOX a ficar cada vez mais completa.",
-    primaryCta: "Quero colaborar",
-    secondaryCta: "Ver Roadmap",
-  },
 } as const;
