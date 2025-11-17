@@ -53,6 +53,11 @@ Este playbook padroniza como enviar eventos para a API de analytics. O objetivo 
   - Mesmo formato do header com prefixo `nav:footer`.
 - **Clique em redes sociais**
   - `targetType`: `LINK`, `targetId`: `social:<plataforma>` (ex.: `social:instagram`)
+- **Download de media kit**
+  - `action`: `CLICK`
+  - `targetType`: `BUTTON`
+  - `targetId`: `sponsors:media_kit_download`
+  - `props`: `{ file_type: "media_kit", download_source: "sponsors_page" }`
 
 ### 3.2 Página inicial (`/`)
 
