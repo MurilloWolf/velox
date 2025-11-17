@@ -134,7 +134,7 @@ export default function FreeContent({
 
       setCheckoutResult(response.data);
       setHasAccessed(true);
-      
+
       // Notify completion
       onComplete?.();
 

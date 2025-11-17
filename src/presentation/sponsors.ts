@@ -4,7 +4,7 @@ export const sponsorsPageContent = {
     title: "Construa o futuro com a VELOX",
     description:
       "Estamos abrindo espaço para marcas se conectarem com corredores através de maneira mais orgânica. Sem métricas infladas: falamos em cocriação, entregas personalizadas e proximidade real desde o primeiro contato.",
-    primaryCta: "Quero ser parceiro fundador",
+    primaryCta: "Entrar em contato",
     secondaryCta: "Receber media kit",
     highlights: [
       {

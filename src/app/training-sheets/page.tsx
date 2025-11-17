@@ -113,14 +113,16 @@ export default function TrainingSheetsPage() {
       description: "Baseado em metodologias comprovadas de treinamento",
     },
     {
-      icon: <Award className="w-8 h-8" />,
-      title: "Resultados Garantidos",
-      description: "Mais de 1000 corredores já conquistaram seus objetivos",
+      icon: <Users className="w-8 h-8" />,
+      title: "Estrutura Profissional",
+      description:
+        "Planilhas desenvolvidas seguindo padrões de treinamento esportivo",
     },
     {
-      icon: <Users className="w-8 h-8" />,
-      title: "Suporte Especializado",
-      description: "Tire dúvidas direto com nossos especialistas",
+      icon: <Award className="w-8 h-8" />,
+      title: "Melhor experiência",
+      description:
+        "Nossas planilhas são fáceis de seguir e adaptadas para todos os níveis",
     },
   ];
 
@@ -367,19 +369,18 @@ export default function TrainingSheetsPage() {
             </div>
           </div>
         </section>
-        <section className="py-20 px-4 relative">
+        {/* TODO - FUTURE SECTION */}
+        {/* <section className="py-20 px-4 relative">
           <div className="container mx-auto max-w-6xl">
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
                 Histórias de <span className="text-[#d5fe46]">Sucesso</span>
               </h2>
               <p className="text-xl text-white/70 max-w-3xl mx-auto">
-                Veja os resultados de quem já transformou sua corrida com nossas
-                planilhas
+                Veja os resultados de quem já transformou sua corrida
               </p>
             </div>
 
-            {/* Image Gallery Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
               {[
                 {
@@ -409,7 +410,6 @@ export default function TrainingSheetsPage() {
                       <Users className="w-6 h-6 text-[#d5fe46]" />
                     </div>
                   </div>
-                  {/* Overlay com efeito glass */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                     <div className="p-4 text-white text-sm font-medium">
                       {image.alt}
@@ -467,7 +467,7 @@ export default function TrainingSheetsPage() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
       </main>
     </div>
   );
