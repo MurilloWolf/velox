@@ -60,6 +60,7 @@ export default function useSessionId() {
   }, []);
 
   const updateActivity = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (eventType?: string) => {
       const now = Date.now();
       const timeSinceLastActivity = now - lastActivityRef.current;
@@ -70,6 +71,7 @@ export default function useSessionId() {
         updateLastActivity();
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [sessionId]
   );
 

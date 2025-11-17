@@ -26,11 +26,13 @@ type FreeCustomerInfo = {
 
 interface FreeContentProps {
   product: Product;
+  onComplete?: () => void;
   onProcessingChange?: (isProcessing: boolean) => void;
 }
 
 export default function FreeContent({
   product,
+  onComplete,
   onProcessingChange,
 }: FreeContentProps) {
   const [isAccessing, setIsAccessing] = useState(false);
@@ -132,6 +134,9 @@ export default function FreeContent({
 
       setCheckoutResult(response.data);
       setHasAccessed(true);
+      
+      // Notify completion
+      onComplete?.();
 
       // Redirect after showing loading state
       setTimeout(() => {
