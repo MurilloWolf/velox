@@ -74,11 +74,11 @@
               "source": "src/components/system/Header.tsx",
               "dataPoints": {
                 "navItems": [
-                  {"label": "Plataforma", "href": "/#recursos"},
-                  {"label": "Calendário", "href": "/calendar"},
-                  {"label": "Bot", "href": "/info"},
-                  {"label": "Patrocínio", "href": "/sponsors"},
-                  {"label": "Contato", "href": "/#contato"}
+                  { "label": "Plataforma", "href": "/#recursos" },
+                  { "label": "Calendário", "href": "/calendar" },
+                  { "label": "Bot", "href": "/info" },
+                  { "label": "Patrocínio", "href": "/sponsors" },
+                  { "label": "Contato", "href": "/#contato" }
                 ],
                 "primaryCta": {
                   "label": "VELOX BOT Telegram",
@@ -95,7 +95,10 @@
               "dataPoints": {
                 "headline": "Encontrando as melhores provas de corrida para você",
                 "subheadline": "Sua plataforma completa de corridas",
-                "cta": {"label": "Encontrar Provas Agora", "href": "/calendar"}
+                "cta": {
+                  "label": "Encontrar Provas Agora",
+                  "href": "/calendar"
+                }
               }
             },
             {
@@ -125,10 +128,19 @@
               "source": "src/components/system/HomePage/Features/PlatformHero.tsx",
               "dataPoints": {
                 "features": [
-                  {"title": "Calendário de Corridas", "action": "/calendar"},
-                  {"title": "Bot no Telegram", "action": "https://t.me/VeloxBot"},
-                  {"title": "Planos de Treino", "action": "/coach?section=training"},
-                  {"title": "Guia de Nutrição", "action": "/coach?section=nutrition"}
+                  { "title": "Calendário de Corridas", "action": "/calendar" },
+                  {
+                    "title": "Bot no Telegram",
+                    "action": "https://t.me/VeloxBot"
+                  },
+                  {
+                    "title": "Planos de Treino",
+                    "action": "/coach?section=training"
+                  },
+                  {
+                    "title": "Guia de Nutrição",
+                    "action": "/coach?section=nutrition"
+                  }
                 ]
               }
             },
@@ -144,7 +156,10 @@
                   "Progressão Garantida",
                   "Resultados Comprovados"
                 ],
-                "cta": {"label": "Ver Planilhas de Treino", "href": "/training-sheets"}
+                "cta": {
+                  "label": "Ver Planilhas de Treino",
+                  "href": "/training-sheets"
+                }
               }
             },
             {
@@ -159,7 +174,10 @@
                   "Alertas personalizados",
                   "Insights inteligentes"
                 ],
-                "cta": {"label": "Acessar bot no Telegram", "href": "https://web.telegram.org/a/#8475526575"}
+                "cta": {
+                  "label": "Acessar bot no Telegram",
+                  "href": "https://web.telegram.org/a/#8475526575"
+                }
               }
             },
             {
@@ -170,9 +188,21 @@
               "source": "src/components/system/HomePage/ContactSection.tsx",
               "dataPoints": {
                 "methods": [
-                  {"id": "TELEGRAM", "label": "Falar no Telegram", "href": "https://t.me/veloxsupport"},
-                  {"id": "EMAIL", "label": "Enviar e-mail", "href": "mailto:velox.running.app@gmail.com"},
-                  {"id": "INSTAGRAM", "label": "@RunningVelox", "href": "https://www.instagram.com/runningvelox/"}
+                  {
+                    "id": "TELEGRAM",
+                    "label": "Falar no Telegram",
+                    "href": "https://t.me/veloxsupport"
+                  },
+                  {
+                    "id": "EMAIL",
+                    "label": "Enviar e-mail",
+                    "href": "mailto:velox.running.app@gmail.com"
+                  },
+                  {
+                    "id": "INSTAGRAM",
+                    "label": "@RunningVelox",
+                    "href": "https://www.instagram.com/runningvelox/"
+                  }
                 ]
               }
             },
@@ -293,8 +323,13 @@
               "link": "/training-sheets",
               "source": "src/app/training-sheets/page.tsx",
               "dataPoints": {
-                "cta": {"label": "Começar Agora", "href": "/coach"},
-                "benefits": ["Objetivos claros", "Progressão científica", "Estrutura profissional", "Melhor experiência"]
+                "cta": { "label": "Começar Agora", "href": "/coach" },
+                "benefits": [
+                  "Objetivos claros",
+                  "Progressão científica",
+                  "Estrutura profissional",
+                  "Melhor experiência"
+                ]
               }
             },
             {
@@ -304,7 +339,16 @@
               "link": null,
               "source": "src/services/actions/products.ts",
               "dataPoints": {
-                "productFields": ["id", "title", "subtitle", "priceCents", "currency", "isFree", "imageLink", "categories"],
+                "productFields": [
+                  "id",
+                  "title",
+                  "subtitle",
+                  "priceCents",
+                  "currency",
+                  "isFree",
+                  "imageLink",
+                  "categories"
+                ],
                 "preview": "getProductPreviewUrl monta thumbnails a partir de product.imageLink"
               }
             },
@@ -351,12 +395,36 @@
               "source": "src/presentation/info.ts",
               "dataPoints": {
                 "commands": [
-                  {"command": "/start", "description": "Apresenta o bot e próximos passos", "category": "Basico"},
-                  {"command": "/ajuda", "description": "Lista comandos e categorias", "category": "Basico"},
-                  {"command": "/corridas", "description": "Lista provas com botões para detalhes/favoritar", "category": "Corrida"},
-                  {"command": "/buscar_corridas", "description": "Atalhos de filtro por distância", "category": "Corrida"},
-                  {"command": "/proxima_corrida", "description": "Mostra a próxima prova com data/local", "category": "Corrida"},
-                  {"command": "/favoritos", "description": "Lista corridas salvas", "category": "Corrida"}
+                  {
+                    "command": "/start",
+                    "description": "Apresenta o bot e próximos passos",
+                    "category": "Basico"
+                  },
+                  {
+                    "command": "/ajuda",
+                    "description": "Lista comandos e categorias",
+                    "category": "Basico"
+                  },
+                  {
+                    "command": "/corridas",
+                    "description": "Lista provas com botões para detalhes/favoritar",
+                    "category": "Corrida"
+                  },
+                  {
+                    "command": "/buscar_corridas",
+                    "description": "Atalhos de filtro por distância",
+                    "category": "Corrida"
+                  },
+                  {
+                    "command": "/proxima_corrida",
+                    "description": "Mostra a próxima prova com data/local",
+                    "category": "Corrida"
+                  },
+                  {
+                    "command": "/favoritos",
+                    "description": "Lista corridas salvas",
+                    "category": "Corrida"
+                  }
                 ]
               }
             }
@@ -376,7 +444,11 @@
               "dataPoints": {
                 "primaryCta": "Entrar em contato (WhatsApp +55 18 99770-8504)",
                 "secondaryCta": "Receber media kit",
-                "highlights": ["Ecossistema em crescimento", "Base em expansão orgânica", "Somos o único no Brasil"],
+                "highlights": [
+                  "Ecossistema em crescimento",
+                  "Base em expansão orgânica",
+                  "Somos o único no Brasil"
+                ],
                 "mediaKitFileId": "1XgAViZrE26H6zy-xjDWi2y68bGSsH9pa"
               }
             },
@@ -387,7 +459,11 @@
               "link": null,
               "source": "src/presentation/sponsors.ts",
               "dataPoints": {
-                "cards": ["Relevância", "Métricas precisas", "Insights acionáveis"]
+                "cards": [
+                  "Relevância",
+                  "Métricas precisas",
+                  "Insights acionáveis"
+                ]
               }
             },
             {
@@ -415,7 +491,14 @@
               "link": "/purchase-success",
               "source": "src/lib/purchaseUtils.ts",
               "dataPoints": {
-                "payload": ["purchaseId", "productName", "buyerEmail", "timestamp", "driveLink", "imageLink"],
+                "payload": [
+                  "purchaseId",
+                  "productName",
+                  "buyerEmail",
+                  "timestamp",
+                  "driveLink",
+                  "imageLink"
+                ],
                 "expiry": "7200000ms (2h)"
               }
             },
@@ -451,17 +534,72 @@
           "title": "Política de Privacidade",
           "source": "src/app/privacy/page.tsx",
           "sections": [
-            {"key": "intro", "title": "1. Introdução", "link": "/privacy#introduction", "source": "src/presentation/privacy.ts"},
-            {"key": "data_collection", "title": "2. Dados que coletamos", "link": "/privacy#data-collection", "source": "src/presentation/privacy.ts"},
-            {"key": "legal_basis", "title": "3. Base Legal", "link": "/privacy#legal-basis", "source": "src/presentation/privacy.ts"},
-            {"key": "information_sharing", "title": "4. Compartilhamento", "link": "/privacy#information-sharing", "source": "src/presentation/privacy.ts"},
-            {"key": "data_retention", "title": "5. Retenção", "link": "/privacy#data-retention", "source": "src/presentation/privacy.ts"},
-            {"key": "storage_security", "title": "6. Armazenamento e Segurança", "link": "/privacy#storage-security", "source": "src/presentation/privacy.ts"},
-            {"key": "user_rights", "title": "7. Direitos do Usuário", "link": "/privacy#user-rights", "source": "src/presentation/privacy.ts"},
-            {"key": "cookies", "title": "8. Cookies", "link": "/privacy#cookies", "source": "src/presentation/privacy.ts"},
-            {"key": "minors", "title": "9. Menores", "link": "/privacy#minors", "source": "src/presentation/privacy.ts"},
-            {"key": "policy_changes", "title": "10. Alterações", "link": "/privacy#policy-changes", "source": "src/presentation/privacy.ts"},
-            {"key": "contact", "title": "11. Contato", "link": "/privacy#contact", "source": "src/presentation/privacy.ts"}
+            {
+              "key": "intro",
+              "title": "1. Introdução",
+              "link": "/privacy#introduction",
+              "source": "src/presentation/privacy.ts"
+            },
+            {
+              "key": "data_collection",
+              "title": "2. Dados que coletamos",
+              "link": "/privacy#data-collection",
+              "source": "src/presentation/privacy.ts"
+            },
+            {
+              "key": "legal_basis",
+              "title": "3. Base Legal",
+              "link": "/privacy#legal-basis",
+              "source": "src/presentation/privacy.ts"
+            },
+            {
+              "key": "information_sharing",
+              "title": "4. Compartilhamento",
+              "link": "/privacy#information-sharing",
+              "source": "src/presentation/privacy.ts"
+            },
+            {
+              "key": "data_retention",
+              "title": "5. Retenção",
+              "link": "/privacy#data-retention",
+              "source": "src/presentation/privacy.ts"
+            },
+            {
+              "key": "storage_security",
+              "title": "6. Armazenamento e Segurança",
+              "link": "/privacy#storage-security",
+              "source": "src/presentation/privacy.ts"
+            },
+            {
+              "key": "user_rights",
+              "title": "7. Direitos do Usuário",
+              "link": "/privacy#user-rights",
+              "source": "src/presentation/privacy.ts"
+            },
+            {
+              "key": "cookies",
+              "title": "8. Cookies",
+              "link": "/privacy#cookies",
+              "source": "src/presentation/privacy.ts"
+            },
+            {
+              "key": "minors",
+              "title": "9. Menores",
+              "link": "/privacy#minors",
+              "source": "src/presentation/privacy.ts"
+            },
+            {
+              "key": "policy_changes",
+              "title": "10. Alterações",
+              "link": "/privacy#policy-changes",
+              "source": "src/presentation/privacy.ts"
+            },
+            {
+              "key": "contact",
+              "title": "11. Contato",
+              "link": "/privacy#contact",
+              "source": "src/presentation/privacy.ts"
+            }
           ]
         },
         {
