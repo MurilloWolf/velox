@@ -75,8 +75,11 @@ export default function EventDetailsModal({
     year: "numeric",
   });
 
+  const fullAddress = [event.location, event.city, event.uf]
+    .filter(Boolean)
+    .join(", ");
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    event.location
+    fullAddress
   )}`;
 
   const eventStatusMap = {
