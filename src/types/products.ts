@@ -3,6 +3,7 @@ export interface Product {
   title: string;
   subtitle: string;
   imageLink: string;
+  driveLink?: string | null;
   priceCents: number;
   currency: string;
   isFree: boolean;

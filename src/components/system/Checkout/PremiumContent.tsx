@@ -260,8 +260,14 @@ export default function PremiumContent({
           purchaseId: checkoutResult.purchase.id,
           productName: checkoutResult.purchase.product.title,
           buyerEmail: checkoutResult.purchase.buyerEmail || customerInfo.email,
-          driveLink: checkoutResult.purchase.deliveryLink as string,
-          imageLink: checkoutResult.purchase.product.imageLink as string,
+          driveLink:
+            checkoutResult.purchase.deliveryLink ??
+            checkoutResult.purchase.product.driveLink ??
+            undefined,
+          imageLink:
+            checkoutResult.purchase.product.imageLink ??
+            checkoutResult.purchase.deliveryLink ??
+            undefined,
         });
         window.location.href = successUrl;
       }, 2000);

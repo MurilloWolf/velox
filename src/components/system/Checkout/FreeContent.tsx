@@ -144,10 +144,13 @@ export default function FreeContent({
           purchaseId: response.data.purchase.id,
           productName: response.data.purchase.product.title,
           buyerEmail: response.data.purchase.buyerEmail || customerInfo.email,
-          driveLink: `https://docs.google.com/spreadsheets/d/${response.data.purchase.product.id}/edit?usp=sharing`,
+          driveLink:
+            response.data.purchase.deliveryLink ??
+            response.data.purchase.product.driveLink ??
+            undefined,
           imageLink:
-            response.data.purchase.product.imageLink ||
-            response.data.purchase.deliveryLink ||
+            response.data.purchase.product.imageLink ??
+            response.data.purchase.deliveryLink ??
             undefined,
         });
         window.location.href = successUrl;
