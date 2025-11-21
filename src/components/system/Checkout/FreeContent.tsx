@@ -146,11 +146,11 @@ export default function FreeContent({
           buyerEmail: response.data.purchase.buyerEmail || customerInfo.email,
           driveLink:
             response.data.purchase.deliveryLink ??
-            response.data.purchase.product.driveLink ??
-            undefined,
+            (response.data.purchase.isFree
+              ? response.data.purchase.product.driveLink ?? undefined
+              : undefined),
           imageLink:
             response.data.purchase.product.imageLink ??
-            response.data.purchase.deliveryLink ??
             undefined,
         });
         window.location.href = successUrl;

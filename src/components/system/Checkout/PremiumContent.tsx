@@ -25,10 +25,15 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Product } from "@/types/products";
-import { checkoutPurchase, CheckoutError } from "@/services/purchases";
+import {
+  checkoutPurchase,
+  CheckoutError,
+  fetchPurchaseAccess,
+} from "@/services/purchases";
 import type {
   CheckoutSuccessPayload,
   PaymentProvider,
+  Purchase,
 } from "@/types/purchases";
 import useAnalytics from "@/tracking/useAnalytics";
 import { Badge } from "@/components/ui";
@@ -239,7 +244,7 @@ export default function PremiumContent({
     }
   };
 
-  const handleSuccess = () => {
+  const handleSuccess = async () => {
     setShowConfirmation(true);
     onProcessingChange?.(false);
 
@@ -255,18 +260,72 @@ export default function PremiumContent({
         }
       );
 
+      const emailForAccess =
+        checkoutResult.purchase.buyerEmail || customerInfo.email;
+
+      const waitForAccessLink = async () => {
+        const maxAttempts = 5;
+        let latestPurchase: Purchase | null = null;
+
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+          try {
+            const purchase = await fetchPurchaseAccess(
+              checkoutResult.purchase.id,
+              emailForAccess
+            );
+            latestPurchase = purchase;
+
+            if (purchase.deliveryLink) {
+              return purchase;
+            }
+          } catch (error) {
+            console.error(
+              `Erro ao recuperar dados da compra (tentativa ${attempt}):`,
+              error
+            );
+          }
+
+          if (attempt < maxAttempts) {
+            await new Promise((resolve) => setTimeout(resolve, 1500));
+          }
+        }
+
+        return latestPurchase;
+      };
+
+      const purchaseWithAccess = await waitForAccessLink();
+
+      if (purchaseWithAccess) {
+        setCheckoutResult((prev) =>
+          prev
+            ? {
+                ...prev,
+                purchase: {
+                  ...prev.purchase,
+                  ...purchaseWithAccess,
+                  product:
+                    purchaseWithAccess.product ?? prev.purchase.product,
+                },
+              }
+            : prev
+        );
+      }
+
+      const resolvedPurchase = purchaseWithAccess ?? checkoutResult.purchase;
+
       setTimeout(() => {
         const successUrl = generatePurchaseSuccessUrl({
-          purchaseId: checkoutResult.purchase.id,
-          productName: checkoutResult.purchase.product.title,
-          buyerEmail: checkoutResult.purchase.buyerEmail || customerInfo.email,
+          purchaseId: resolvedPurchase.id,
+          productName: resolvedPurchase.product.title,
+          buyerEmail: resolvedPurchase.buyerEmail || emailForAccess,
           driveLink:
-            checkoutResult.purchase.deliveryLink ??
-            checkoutResult.purchase.product.driveLink ??
-            undefined,
+            resolvedPurchase.deliveryLink ??
+            (resolvedPurchase.isFree
+              ? resolvedPurchase.product.driveLink ?? undefined
+              : undefined),
           imageLink:
+            resolvedPurchase.product.imageLink ??
             checkoutResult.purchase.product.imageLink ??
-            checkoutResult.purchase.deliveryLink ??
             undefined,
         });
         window.location.href = successUrl;
@@ -677,7 +736,7 @@ function StripePaymentSection({
 
 interface StripePaymentFormProps {
   buyerEmail: string;
-  onSuccess: () => void;
+  onSuccess: () => void | Promise<void>;
   onError: (message: string | null) => void;
   isProcessing: boolean;
   setIsProcessing: (value: boolean) => void;
@@ -739,7 +798,7 @@ function StripePaymentForm({
         onError(null);
       }
 
-      onSuccess();
+      await onSuccess();
     } catch (error) {
       console.error("Erro ao confirmar pagamento com a Stripe:", error);
       const message =

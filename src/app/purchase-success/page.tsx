@@ -34,28 +34,26 @@ function PurchaseSuccessContent() {
   const [purchaseData, setPurchaseData] = useState<PurchaseData | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const handleDownloadImage = async () => {
-    if (!purchaseData) return;
-    try {
-      if (!purchaseData.imageLink) return;
+  const handleDownloadImage = () => {
+    if (!purchaseData?.imageLink) return;
+    const filename = `planilha-${purchaseData.productName
+      .toLowerCase()
+      .replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}.png`;
 
-      const response = await fetch(purchaseData.imageLink);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
+    try {
+      const downloadUrl = `/api/download-image?url=${encodeURIComponent(
+        purchaseData.imageLink
+      )}&filename=${encodeURIComponent(filename)}`;
 
       const link = document.createElement("a");
-      link.href = url;
-      link.download = `planilha-${purchaseData.productName
-        .toLowerCase()
-        .replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}.png`;
+      link.href = downloadUrl;
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-
-      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Erro ao baixar imagem:", error);
-      window.open(purchaseData.imageLink!, "_blank");
+      window.open(purchaseData.imageLink, "_blank");
     }
   };
 
