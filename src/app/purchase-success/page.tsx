@@ -302,7 +302,7 @@ function PurchaseSuccessContent() {
                           </Link>
                           <Link
                             href={purchaseData.driveLink.replace(
-                              "/edit",
+                              /\/edit.*$/,
                               "/export?format=xlsx"
                             )}
                             target="_blank"
