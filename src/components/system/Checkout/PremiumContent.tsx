@@ -39,7 +39,7 @@ import useAnalytics from "@/tracking/useAnalytics";
 import { Badge } from "@/components/ui";
 import { getProductPreviewUrl } from "@/lib/imageUtils";
 import { generatePurchaseSuccessUrl } from "@/lib/purchaseUtils";
-import { ErrorDisplay, PurchaseSuccessState } from "./shared";
+import { ErrorDisplay, LoadingState } from "./shared";
 
 const STRIPE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "";
@@ -68,7 +68,7 @@ export default function PremiumContent({
   const [selectedProvider, setSelectedProvider] =
     useState<PaymentProvider>("stripe");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isFinalizingAccess, setIsFinalizingAccess] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [checkoutResult, setCheckoutResult] = useState<
     CheckoutSuccessPayload["data"] | null
@@ -90,7 +90,7 @@ export default function PremiumContent({
     setIsProcessing(false);
     setClientSecret(null);
     setCheckoutResult(null);
-    setShowConfirmation(false);
+    setIsFinalizingAccess(false);
     setErrorMessage(null);
   };
 
@@ -189,7 +189,7 @@ export default function PremiumContent({
     onProcessingChange?.(true);
     setErrorMessage(null);
     setCheckoutResult(null);
-    setShowConfirmation(false);
+    setIsFinalizingAccess(false);
 
     try {
       trackCheckoutStep("customer_info", product.id, {
@@ -245,92 +245,94 @@ export default function PremiumContent({
   };
 
   const handleSuccess = async () => {
-    setShowConfirmation(true);
+    setIsFinalizingAccess(true);
     onProcessingChange?.(false);
 
-    if (checkoutResult?.purchase) {
-      trackPurchase(
-        product.id,
-        product.priceCents,
-        product.currency || "BRL",
-        "stripe",
-        checkoutResult.purchase.id,
-        {
-          buyer_email: customerInfo.email,
-        }
-      );
+    if (!checkoutResult?.purchase) {
+      return;
+    }
 
-      const emailForAccess =
-        checkoutResult.purchase.buyerEmail || customerInfo.email;
+    trackPurchase(
+      product.id,
+      product.priceCents,
+      product.currency || "BRL",
+      "stripe",
+      checkoutResult.purchase.id,
+      {
+        buyer_email: customerInfo.email,
+      }
+    );
 
-      const waitForAccessLink = async () => {
-        const maxAttempts = 5;
-        let latestPurchase: Purchase | null = null;
+    const emailForAccess =
+      checkoutResult.purchase.buyerEmail || customerInfo.email;
 
-        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-          try {
-            const purchase = await fetchPurchaseAccess(
-              checkoutResult.purchase.id,
-              emailForAccess
-            );
-            latestPurchase = purchase;
+    const waitForAccessLink = async () => {
+      const maxAttempts = 5;
+      let latestPurchase: Purchase | null = null;
 
-            if (purchase.deliveryLink) {
-              return purchase;
-            }
-          } catch (error) {
-            console.error(
-              `Erro ao recuperar dados da compra (tentativa ${attempt}):`,
-              error
-            );
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          const purchase = await fetchPurchaseAccess(
+            checkoutResult.purchase.id,
+            emailForAccess
+          );
+          latestPurchase = purchase;
+
+          if (purchase.deliveryLink) {
+            return purchase;
           }
-
-          if (attempt < maxAttempts) {
-            await new Promise((resolve) => setTimeout(resolve, 1500));
-          }
+        } catch (error) {
+          console.error(
+            `Erro ao recuperar dados da compra (tentativa ${attempt}):`,
+            error
+          );
         }
 
-        return latestPurchase;
-      };
-
-      const purchaseWithAccess = await waitForAccessLink();
-
-      if (purchaseWithAccess) {
-        setCheckoutResult((prev) =>
-          prev
-            ? {
-                ...prev,
-                purchase: {
-                  ...prev.purchase,
-                  ...purchaseWithAccess,
-                  product:
-                    purchaseWithAccess.product ?? prev.purchase.product,
-                },
-              }
-            : prev
-        );
+        if (attempt < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+        }
       }
 
-      const resolvedPurchase = purchaseWithAccess ?? checkoutResult.purchase;
+      return latestPurchase;
+    };
 
-      setTimeout(() => {
-        const successUrl = generatePurchaseSuccessUrl({
-          purchaseId: resolvedPurchase.id,
-          productName: resolvedPurchase.product.title,
-          buyerEmail: resolvedPurchase.buyerEmail || emailForAccess,
-          driveLink:
-            resolvedPurchase.deliveryLink ??
-            (resolvedPurchase.isFree
-              ? resolvedPurchase.product.driveLink ?? undefined
-              : undefined),
-          imageLink:
-            resolvedPurchase.product.imageLink ??
-            checkoutResult.purchase.product.imageLink ??
-            undefined,
-        });
-        window.location.href = successUrl;
-      }, 2000);
+    const purchaseWithAccess = await waitForAccessLink();
+
+    if (purchaseWithAccess) {
+      setCheckoutResult((prev) =>
+        prev
+          ? {
+              ...prev,
+              purchase: {
+                ...prev.purchase,
+                ...purchaseWithAccess,
+                product: purchaseWithAccess.product ?? prev.purchase.product,
+              },
+            }
+          : prev
+      );
     }
+
+    const resolvedPurchase = purchaseWithAccess ?? checkoutResult.purchase;
+
+    setTimeout(() => {
+      const successUrl = generatePurchaseSuccessUrl({
+        purchaseId: resolvedPurchase.id,
+        productName: resolvedPurchase.product.title,
+        buyerEmail: resolvedPurchase.buyerEmail || emailForAccess,
+        driveLink:
+          resolvedPurchase.deliveryLink ??
+          (resolvedPurchase.isFree
+            ? resolvedPurchase.product.driveLink ?? undefined
+            : undefined),
+        imageLink:
+          resolvedPurchase.product.imageLink ??
+          checkoutResult.purchase.product.imageLink ??
+          undefined,
+      });
+      onPurchaseComplete?.();
+      window.location.href = successUrl;
+    }, 2000);
   };
 
   const handleInputChange = (field: keyof CustomerInfo, value: string) => {
@@ -343,16 +345,16 @@ export default function PremiumContent({
     }
   };
 
-  if (showConfirmation && checkoutResult) {
+  if (isFinalizingAccess && checkoutResult) {
+    const buyerEmail =
+      checkoutResult.purchase.buyerEmail || customerInfo.email;
+
     return (
-      <PurchaseSuccessState
-        product={product}
-        checkoutResult={checkoutResult}
-        customerEmail={customerInfo.email}
+      <LoadingState
+        email={buyerEmail}
+        title="Finalizando sua compra premium..."
+        description="Estamos confirmando o pagamento e liberando seu conteúdo exclusivo."
         accentColor="yellow"
-        onComplete={onPurchaseComplete || (() => {})}
-        title="Pagamento aprovado!"
-        subtitle="você já pode acessar o material exclusivo"
       />
     );
   }
