@@ -8,7 +8,8 @@ import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
 
 export default function CTASection() {
   const TELEGRAM_BOT_URL =
-    process.env.NEXT_PUBLIC_BOT_URL || "https://web.telegram.org/a/#8475526575";
+    `${process.env.NEXT_PUBLIC_BOT_URL}#${process.env.NEXT_PUBLIC_BOT_ID}` ||
+    "https://web.telegram.org/a/#8475526575";
   const { trackButtonClick } = useAnalytics();
   const { ctaSection } = useHomeMessages();
 

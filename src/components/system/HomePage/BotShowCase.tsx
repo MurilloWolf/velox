@@ -8,7 +8,8 @@ import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
 
 export default function BotShowcase() {
   const TELEGRAM_BOT_URL =
-    process.env.NEXT_PUBLIC_BOT_URL || "https://web.telegram.org/a/#8475526575";
+    `${process.env.NEXT_PUBLIC_BOT_URL}#${process.env.NEXT_PUBLIC_BOT_ID}` ||
+    "https://web.telegram.org/a/#8475526575";
   const { trackButtonClick } = useAnalytics();
   const { botShowcase } = useHomeMessages();
   const featureIcons = [MessageSquare, Bell, Star] as const;
@@ -103,10 +104,15 @@ export default function BotShowcase() {
                       {botShowcase.conversation.botName}
                     </span>
                   </div>
-                  <p className="text-sm">{botShowcase.conversation.botResponse}</p>
+                  <p className="text-sm">
+                    {botShowcase.conversation.botResponse}
+                  </p>
                   <div className="mt-3 space-y-2">
                     {botShowcase.conversation.raceSamples.map((sample) => (
-                      <div className="bg-white/10 rounded p-2 text-xs" key={sample}>
+                      <div
+                        className="bg-white/10 rounded p-2 text-xs"
+                        key={sample}
+                      >
                         {sample}
                       </div>
                     ))}

@@ -20,7 +20,8 @@ import { useSmoothScroll } from "./hooks/useSmoothScroll";
 
 export default function Header() {
   const TELEGRAM_BOT_URL =
-    process.env.NEXT_PUBLIC_BOT_URL || "https://web.telegram.org/a/#8475526575";
+    `${process.env.NEXT_PUBLIC_BOT_URL}#${process.env.NEXT_PUBLIC_BOT_ID}` ||
+    "https://web.telegram.org/a/#8475526575";
 
   const { trackNavigationClick, trackButtonClick } = useAnalytics();
   const headerMessages = useHeaderMessages();

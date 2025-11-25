@@ -33,7 +33,8 @@ type CommandIconKey = keyof typeof commandIconMap;
 
 export default function InfoPageClient() {
   const TELEGRAM_BOT_URL =
-    process.env.NEXT_PUBLIC_BOT_URL || "https://web.telegram.org/a/#8475526575";
+    `${process.env.NEXT_PUBLIC_BOT_URL}#${process.env.NEXT_PUBLIC_BOT_ID}` ||
+    "https://web.telegram.org/a/#8475526575";
 
   const infoMessages = useInfoMessages();
   const { hero, howItWorksCard, howItWorks, commandsSection, categories } =
@@ -153,7 +154,7 @@ export default function InfoPageClient() {
           </section>
 
           <section className="space-y-8">
-              <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div>
                 <h2 className="text-3xl font-semibold text-white">
                   {commandsSection.title}
