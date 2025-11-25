@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
+
+import { cn } from "@/lib/utils";
+
+interface MeshGradientProps {
+  children: ReactNode;
+  className?: string;
+}
 
 export default function MeshGradient({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  className,
+}: MeshGradientProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -105,7 +111,12 @@ export default function MeshGradient({
   }, []);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-[#121212]">
+    <div
+      className={cn(
+        "relative w-full h-full overflow-hidden bg-[#121212]",
+        className
+      )}
+    >
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full"

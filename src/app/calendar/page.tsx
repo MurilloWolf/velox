@@ -23,7 +23,7 @@ export default async function CalendarPage() {
   return (
     <div className="min-h-screen bg-black/95">
       <Header />
-      <MashGradiant>
+      <MashGradiant className="min-h-screen">
         <div className="p-4 sm:p-6 md:p-8 lg:p-12 overflow-auto">
           <PageTracker pagePath="/calendar" />
           <div className="flex flex-col items-center justify-center relative z-20 mb-6 sm:mb-8">

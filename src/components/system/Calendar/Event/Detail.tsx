@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, type CSSProperties } from "react";
 import Link from "next/link";
 import { ExternalLink, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -105,11 +105,20 @@ export default function EventDetailsModal({
     calendarMessages.eventDetail.status[
       event.status as keyof typeof calendarMessages.eventDetail.status
     ] ?? calendarMessages.eventDetail.status.UNKNOWN;
+  const modalSafeArea: CSSProperties = {
+    paddingTop: "max(env(safe-area-inset-top), 12px)",
+    paddingBottom: "max(env(safe-area-inset-bottom), 12px)",
+    paddingLeft: "max(env(safe-area-inset-left), 12px)",
+    paddingRight: "max(env(safe-area-inset-right), 12px)",
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-full max-w-[calc(100vw-2rem)] sm:max-w-3xl lg:max-w-5xl xl:max-w-6xl max-h-[90vh] overflow-y-auto lg:overflow-hidden p-0 bg-gradient-to-br from-black via-black/60 to-black/80 border-white/10 text-white">
-        <div className="flex flex-col lg:flex-row h-full">
+      <DialogContent
+        className="w-full max-w-[min(88vw,1100px)] sm:max-w-3xl lg:max-w-5xl max-h-[92vh] overflow-y-auto lg:overflow-hidden border border-transparent bg-black/85 p-0 text-white shadow-[0_30px_90px_-25px_rgba(0,0,0,0.7)]"
+        style={modalSafeArea}
+      >
+        <div className="flex flex-col lg:flex-row h-full rounded-[28px] border border-white/10 bg-gradient-to-br from-black via-black/60 to-black/85 shadow-[0_30px_90px_-25px_rgba(0,0,0,0.85)]">
           {/* Lado esquerdo - Imagem */}
           <div className="lg:w-1/2 relative">
             <EventImagePreview

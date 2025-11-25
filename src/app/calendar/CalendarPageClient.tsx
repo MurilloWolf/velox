@@ -84,7 +84,7 @@ export function CalendarPageClient({ races, error }: CalendarPageClientProps) {
         </div>
         <main
           id="conteudo-principal"
-          className="col-span-1 lg:col-span-3 xl:col-span-3 w-full bg-black/10 backdrop-blur-sm p-3 sm:p-4 md:p-6 rounded-2xl"
+          className="col-span-1 lg:col-span-3 xl:col-span-3 w-full bg-black/10 backdrop-blur-sm p-3 sm:p-4 md:p-6 rounded-2xl min-h-screen lg:min-h-0"
         >
           <EventCalendar
             races={races ?? []}
