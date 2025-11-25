@@ -72,7 +72,8 @@ const coachSectionSourceFiles: Record<string, string> = {
 };
 
 const coachRoutes: RouteConfig[] = navigationSections.flatMap((section) => {
-  const sectionFile = coachSectionSourceFiles[section.id] ?? "src/app/coach/page.tsx";
+  const sectionFile =
+    coachSectionSourceFiles[section.id] ?? "src/app/coach/page.tsx";
 
   const rootEntry: RouteConfig = {
     path: "/coach",
@@ -103,8 +104,8 @@ const coachRoutes: RouteConfig[] = navigationSections.flatMap((section) => {
 const buildUrl = (route: RouteConfig) => {
   const url = new URL(route.path, seo.siteUrl);
   if (route.searchParams) {
-    for (const [key, value] of Object.entries(route.searchParams).sort(([a], [b]) =>
-      a.localeCompare(b)
+    for (const [key, value] of Object.entries(route.searchParams).sort(
+      ([a], [b]) => a.localeCompare(b)
     )) {
       url.searchParams.set(key, value);
     }
