@@ -259,7 +259,7 @@ export default function ChatPanel({
             className={cn("flex items-center", isWidget ? "gap-3" : "gap-4")}
           >
             <Image
-              src="/velox_x.png"
+              src="https://velox-images-bucket.s3.sa-east-1.amazonaws.com/public/velox_x.png"
               alt="Velox"
               className={cn(
                 "rounded-full object-contain",
