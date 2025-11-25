@@ -171,7 +171,12 @@ export default function NutritionSection({
     ...RACE_ORDER.map((key) =>
       races[key] ? { id: key, guide: races[key] } : null
     ).filter(
-      (entry): entry is { id: string; guide: NutritionRaceGuide } =>
+      (
+        entry
+      ): entry is {
+        id: (typeof RACE_ORDER)[number];
+        guide: NutritionRaceGuide;
+      } =>
         Boolean(entry)
     ),
     ...Object.entries(races)

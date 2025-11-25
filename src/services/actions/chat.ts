@@ -180,9 +180,14 @@ const buildHistorySection = (history: HistoryItem[]) => {
   return history.map((entry) => `- ${entry.role}: ${entry.message}`).join("\n");
 };
 
+type UserPromptPayload = Pick<
+  SendChatPayload,
+  "userName" | "timeOfDay" | "currentQuestion" | "history"
+>;
+
 const buildUserPrompt = (
   template: PromptTemplate,
-  payload: SendChatPayload
+  payload: UserPromptPayload
 ) => {
   const labels = template.conversation_context ?? {};
   const historyBlock = buildHistorySection(payload.history);

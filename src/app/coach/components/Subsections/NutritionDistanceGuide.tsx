@@ -86,7 +86,7 @@ const GUIDE_TEXT = {
   },
 } as const;
 
-type GuideCopy = (typeof GUIDE_TEXT)["pt-BR"];
+type GuideCopy = (typeof GUIDE_TEXT)[keyof typeof GUIDE_TEXT];
 
 const SectionWrapper = ({
   children,

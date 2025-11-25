@@ -1,4 +1,4 @@
-import { SubsectionContent } from "../../../types";
+import { SubsectionContent } from "../../../../types";
 import nutritionGuideSubsections from "./guides";
 
 const subsections: SubsectionContent[] = nutritionGuideSubsections;
