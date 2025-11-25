@@ -2,9 +2,14 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import ChatWidget from "@/components/system/Chat/components/ChatWidget";
 import { SessionProvider } from "@/components/system";
 import { seo } from "@/lib/seo";
+import ChatWidget from "@/components/system/Chat/components/ChatWidget";
+import { defaultLocale } from "@/i18n/config";
+import { getRequestLocaleInfo } from "@/i18n/getRequestLocaleInfo";
+import { messagesByLocale } from "@/i18n/messages";
+import { I18nProvider } from "@/i18n/I18nProvider";
+import { LocationProvider } from "@/location/LocationProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -97,25 +102,33 @@ export default function RootLayout({
     ],
   } as const;
 
+  const { locale, location } = getRequestLocaleInfo();
+  const localeMessages =
+    messagesByLocale[locale] ?? messagesByLocale[defaultLocale];
+
   return (
-    <html lang="pt-BR">
+    <html lang={locale}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider>
-          <a className="skip-to-content" href="#conteudo-principal">
-            Pular para o conteúdo principal
-          </a>
-          <script
-            type="application/ld+json"
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(organizationJsonLd),
-            }}
-          />
-          {children}
-          <ChatWidget />
-        </SessionProvider>
+        <I18nProvider locale={locale} messages={localeMessages}>
+          <LocationProvider location={location}>
+            <SessionProvider>
+              <a className="skip-to-content" href="#conteudo-principal">
+                Pular para o conteúdo principal
+              </a>
+              <script
+                type="application/ld+json"
+                suppressHydrationWarning
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify(organizationJsonLd),
+                }}
+              />
+              {children}
+              <ChatWidget />
+            </SessionProvider>
+          </LocationProvider>
+        </I18nProvider>
       </body>
     </html>
   );

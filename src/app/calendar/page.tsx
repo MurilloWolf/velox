@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 import { Header, Footer, MashGradiant, PageTracker } from "@/components/system";
-import { calendarPageContent } from "@/presentation";
+import { getRequestLocaleInfo } from "@/i18n/getRequestLocaleInfo";
+import { getCalendarPageContent } from "@/presentation";
 import { fetchRacesAction } from "@/services/actions/races";
 import { buildMetadata } from "@/lib/seo";
 import { CalendarPageClient } from "./CalendarPageClient";
@@ -24,6 +25,8 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default async function CalendarPage() {
+  const { locale } = getRequestLocaleInfo();
+  const calendarPageContent = getCalendarPageContent(locale);
   const { races, error } = await fetchRacesAction();
 
   return (

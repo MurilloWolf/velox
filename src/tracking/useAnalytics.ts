@@ -68,84 +68,82 @@ export interface TrackEventParams {
   purchaseId?: string;
 }
 
+const sanitizePropValue = (value: unknown): string | undefined => {
+  if (value === null || value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
+
+  if (Array.isArray(value)) {
+    const serializedItems = value
+      .map((item) => {
+        if (
+          item === null ||
+          item === undefined ||
+          typeof item === "function"
+        ) {
+          return null;
+        }
+
+        if (typeof item === "string" || typeof item === "number") {
+          return String(item);
+        }
+
+        if (typeof item === "boolean") {
+          return item ? "true" : "false";
+        }
+
+        try {
+          return JSON.stringify(item);
+        } catch {
+          return null;
+        }
+      })
+      .filter((item): item is string => Boolean(item));
+
+    return serializedItems.length ? serializedItems.join(",") : undefined;
+  }
+
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return undefined;
+  }
+};
+
+const sanitizeProps = (
+  props?: Record<
+    string,
+    string | Record<string, any> | number | boolean | null | undefined
+  >
+): Record<string, string> | undefined => {
+  if (!props) {
+    return undefined;
+  }
+
+  const sanitizedEntries = Object.entries(props).reduce<
+    Record<string, string>
+  >((acc, [key, value]) => {
+    const sanitizedValue = sanitizePropValue(value);
+    if (sanitizedValue !== undefined) {
+      acc[key] = sanitizedValue;
+    }
+    return acc;
+  }, {});
+
+  return Object.keys(sanitizedEntries).length ? sanitizedEntries : undefined;
+};
+
 export default function useAnalytics() {
   const { sessionId, deviceId, updateActivity } = useSessionId();
   const deviceInfo = useDeviceInfo();
-
-  const sanitizePropValue = (value: unknown): string | undefined => {
-    if (value === null || value === undefined) {
-      return undefined;
-    }
-
-    if (typeof value === "string") {
-      return value;
-    }
-
-    if (typeof value === "number" || typeof value === "boolean") {
-      return String(value);
-    }
-
-    if (Array.isArray(value)) {
-      const serializedItems = value
-        .map((item) => {
-          if (
-            item === null ||
-            item === undefined ||
-            typeof item === "function"
-          ) {
-            return null;
-          }
-
-          if (typeof item === "string" || typeof item === "number") {
-            return String(item);
-          }
-
-          if (typeof item === "boolean") {
-            return item ? "true" : "false";
-          }
-
-          try {
-            return JSON.stringify(item);
-          } catch {
-            return null;
-          }
-        })
-        .filter((item): item is string => Boolean(item));
-
-      return serializedItems.length ? serializedItems.join(",") : undefined;
-    }
-
-    try {
-      return JSON.stringify(value);
-    } catch {
-      return undefined;
-    }
-  };
-
-  const sanitizeProps = (
-    props?: Record<
-      string,
-      string | Record<string, any> | number | boolean | null | undefined
-    >
-  ): Record<string, string> | undefined => {
-    if (!props) {
-      return undefined;
-    }
-
-    const sanitizedEntries = Object.entries(props).reduce<
-      Record<string, string>
-    >((acc, [key, value]) => {
-      const sanitizedValue = sanitizePropValue(value);
-      if (sanitizedValue !== undefined) {
-        acc[key] = sanitizedValue;
-      }
-      return acc;
-    }, {});
-
-    return Object.keys(sanitizedEntries).length
-      ? sanitizedEntries
-      : undefined;
-  };
 
   // Função genérica para track de eventos (mantida para compatibilidade)
   const trackEvent = useCallback(
