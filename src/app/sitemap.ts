@@ -3,8 +3,14 @@ import fs from "node:fs";
 
 import type { MetadataRoute } from "next";
 
-import { navigationSections } from "@/app/coach/presentation/config";
+import { buildCoachPresentation } from "@/app/coach/presentation/config";
+import { getCoachContentByLocale } from "@/app/coach/presentation/content";
 import { seo } from "@/lib/seo";
+import { defaultLocale } from "@/i18n/config";
+
+const { navigationSections } = buildCoachPresentation(
+  getCoachContentByLocale(defaultLocale)
+);
 
 type RouteConfig = {
   path: string;

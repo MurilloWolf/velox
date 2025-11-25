@@ -26,10 +26,6 @@ const ptBR = {
     footer,
     common,
   },
-  calendar: {
-    title: "Calendário de Eventos",
-    subtitle: "Fique de olho nas próximas corridas",
-  },
 } as const;
 
 export default ptBR;

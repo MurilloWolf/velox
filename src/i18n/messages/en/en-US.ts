@@ -26,10 +26,6 @@ const enUS = {
     footer,
     common,
   },
-  calendar: {
-    title: "Race Calendar",
-    subtitle: "Keep an eye on upcoming events",
-  },
 } as const;
 
 export default enUS;
