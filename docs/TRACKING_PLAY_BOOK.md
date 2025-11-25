@@ -5,6 +5,7 @@ Este playbook padroniza como enviar eventos para a API de analytics. O objetivo 
 ## 1. Padrões Gerais (aplicar a todos os eventos)
 
 - `channel`: sempre `WEBSITE` para eventos disparados no site.
+- `region`: obrigatório. Mapeie `pt-BR` para `BR` e `en-US` para `US` usando o provider de i18n para garantir consistência com a experiência exibida ao usuário.
 - `action`: verbo em maiúsculas descrevendo a ação (`VIEW`, `CLICK`, `SUBMIT`, `FILTER`, `OPEN`, `CLOSE`, `PURCHASE`).
 - `targetType`: entidade afetada em maiúsculas. Use os valores definidos abaixo para manter consistência.
 - `targetId`: identificador estável (slug/ID) que permita agrupar os eventos depois.

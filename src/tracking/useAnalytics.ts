@@ -3,8 +3,11 @@ import { useCallback } from "react";
 import { sendTrackEvent } from "@/services/actions/trackAnalytics";
 import useSessionId from "@/hooks/useSessionId";
 import useDeviceInfo from "@/hooks/useDeviceInfo";
+import { useI18n } from "@/i18n/useI18n";
 
 export type TrackChannel = "WEBSITE";
+
+export type TrackRegion = "BR" | "US";
 
 export type TrackAction =
   | "VIEW"
@@ -36,6 +39,7 @@ export interface TrackEventParams {
   // ID of the target entity (e.g., productId, purchaseId)
   targetId?: string;
   // TELEGRAM, EMAIL, WEBSITE, WHATSAPP
+  region: TrackRegion;
   channel: TrackChannel;
   // CLICK, VIEW, DOWNLOAD, etc.
   action: string;
@@ -68,6 +72,11 @@ export interface TrackEventParams {
   purchaseId?: string;
 }
 
+type TrackEventInput = Omit<
+  TrackEventParams,
+  "channel" | "sessionId" | "deviceId" | "region"
+>;
+
 const sanitizePropValue = (value: unknown): string | undefined => {
   if (value === null || value === undefined) {
     return undefined;
@@ -84,11 +93,7 @@ const sanitizePropValue = (value: unknown): string | undefined => {
   if (Array.isArray(value)) {
     const serializedItems = value
       .map((item) => {
-        if (
-          item === null ||
-          item === undefined ||
-          typeof item === "function"
-        ) {
+        if (item === null || item === undefined || typeof item === "function") {
           return null;
         }
 
@@ -128,15 +133,16 @@ const sanitizeProps = (
     return undefined;
   }
 
-  const sanitizedEntries = Object.entries(props).reduce<
-    Record<string, string>
-  >((acc, [key, value]) => {
-    const sanitizedValue = sanitizePropValue(value);
-    if (sanitizedValue !== undefined) {
-      acc[key] = sanitizedValue;
-    }
-    return acc;
-  }, {});
+  const sanitizedEntries = Object.entries(props).reduce<Record<string, string>>(
+    (acc, [key, value]) => {
+      const sanitizedValue = sanitizePropValue(value);
+      if (sanitizedValue !== undefined) {
+        acc[key] = sanitizedValue;
+      }
+      return acc;
+    },
+    {}
+  );
 
   return Object.keys(sanitizedEntries).length ? sanitizedEntries : undefined;
 };
@@ -144,17 +150,17 @@ const sanitizeProps = (
 export default function useAnalytics() {
   const { sessionId, deviceId, updateActivity } = useSessionId();
   const deviceInfo = useDeviceInfo();
+  const { contentRegion } = useI18n();
 
   // Função genérica para track de eventos (mantida para compatibilidade)
   const trackEvent = useCallback(
-    (
-      trackEvent: Omit<TrackEventParams, "channel" | "sessionId" | "deviceId">
-    ) => {
+    (trackEvent: TrackEventInput) => {
       updateActivity("track_event");
 
       const eventData = {
         ...trackEvent,
         channel: "WEBSITE" as const,
+        region: contentRegion,
         sessionId: sessionId || undefined,
         deviceId: deviceId || undefined,
         pagePath:
@@ -174,7 +180,7 @@ export default function useAnalytics() {
 
       sendTrackEvent(eventData);
     },
-    [sessionId, deviceId, updateActivity, deviceInfo]
+    [sessionId, deviceId, updateActivity, deviceInfo, contentRegion]
   );
 
   const trackPageView = useCallback(
