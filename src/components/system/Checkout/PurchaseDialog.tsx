@@ -25,6 +25,7 @@ interface PurchaseDialogProps {
   size?: PurchaseDialogSize;
   blockClose?: boolean;
   isPurchaseInProgress?: boolean;
+  disableAutoFocus?: boolean;
 }
 
 export default function PurchaseDialog({
@@ -39,6 +40,7 @@ export default function PurchaseDialog({
   size = "default",
   blockClose = false,
   isPurchaseInProgress = false,
+  disableAutoFocus = true,
 }: PurchaseDialogProps) {
   const sizeClasses = {
     compact: "sm:max-w-lg p-2 py-6 sm:px-5 sm:py-6",
@@ -86,6 +88,9 @@ export default function PurchaseDialog({
             contentClassName
           )}
           showCloseButton={!shouldBlockClose}
+          onOpenAutoFocus={
+            disableAutoFocus ? (event) => event.preventDefault() : undefined
+          }
           onPointerDownOutside={(e) => {
             if (shouldBlockClose) {
               e.preventDefault();
