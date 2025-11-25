@@ -53,7 +53,9 @@ export default function EventListModal({
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-3xl max-h-[82vh] overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl shadow-[0_30px_90px_-25px_rgba(0,0,0,0.85)]">
+      <div
+        className="relative w-full max-w-[calc(100vw-2rem)] sm:max-w-2xl lg:max-w-3xl max-h-[90vh] sm:max-h-[82vh] overflow-y-auto sm:overflow-hidden rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl shadow-[0_30px_90px_-25px_rgba(0,0,0,0.85)]"
+      >
         <div className="sticky top-0 flex items-center justify-between gap-4 border-b border-white/10 bg-gradient-to-r from-primary/30 via-black/40 to-transparent px-8 py-6">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight text-white">
