@@ -15,7 +15,9 @@ export type RequestLocaleInfo = {
   detectedVia: "country_header" | "accept_language" | "default";
 };
 
-const resolveLocaleFromCountry = (countryCode: string | null): Locale | null => {
+const resolveLocaleFromCountry = (
+  countryCode: string | null
+): Locale | null => {
   if (!countryCode) {
     return null;
   }
@@ -28,7 +30,9 @@ const resolveLocaleFromCountry = (countryCode: string | null): Locale | null => 
   return "en-US";
 };
 
-const resolveLocaleFromAcceptLanguage = (headerValue: string | null): Locale | null => {
+const resolveLocaleFromAcceptLanguage = (
+  headerValue: string | null
+): Locale | null => {
   if (!headerValue) {
     return null;
   }
@@ -55,13 +59,14 @@ const resolveLocaleFromAcceptLanguage = (headerValue: string | null): Locale | n
   return "en-US";
 };
 
-export const getRequestLocaleInfo = cache((): RequestLocaleInfo => {
-  const headerList = headers();
+export const getRequestLocaleInfo = cache(
+  async (): Promise<RequestLocaleInfo> => {
+    const headerList = await headers();
 
-  const countryCode = headerList.get("x-vercel-ip-country");
-  const region = headerList.get("x-vercel-ip-country-region");
-  const city = headerList.get("x-vercel-ip-city");
-  const acceptLanguage = headerList.get("accept-language");
+    const countryCode = headerList.get("x-vercel-ip-country");
+    const region = headerList.get("x-vercel-ip-country-region");
+    const city = headerList.get("x-vercel-ip-city");
+    const acceptLanguage = headerList.get("accept-language");
 
   let locale: Locale = defaultLocale;
   let detectedVia: RequestLocaleInfo["detectedVia"] = "default";
@@ -78,17 +83,18 @@ export const getRequestLocaleInfo = cache((): RequestLocaleInfo => {
     }
   }
 
-  const location = { countryCode, region, city };
+    const location = { countryCode, region, city };
 
-  console.log("[locale] Request locale resolved", {
-    locale,
-    detectedVia,
-    location,
-  });
+    console.log("[locale] Request locale resolved", {
+      locale,
+      detectedVia,
+      location,
+    });
 
-  return {
-    locale,
-    detectedVia,
-    location,
-  };
-});
+    return {
+      locale,
+      detectedVia,
+      location,
+    };
+  }
+);

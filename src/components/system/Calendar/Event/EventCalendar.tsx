@@ -7,6 +7,7 @@ import { ListModal, Detail } from "./index";
 
 import type { Event } from "../types";
 import type { RaceEvent } from "@/types/race";
+import { useCalendarMessages } from "@/i18n/hooks/useCalendarMessages";
 
 interface EventCalendarProps {
   races: RaceEvent[];
@@ -45,6 +46,7 @@ export function EventCalendar({
   selectedRaceId,
   onRaceSelected,
 }: EventCalendarProps) {
+  const messages = useCalendarMessages();
   const events = useMemo(
     () => races.map(toEvent).filter((event): event is Event => Boolean(event)),
     [races]
@@ -112,13 +114,12 @@ export function EventCalendar({
         />
         {error && (
           <div className="rounded-xl lg:rounded-2xl border border-red-500/40 bg-red-500/10 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm text-red-200">
-            {error}
+            {messages.errorState}
           </div>
         )}
         {!error && events.length === 0 && (
           <div className="rounded-xl lg:rounded-2xl border border-white/10 bg-white/[0.08] px-3 py-4 sm:px-4 sm:py-5 text-xs sm:text-sm text-white/70 text-center">
-            Nenhuma corrida encontrada para os próximos meses. Volte mais tarde
-            para conferir novas atualizações.
+            {messages.emptyState}
           </div>
         )}
       </div>

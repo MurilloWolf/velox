@@ -5,27 +5,18 @@ import { getRequestLocaleInfo } from "@/i18n/getRequestLocaleInfo";
 import { getCalendarPageContent } from "@/presentation";
 import { fetchRacesAction } from "@/services/actions/races";
 import { buildMetadata } from "@/lib/seo";
+import { getCalendarMetadataContent } from "@/i18n/metadata/calendar";
 import { CalendarPageClient } from "./CalendarPageClient";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Calendário de corridas - VELOX Corridas",
-  description:
-    "Consulte o calendário atualizado de corridas de rua, meias maratonas e provas em todo o Brasil.",
-  keywords: [
-    "calendário de corridas",
-    "corridas Brasil",
-    "provas de rua",
-    "corrida 2025",
-    "agenda de maratonas",
-  ],
-  path: "/calendar",
-  image: "/velox_x.png",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getRequestLocaleInfo();
+  return buildMetadata(getCalendarMetadataContent(locale));
+}
 
 export default async function CalendarPage() {
-  const { locale } = getRequestLocaleInfo();
+  const { locale } = await getRequestLocaleInfo();
   const calendarPageContent = getCalendarPageContent(locale);
   const { races, error } = await fetchRacesAction();
 

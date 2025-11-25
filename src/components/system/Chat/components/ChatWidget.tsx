@@ -9,11 +9,27 @@ import { cn } from "@/lib/utils";
 import ChatPanel from "./ChatPanel";
 import useAnalytics from "@/tracking/useAnalytics";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/i18n/useI18n";
+
+const WIDGET_COPY = {
+  "pt-BR": {
+    open: "Fale com a gente",
+    close: "Minimizar chat",
+    aria: "Alternar chat",
+  },
+  "en-US": {
+    open: "Chat with us",
+    close: "Hide chat",
+    aria: "Toggle chat",
+  },
+} as const;
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const { trackModalOpen, trackModalClose } = useAnalytics();
   const pathname = usePathname();
+  const { isBrazilExperience } = useI18n();
+  const copy = WIDGET_COPY[isBrazilExperience ? "pt-BR" : "en-US"];
 
   const isFaqPage = pathname?.startsWith("/faq");
 
@@ -55,9 +71,10 @@ export default function ChatWidget() {
         className="flex items-center gap-2 rounded-full hover:bg-blue-500 bg-blue-700 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition hover:scale-105 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#93C5FD] active:scale-95"
         aria-expanded={isOpen}
         aria-controls="chat-widget"
+        aria-label={copy.aria}
       >
         <MessageCircle className="h-5 w-5" />
-        {isOpen ? "Minimizar chat" : "Fale com a gente"}
+        {isOpen ? copy.close : copy.open}
       </Button>
     </div>
   );

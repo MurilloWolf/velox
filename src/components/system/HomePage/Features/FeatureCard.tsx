@@ -13,10 +13,12 @@ export interface IFeatureProps {
   scrollNext: () => void;
   showScroll: boolean;
   onSelect: () => void;
+  scrollLabel?: string;
 }
 
 export default function FeatureCard(props: IFeatureProps) {
-  const { feature, index, scrollNext, showScroll, onSelect } = props;
+  const { feature, index, scrollNext, showScroll, onSelect, scrollLabel } =
+    props;
   const Icon = feature.icon;
   return (
     <Card
@@ -58,7 +60,7 @@ export default function FeatureCard(props: IFeatureProps) {
             showScroll ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           aria-hidden={!showScroll}
-          aria-label="Ver mais recursos"
+          aria-label={scrollLabel}
         >
           <div className="flex items-center space-x-1">
             {[0, 1, 2].map((i) => (

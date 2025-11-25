@@ -1,7 +1,10 @@
 "use server";
 
 import promptTemplate from "@/components/system/Chat/prompts/prompt.json";
-import { ASSISTANT_FALLBACK_MESSAGE } from "@/components/system/Chat/constants";
+import {
+  getChatCopy,
+  type ChatLocaleKey,
+} from "@/components/system/Chat/constants";
 type HistoryItem = {
   role: "user" | "assistant";
   message: string;
@@ -43,6 +46,8 @@ type SendChatPayload = {
   timeOfDay: string;
   currentQuestion: string;
   history: HistoryItem[];
+  language: ChatLocaleKey;
+  fallbackMessage?: string;
 };
 
 type SendChatResult = {
@@ -291,7 +296,7 @@ const collectMessages = (parsed: Record<string, unknown>, fallback: string) => {
   }
 
   if (!messages.length) {
-    messages.push(ASSISTANT_FALLBACK_MESSAGE);
+    messages.push(fallback);
   }
 
   return messages;
@@ -321,7 +326,7 @@ const buildOpenAiPayload = (
 export async function sendChatCompletion(
   payload: SendChatPayload
 ): Promise<SendChatResult> {
-  const { userName, timeOfDay, currentQuestion, history } = payload;
+  const { userName, timeOfDay, currentQuestion, history, language } = payload;
 
   if (!currentQuestion) {
     throw new Error("Pergunta atual não informada.");
@@ -333,6 +338,12 @@ export async function sendChatCompletion(
   }
 
   const template: PromptTemplate = JSON.parse(JSON.stringify(promptTemplate));
+  const languageLabels: Record<ChatLocaleKey, string> = {
+    "pt-BR": "português do Brasil",
+    "en-US": "English (United States)",
+  };
+  template.language =
+    languageLabels[language] ?? template.language ?? language;
   const systemPrompt = buildSystemPrompt(template);
   const userPrompt = buildUserPrompt(template, {
     userName,
@@ -389,11 +400,14 @@ export async function sendChatCompletion(
     }
   }
 
+  const fallbackMessage =
+    payload.fallbackMessage ?? getChatCopy(language).fallback;
+
   const assistantMessages = collectMessages(
     parsed,
-    assistantRaw || ASSISTANT_FALLBACK_MESSAGE
+    assistantRaw || fallbackMessage
   );
-  const [messageToSend = ASSISTANT_FALLBACK_MESSAGE] = assistantMessages;
+  const [messageToSend = fallbackMessage] = assistantMessages;
 
   const tokensUsed = Number(
     parsed?.tokens_used ??

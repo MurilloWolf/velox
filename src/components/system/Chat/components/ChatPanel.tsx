@@ -20,11 +20,11 @@ import { getTimeOfDay } from "../utils/time";
 import { createRateLimitState, evaluateRateLimit } from "../utils/rate-limit";
 import { sendChatCompletion } from "@/services/actions/chat";
 import {
-  ASSISTANT_FALLBACK_MESSAGE,
-  DEFAULT_USER_NAME,
-  RATE_LIMIT_MESSAGES,
-  INITIAL_MESSAGE,
+  buildInitialMessage,
+  getChatCopy,
+  type ChatLocaleKey,
 } from "@/components/system/Chat/constants";
+import { useI18n } from "@/i18n/useI18n";
 
 type ChatPanelVariant = "full" | "widget";
 
@@ -41,7 +41,12 @@ export default function ChatPanel({
   className,
   contentClassName,
 }: ChatPanelProps) {
-  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
+  const { isBrazilExperience } = useI18n();
+  const localeKey: ChatLocaleKey = isBrazilExperience ? "pt-BR" : "en-US";
+  const chatCopy = getChatCopy(localeKey);
+  const [messages, setMessages] = useState<Message[]>(() => [
+    buildInitialMessage(chatCopy.initialMessage),
+  ]);
   const [inputValue, setInputValue] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [, startTransition] = useTransition();
@@ -117,7 +122,9 @@ export default function ChatPanel({
     rateLimitStateRef.current = result.state;
 
     if (!result.allowed && result.reason) {
-      pushWarning(RATE_LIMIT_MESSAGES[result.reason]);
+      const warning =
+        chatCopy.rateLimitMessages[result.reason] ?? chatCopy.fallback;
+      pushWarning(warning);
       return false;
     }
 
@@ -152,10 +159,12 @@ export default function ChatPanel({
 
     try {
       const data = await sendChatCompletion({
-        userName: DEFAULT_USER_NAME,
+        userName: chatCopy.defaultUserName,
         timeOfDay: getTimeOfDay(),
         currentQuestion: trimmedInput,
         history: buildHistoryPayload(previousMessages),
+        language: localeKey,
+        fallbackMessage: chatCopy.fallback,
       });
 
       const assistantMessages = Array.isArray(data?.messages)
@@ -189,8 +198,8 @@ export default function ChatPanel({
         id: createMessageId(),
         text:
           error instanceof Error
-            ? `Desculpe, ocorreu um erro: ${error.message}`
-            : ASSISTANT_FALLBACK_MESSAGE,
+            ? `${chatCopy.fallback} (${error.message})`
+            : chatCopy.fallback,
         sender: "bot",
         timestamp: new Date(),
         format: "text",
@@ -227,6 +236,15 @@ export default function ChatPanel({
     variant === "full"
       ? "w-full h-full min-h-[400px] md:min-h-[700px] mx-auto my-2 md:my-10 max-w-3xl"
       : "w-full";
+
+  useEffect(() => {
+    setMessages((prev) => {
+      if (prev.length === 1 && prev[0].id === "welcome") {
+        return [buildInitialMessage(chatCopy.initialMessage)];
+      }
+      return prev;
+    });
+  }, [chatCopy.initialMessage]);
 
   return (
     <div className={wrapperClasses}>

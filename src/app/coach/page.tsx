@@ -6,36 +6,42 @@ import { cn } from "@/lib/utils";
 
 import { ResourcesSidebar, CoachHeader, Panel } from "./components";
 import { SECTION_THEMES, type CoachRootSection } from "./presentation/themes";
-import {
-  navigationSections,
-  sectionRenderers,
-  subsectionRenderers,
-  getPanelContent,
-} from "./presentation/config";
+import type { CoachNavigationSection } from "./presentation/types";
+import { buildCoachPresentation } from "./presentation/config";
+import { getCoachContentByLocale } from "./presentation/content";
 import { useTrackSection } from "./track";
+import { useI18n } from "@/i18n/useI18n";
 
 const DEFAULT_SECTION: CoachRootSection = "nutrition";
-const KNOWN_SECTIONS = new Set(
-  navigationSections.flatMap((section) => [
-    section.id,
-    ...(section.subsections?.map((subsection) => subsection.id) ?? []),
-  ])
-);
 
-const isCoachRootSection = (value: string): value is CoachRootSection =>
-  Object.hasOwn(sectionRenderers, value as CoachRootSection);
+const buildKnownSections = (sections: CoachNavigationSection[]) =>
+  new Set(
+    sections.flatMap((section) => [
+      section.id,
+      ...(section.subsections?.map((subsection) => subsection.id) ?? []),
+    ])
+  );
 
-const normalizeSection = (candidate: string | null): string => {
+const isCoachRootSection = (
+  value: string,
+  renderers: Record<string, () => React.JSX.Element> = {}
+): value is CoachRootSection =>
+  Object.hasOwn(renderers, value as CoachRootSection);
+
+const normalizeSection = (
+  candidate: string | null,
+  knownSections: Set<string>
+): string => {
   if (!candidate) {
     return DEFAULT_SECTION;
   }
 
-  if (KNOWN_SECTIONS.has(candidate)) {
+  if (knownSections.has(candidate)) {
     return candidate;
   }
 
   const rootCandidate = candidate.split("-")[0];
-  return KNOWN_SECTIONS.has(rootCandidate) ? rootCandidate : DEFAULT_SECTION;
+  return knownSections.has(rootCandidate) ? rootCandidate : DEFAULT_SECTION;
 };
 
 export default function CoachPage() {
@@ -57,28 +63,46 @@ function CoachPageWithTracker() {
 function CoachPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { locale } = useI18n();
   const sectionParam = searchParams.get("section");
   const { trackSection } = useTrackSection();
+  const coachContent = useMemo(
+    () => getCoachContentByLocale(locale),
+    [locale]
+  );
+  const {
+    navigationSections,
+    sectionRenderers,
+    subsectionRenderers,
+    getPanelContent,
+  } = useMemo(
+    () => buildCoachPresentation(coachContent),
+    [coachContent]
+  );
+  const knownSections = useMemo(
+    () => buildKnownSections(navigationSections),
+    [navigationSections]
+  );
 
   const [activeSection, setActiveSection] = useState(() =>
-    normalizeSection(sectionParam)
+    normalizeSection(sectionParam, knownSections)
   );
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const nextSection = normalizeSection(sectionParam);
+    const nextSection = normalizeSection(sectionParam, knownSections);
     if (nextSection !== activeSection) {
       setActiveSection(nextSection);
     }
-  }, [sectionParam, activeSection]);
+  }, [sectionParam, activeSection, knownSections]);
 
   const handleSectionChange = (section: string) => {
-    const normalized = normalizeSection(section);
+    const normalized = normalizeSection(section, knownSections);
     if (normalized !== activeSection) {
       setActiveSection(normalized);
     }
 
-    if (normalized !== normalizeSection(sectionParam)) {
+    if (normalized !== normalizeSection(sectionParam, knownSections)) {
       const params = new URLSearchParams(searchParams.toString());
       params.set("section", normalized);
       const queryString = params.toString();
@@ -90,7 +114,7 @@ function CoachPageContent() {
 
   const rootSectionCandidate = activeSection.split("-")[0] ?? DEFAULT_SECTION;
   const rootSection = (
-    isCoachRootSection(rootSectionCandidate)
+    isCoachRootSection(rootSectionCandidate, sectionRenderers)
       ? rootSectionCandidate
       : DEFAULT_SECTION
   ) as CoachRootSection;
@@ -127,7 +151,7 @@ function CoachPageContent() {
         sections={navigationSections}
         activeSection={activeSection}
         onSectionChange={(section) => {
-          const normalized = normalizeSection(section);
+          const normalized = normalizeSection(section, knownSections);
           if (normalized !== activeSection) {
             trackSection({ section: normalized, basePath: "/coach" });
           }

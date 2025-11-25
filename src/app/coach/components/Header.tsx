@@ -3,6 +3,7 @@ import React from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/i18n/useI18n";
 
 interface ICoachHeaderProps {
   mobileMenuOpen: boolean;
@@ -14,8 +15,24 @@ interface ICoachHeaderProps {
   };
 }
 
+const HEADER_COPY = {
+  "pt-BR": {
+    title: "Recursos para Corredores",
+    home: "Início",
+    toggleLabel: "Alternar menu",
+  },
+  "en-US": {
+    title: "Runner resources",
+    home: "Home",
+    toggleLabel: "Toggle navigation",
+  },
+} as const;
+
 export default function CoachHeader(props: ICoachHeaderProps) {
   const { mobileMenuOpen, setMobileMenuOpen, theme } = props;
+  const { isBrazilExperience } = useI18n();
+  const copy = HEADER_COPY[isBrazilExperience ? "pt-BR" : "en-US"];
+
   return (
     <header
       className={cn(
@@ -33,7 +50,7 @@ export default function CoachHeader(props: ICoachHeaderProps) {
               theme.button
             )}
             onClick={() => setMobileMenuOpen((open) => !open)}
-            aria-label="Alternar menu"
+            aria-label={copy.toggleLabel}
             aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? (
@@ -43,7 +60,7 @@ export default function CoachHeader(props: ICoachHeaderProps) {
             )}
           </Button>
           <h1 className={cn("text-xl font-semibold", theme.title)}>
-            Recursos para Corredores
+            {copy.title}
           </h1>
         </div>
         <div className="flex items-center gap-2">
@@ -54,7 +71,7 @@ export default function CoachHeader(props: ICoachHeaderProps) {
             className={cn("text-slate-200 transition-colors", theme.button)}
           >
             <Link href="/" className="uppercase">
-              Início
+              {copy.home}
             </Link>
           </Button>
         </div>

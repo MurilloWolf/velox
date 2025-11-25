@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { EventCalendar } from "@/components/system";
 import { Badge, Button, Card, CardHeader } from "@/components/ui";
 import { ArrowRight } from "lucide-react";
 import type { RaceEvent } from "@/types/race";
+import { useI18n } from "@/i18n/useI18n";
+import { useCalendarMessages } from "@/i18n/hooks/useCalendarMessages";
 
 interface CalendarPageClientProps {
   races: RaceEvent[];
@@ -14,6 +16,12 @@ interface CalendarPageClientProps {
 export function CalendarPageClient({ races, error }: CalendarPageClientProps) {
   const maxUpcomingRaces = 5;
   const [selectedRaceId, setSelectedRaceId] = useState<string | null>(null);
+  const { locale } = useI18n();
+  const messages = useCalendarMessages();
+  const dateFormatter = useMemo(
+    () => new Intl.DateTimeFormat(locale, { dateStyle: "short" }),
+    [locale]
+  );
 
   const handleViewDetails = (race: RaceEvent) => {
     setSelectedRaceId(race.id);
@@ -25,7 +33,7 @@ export function CalendarPageClient({ races, error }: CalendarPageClientProps) {
         <div className="hidden lg:block lg:col-span-2 xl:col-span-2">
           <div className="bg-black/10 backdrop-blur-sm rounded-2xl p-4 lg:p-6 sticky top-4">
             <h3 className="text-xl lg:text-2xl font-semibold text-white mb-4">
-              Próximas Corridas
+              {messages.upcoming.title}
             </h3>
             <div className="space-y-3">
               {races?.slice(0, maxUpcomingRaces).map((race) => (
@@ -41,7 +49,7 @@ export function CalendarPageClient({ races, error }: CalendarPageClientProps) {
                             {race.title}
                           </h4>
                           <p className="text-white/80 text-xs font-mono whitespace-nowrap">
-                            {new Date(race.date).toLocaleDateString()}
+                            {dateFormatter.format(new Date(race.date))}
                           </p>
                         </div>
                         <p className="text-white text-xs -mt-1">
@@ -63,7 +71,8 @@ export function CalendarPageClient({ races, error }: CalendarPageClientProps) {
                           className="text-black bg-[#D5FE46] hover:bg-[#D5FE46]/80 justify-center items-center inline-flex w-full text-sm"
                           onClick={() => handleViewDetails(race)}
                         >
-                          Ver detalhes <ArrowRight className="w-4 h-4 ml-2" />
+                          {messages.upcoming.viewDetailsLabel}{" "}
+                          <ArrowRight className="w-4 h-4 ml-2" />
                         </Button>
                       </div>
                     </div>

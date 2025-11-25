@@ -12,21 +12,14 @@ import {
   TrainingSheets,
 } from "@/components/system";
 import { buildMetadata } from "@/lib/seo";
+import { getRequestLocaleInfo } from "@/i18n/getRequestLocaleInfo";
+import { getHomeMetadataContent } from "@/i18n/metadata/home";
 
-export const metadata: Metadata = buildMetadata({
-  title: "VELOX Corridas - Calendário, dicas e bot no Telegram",
-  description:
-    "Encontre corridas em todo o Brasil, receba alertas no Telegram e organize seus treinos com o VELOX Corridas.",
-  keywords: [
-    "velox corridas",
-    "bot de corrida",
-    "corridas no telegram",
-    "agenda de corridas",
-    "eventos de corrida Brasil",
-  ],
-  path: "/",
-  image: "/velox_x.png",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getRequestLocaleInfo();
+  const content = getHomeMetadataContent(locale);
+  return buildMetadata(content);
+}
 
 export default function Home() {
   return (

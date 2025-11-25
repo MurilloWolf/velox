@@ -1,6 +1,6 @@
 import type { Locale } from "../config";
-import enUS from "./en-US";
-import ptBR from "./pt-BR";
+import enUS from "./en/en-US";
+import ptBR from "./pt/pt-BR";
 
 type DeepWiden<T> = T extends string
   ? string

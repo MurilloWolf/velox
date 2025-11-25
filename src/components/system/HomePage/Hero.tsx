@@ -4,12 +4,14 @@ import { ChevronDown, Calendar } from "lucide-react";
 import Image from "next/image";
 import useAnalytics from "@/tracking/useAnalytics";
 import { Button } from "@/components/ui/button";
-import { useI18n } from "@/i18n/useI18n";
+import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
 
 export default function Hero() {
   const [showScroll, setShowScroll] = useState(true);
   const { trackButtonClick } = useAnalytics();
-  const { t } = useI18n();
+  const {
+    hero: { title, subtitle, cta },
+  } = useHomeMessages();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -25,7 +27,7 @@ export default function Hero() {
   }, []);
 
   const handleCalendarClick = () => {
-    trackButtonClick("hero:primary_cta", "Encontrar Provas Agora", "/calendar");
+    trackButtonClick("hero:primary_cta", cta, "/calendar");
     window.open("/calendar", "_self");
   };
   return (
@@ -43,10 +45,10 @@ export default function Hero() {
           </div>
           <div>
             <h1 className="text-5xl md:text-5xl font-extrabold text-white leading-tight max-w-3xl">
-              {t("home.hero.title")}
+              {title}
             </h1>
             <p className="mt-2 sm:mt-2 mb-10 max-w-3xl text-pretty text-xl text-white/85 md:text-2xl leading-relaxed font-medium">
-              {t("home.hero.subtitle")}
+              {subtitle}
             </p>
             {/* <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
               <div className="text-center">
@@ -81,7 +83,7 @@ export default function Hero() {
               className="border-[#d5fe46] text-[#d5fe46] mt-16 bg-transparent ease-in-out duration-150 cursor-pointer uppercase text-lg py-4 px-7 h-auto transition-all hover:bg-[#d5fe46] hover:text-black"
             >
               <Calendar className="mr-2 h-4 w-4" />
-              {t("home.hero.cta")}
+              {cta}
             </Button>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { Calendar, Dumbbell, Droplets, Send } from "lucide-react";
 
 import { AnalyticsActions } from "@/tracking/types";
 import useAnalytics from "@/tracking/useAnalytics";
+import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
 
 import FeatureCard from "./FeatureCard";
 
@@ -54,41 +55,55 @@ export default function PlatformFeatures() {
   const [showScroll, setShowScroll] = useState(false);
   const router = useRouter();
   const { trackEvent } = useAnalytics();
+  const { platformFeatures } = useHomeMessages();
 
-  const features: FeatureItem[] = [
+  const featureBlueprints: Array<
+    FeatureItem & { id: "calendar" | "bot" | "training" | "nutrition" }
+  > = [
     {
+      id: "calendar",
       icon: Calendar,
-      title: "Calendário de Corridas",
-      description:
-        "Encontre corridas de 5km, 10km, meia maratona e maratona completa em todo o Brasil. Filtros por distância, cidade e data.",
+      title: "",
+      description: "",
       img: `${BASE_S3_URL}/calendar.jpg`,
       href: "/calendar",
     },
     {
+      id: "bot",
       icon: Send,
-      title: "Bot no Telegram",
-      description:
-        "Acesse todas as funcionalidades direto no Telegram. Notificações de novas corridas, lembretes e muito mais.",
+      title: "",
+      description: "",
       img: `${BASE_S3_URL}/woman-telephone.jpg`,
       externalUrl: "https://t.me/VeloxBot",
     },
     {
+      id: "training",
       icon: Dumbbell,
-      title: "Planos de Treino",
-      description:
-        "Treinos estruturados para iniciantes e avançados. Prepare-se para sua próxima corrida com orientação profissional.",
+      title: "",
+      description: "",
       img: `${BASE_S3_URL}/running-bg.jpg`,
       section: "training",
     },
     {
+      id: "nutrition",
       icon: Droplets,
-      title: "Guia de Nutrição",
-      description:
-        "Aprenda quando e quanto beber antes, durante e depois das corridas. Dicas para diferentes distâncias e climas.",
+      title: "",
+      description: "",
       img: `${BASE_S3_URL}/nutrition.jpg`,
       section: "nutrition",
     },
   ];
+
+  const features: FeatureItem[] = featureBlueprints.map((feature) => {
+    const translation = platformFeatures.cards.find(
+      (card) => card.id === feature.id
+    );
+    return {
+      ...feature,
+      title: translation?.title ?? "",
+      description: translation?.description ?? "",
+    };
+  });
 
   const handleFeatureSelect = (feature: FeatureItem) => {
     trackEvent({
@@ -248,11 +263,10 @@ export default function PlatformFeatures() {
             id="recursos-title"
             className="mt-20 text-5xl md:text-5xl font-bold mb-4 bg-white bg-clip-text text-transparent"
           >
-            Tudo que você precisa para correr melhor
+            {platformFeatures.title}
           </h2>
           <p className="text-lg text-white/90 max-w-2xl mx-auto text-pretty">
-            VELOX reúne todas as ferramentas essenciais para corredores em uma
-            única plataforma integrada
+            {platformFeatures.description}
           </p>
         </div>
 
@@ -268,6 +282,7 @@ export default function PlatformFeatures() {
                 index={index}
                 scrollNext={scrollNext}
                 showScroll={showScroll}
+                scrollLabel={platformFeatures.carouselAriaLabel}
                 onSelect={() => handleFeatureSelect(feature)}
               />
             );

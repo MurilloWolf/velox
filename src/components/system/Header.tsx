@@ -13,32 +13,20 @@ import {
 import { Send, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSmoothScroll } from "./hooks/useSmoothScroll";
 import { usePathname } from "next/navigation";
 import useAnalytics from "@/tracking/useAnalytics";
+import { useHeaderMessages } from "@/i18n/hooks/useHeaderMessages";
+import { useSmoothScroll } from "./hooks/useSmoothScroll";
 
 export default function Header() {
   const TELEGRAM_BOT_URL =
     process.env.NEXT_PUBLIC_BOT_URL || "https://web.telegram.org/a/#8475526575";
 
   const { trackNavigationClick, trackButtonClick } = useAnalytics();
-
+  const headerMessages = useHeaderMessages();
   const scrollTo = useSmoothScroll();
   const pathname = usePathname();
-
-  type NavItem = {
-    label: string;
-    href: string;
-    scrollTarget?: string;
-  };
-
-  const navItems: readonly NavItem[] = [
-    { label: "Plataforma", href: "/#recursos", scrollTarget: "#recursos" },
-    { label: "Calendário", href: "/calendar" },
-    { label: "Bot", href: "/info" },
-    { label: "Patrocínio", href: "/sponsors" },
-    { label: "Contato", href: "/#contato", scrollTarget: "#contato" },
-  ] as const;
+  const navItems = headerMessages.navItems;
 
   const handleSmoothNavigation = (
     event: MouseEvent<HTMLElement>,
@@ -57,7 +45,7 @@ export default function Header() {
   const handleTelegramClick = () => {
     trackButtonClick(
       "header:telegram_button",
-      "VELOX BOT Telegram",
+      headerMessages.telegramButton.fullLabel,
       TELEGRAM_BOT_URL
     );
     window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
@@ -70,7 +58,7 @@ export default function Header() {
           variant="ghost"
           size="sm"
           className="md:hidden text-white hover:bg-white/10"
-          aria-label="Abrir menu de navegação"
+          aria-label={headerMessages.mobileMenuAriaLabel}
         >
           <Menu className="h-5 w-5" />
         </Button>
@@ -83,7 +71,7 @@ export default function Header() {
           <SheetTitle className="text-white text-left">
             <Image
               src="https://velox-images-bucket.s3.sa-east-1.amazonaws.com/public/velox-transparent.png"
-              alt="Logotipo do VELOX Corridas"
+              alt={headerMessages.logoAlt}
               width={120}
               height={28}
               className="object-fit-contain"
@@ -96,7 +84,7 @@ export default function Header() {
             const isActive = !item.scrollTarget && pathname === item.href;
 
             return (
-              <SheetClose asChild key={item.label}>
+              <SheetClose asChild key={item.id}>
                 <Link
                   href={item.href}
                   onClick={(event) =>
@@ -125,7 +113,7 @@ export default function Header() {
                 className="w-full text-black bg-[#d5fe46] hover:bg-[#e0ff55] hover:shadow-[0_0_20px_rgba(213,254,70,0.6)] font-semibold transition-all group"
               >
                 <Send className="h-4 w-4 mr-2 transition-transform group-hover:translate-x-1 group-hover:rotate-12" />
-                VELOX BOT Telegram
+                {headerMessages.telegramButton.fullLabel}
               </Button>
             </SheetClose>
           </div>
@@ -144,7 +132,7 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="https://velox-images-bucket.s3.sa-east-1.amazonaws.com/public/velox-transparent.png"
-              alt="Logotipo do VELOX Corridas"
+              alt={headerMessages.logoAlt}
               width={150}
               height={32}
               className="object-fit-contain"
@@ -153,14 +141,14 @@ export default function Header() {
           </Link>
           <nav
             className="hidden md:flex items-center gap-6 text-white"
-            aria-label="Navegação principal"
+            aria-label={headerMessages.navAriaLabel}
           >
             <ul className="flex items-center gap-6 text-sm font-medium">
               {navItems.map((item) => {
                 const isActive = !item.scrollTarget && pathname === item.href;
 
                 return (
-                  <li key={item.label} className="list-none">
+                  <li key={item.id} className="list-none">
                     <Link
                       href={item.href}
                       onClick={(event) =>
@@ -187,11 +175,13 @@ export default function Header() {
           <Button
             onClick={handleTelegramClick}
             size="sm"
-            aria-label="VELOX BOT Telegram"
+            aria-label={headerMessages.telegramButton.ariaLabel}
             className="text-black bg-[#d5fe46] hover:bg-[#e0ff55] hover:rotate-2 hover:shadow-[0_0_20px_rgba(213,254,70,0.6)] hover:[text-shadow:_0_0_8px_rgba(0,0,0,0.3)] cursor-pointer uppercase font-semibold transition-all group"
           >
             <Send className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:rotate-12" />
-            <span className="hidden sm:inline ml-2">Telegram</span>
+            <span className="hidden sm:inline ml-2">
+              {headerMessages.telegramButton.shortLabel}
+            </span>
           </Button>
         </div>
       </div>

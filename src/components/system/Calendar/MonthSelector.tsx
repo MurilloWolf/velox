@@ -2,33 +2,31 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useMemo } from "react";
+import { useI18n } from "@/i18n/useI18n";
 
 interface MonthSelectorProps {
   selectedDate: Date;
   onDateChange: (date: Date) => void;
 }
 
-const MONTHS = [
-  "Janeiro",
-  "Fevereiro",
-  "Março",
-  "Abril",
-  "Maio",
-  "Junho",
-  "Julho",
-  "Agosto",
-  "Setembro",
-  "Outubro",
-  "Novembro",
-  "Dezembro",
-];
-
 export function MonthSelector({
   selectedDate,
   onDateChange,
 }: MonthSelectorProps) {
+  const { locale } = useI18n();
   const currentMonth = selectedDate.getMonth();
-  const currentYear = selectedDate.getFullYear();
+  const monthFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        month: "long",
+        year: "numeric",
+      }),
+    [locale]
+  );
+  const monthLabel = monthFormatter
+    .format(selectedDate)
+    .replace(/^./, (char) => char.toUpperCase());
 
   const handlePreviousMonth = () => {
     const newDate = new Date(selectedDate);
@@ -55,7 +53,7 @@ export function MonthSelector({
 
       <div className="text-center flex-1">
         <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold truncate">
-          {MONTHS[currentMonth]} {currentYear}
+          {monthLabel}
         </h2>
       </div>
 

@@ -2,6 +2,7 @@
 
 import { EventBadge } from "./Event";
 import type { Event } from "./types";
+import { useCalendarMessages } from "@/i18n/hooks/useCalendarMessages";
 
 interface CalendarProps {
   selectedDate: Date;
@@ -10,14 +11,14 @@ interface CalendarProps {
   onViewMoreClick: (events: Event[]) => void;
 }
 
-const WEEKDAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-
 export function Calendar({
   selectedDate,
   events,
   onEventClick,
   onViewMoreClick,
 }: CalendarProps) {
+  const { calendarGrid } = useCalendarMessages();
+  const weekdays = calendarGrid.weekdays;
   const year = selectedDate.getFullYear();
   const month = selectedDate.getMonth();
 
@@ -68,7 +69,7 @@ export function Calendar({
         <div className="overflow-x-auto">
           <div className="min-w-[320px] sm:min-w-[480px] lg:min-w-0">
             <div className="grid grid-cols-7 border-b rounded-t-2xl lg:rounded-t-3xl border-white/10 bg-white/[0.08]">
-              {WEEKDAYS.map((day) => (
+              {weekdays.map((day) => (
                 <div
                   key={day}
                   className="px-1 sm:px-2 py-2 text-center text-[0.65rem] sm:text-[0.7rem] md:text-xs font-semibold uppercase tracking-wide text-white/70"
@@ -117,7 +118,10 @@ export function Calendar({
                               }}
                               className="w-full cursor-pointer rounded-sm sm:rounded-md border border-[#d5fe46]/80 bg-[#d5fe46] px-1 sm:px-2 md:px-3 py-1 sm:py-1.5 md:py-2 text-left text-[0.6rem] sm:text-[0.7rem] md:text-[0.8rem] font-medium text-black transition-colors hover:bg-[#d5fe46]/80"
                             >
-                              Ver mais ({dayEvents.length})
+                              {calendarGrid.viewMoreLabel.replace(
+                                "{count}",
+                                String(dayEvents.length)
+                              )}
                             </button>
                           ) : (
                             hasEvents &&

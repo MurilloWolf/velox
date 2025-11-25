@@ -4,16 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import useAnalytics from "@/tracking/useAnalytics";
 import { Send, MessageSquare, Bell, Star } from "lucide-react";
+import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
 
 export default function BotShowcase() {
   const TELEGRAM_BOT_URL =
     process.env.NEXT_PUBLIC_BOT_URL || "https://web.telegram.org/a/#8475526575";
   const { trackButtonClick } = useAnalytics();
+  const { botShowcase } = useHomeMessages();
+  const featureIcons = [MessageSquare, Bell, Star] as const;
 
   const handleTelegramClick = () => {
     trackButtonClick(
       "bot_showcase:telegram_button",
-      "Abrir bot no Telegram",
+      botShowcase.ctaLabel,
       TELEGRAM_BOT_URL
     );
     window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
@@ -31,7 +34,7 @@ export default function BotShowcase() {
             <div className="inline-flex items-center gap-2 rounded-full bg-[#d5fe46] px-4 py-2 mb-4">
               <Send className="h-4 w-4 text-black" />
               <span className="text-sm font-medium text-black">
-                Bot Telegram
+                {botShowcase.badgeLabel}
               </span>
               <FlurryBackground />
             </div>
@@ -39,63 +42,40 @@ export default function BotShowcase() {
               id="botshowcase-title"
               className="text-4xl md:text-5xl font-bold mb-6 bg-white bg-clip-text text-transparent leading-normal"
             >
-              Acesse direto no Telegram
+              {botShowcase.title}
             </h2>
             <p className="text-lg  mb-8 leading-relaxed text-[#eee]/90">
-              Nosso bot inteligente traz toda a plataforma VELOX para o seu
-              Telegram. Busque corridas, receba dicas, acesse treinos e muito
-              mais sem sair do app.
+              {botShowcase.description}
             </p>
 
             <div className="space-y-4 mb-8">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10  shrink-0">
-                  <MessageSquare className="h-5 w-5 text-[#d5fe46]/60" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-white mb-1">
-                    Comandos Simples
-                  </h4>
-                  <p className="text-sm text-[#f5f5f5]/80">
-                    Interface intuitiva com comandos fáceis de usar
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 shrink-0">
-                  <Bell className="h-5 w-5 text-[#d5fe46]/60" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-white mb-1">
-                    Notificações Inteligentes
-                  </h4>
-                  <p className="text-sm text-[#f5f5f5]/80">
-                    Receba alertas de novas corridas e lembretes personalizados
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10  shrink-0">
-                  <Star className="h-5 w-5 text-[#d5fe46]/60" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-white mb-1">
-                    Favoritos e Histórico
-                  </h4>
-                  <p className="text-sm text-[#f5f5f5]/80">
-                    Salve corridas e acompanhe seu progresso
-                  </p>
-                </div>
-              </div>
+              {botShowcase.features.map((feature, index) => {
+                const Icon = featureIcons[index] || MessageSquare;
+                return (
+                  <div className="flex items-start gap-3" key={feature.title}>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10  shrink-0">
+                      <Icon className="h-5 w-5 text-[#d5fe46]/60" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white mb-1">
+                        {feature.title}
+                      </h4>
+                      <p className="text-sm text-[#f5f5f5]/80">
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
             <Button
               onClick={handleTelegramClick}
               size="lg"
-              aria-label="Abrir o VELOX Bot no Telegram em uma nova aba"
+              aria-label={botShowcase.ctaAriaLabel}
               className="w-full font-semibold sm:w-2/4 uppercase bg-[#d5fe46] brightness-90 hover:bg-[#d5fe46]/90 text-black  hover:opacity-80 cursor-pointer"
             >
               <Send className="mr-2 h-5 w-5" />
-              Abrir bot no Telegram
+              {botShowcase.ctaLabel}
             </Button>
           </div>
           <div className="relative">
@@ -107,10 +87,12 @@ export default function BotShowcase() {
                       <span className="text-sm">👤</span>
                     </div>
                     <span className="text-md text-white font-semibold">
-                      Você
+                      {botShowcase.conversation.userLabel}
                     </span>
                   </div>
-                  <p className="text-sm text-white">/corridas</p>
+                  <p className="text-sm text-white">
+                    {botShowcase.conversation.firstCommand}
+                  </p>
                 </div>
                 <div className="bg-gradient-to-r to-[#666]  from-[#212121] rounded-lg p-4 shadow-md text-white">
                   <div className="flex items-center gap-2 mb-2">
@@ -118,17 +100,16 @@ export default function BotShowcase() {
                       <Send className="h-4 w-4 text-[#d5fe46]" />
                     </div>
                     <span className="font-semibold text-sm text-[#d5fe46]">
-                      VELOX Bot
+                      {botShowcase.conversation.botName}
                     </span>
                   </div>
-                  <p className="text-sm">Encontrei 12 corridas! 🏃</p>
+                  <p className="text-sm">{botShowcase.conversation.botResponse}</p>
                   <div className="mt-3 space-y-2">
-                    <div className="bg-white/10 rounded p-2 text-xs">
-                      📍 Maratona de São Paulo - 42km
-                    </div>
-                    <div className="bg-white/10 rounded p-2 text-xs">
-                      📍 Corrida do Ibirapuera - 10km
-                    </div>
+                    {botShowcase.conversation.raceSamples.map((sample) => (
+                      <div className="bg-white/10 rounded p-2 text-xs" key={sample}>
+                        {sample}
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div className="bg-white/15 rounded-lg p-4 shadow-md">
@@ -137,10 +118,12 @@ export default function BotShowcase() {
                       <span className="text-sm">👤</span>
                     </div>
                     <span className="text-md text-white font-semibold">
-                      Você
+                      {botShowcase.conversation.userLabel}
                     </span>
                   </div>
-                  <p className="text-sm text-white">/proximas_corridas</p>
+                  <p className="text-sm text-white">
+                    {botShowcase.conversation.secondCommand}
+                  </p>
                 </div>
               </div>
             </Card>

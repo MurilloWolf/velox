@@ -82,7 +82,7 @@ export const metadata: Metadata = {
   },
   authors: [{ name: "VELOX" }],
 };
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -102,9 +102,13 @@ export default function RootLayout({
     ],
   } as const;
 
-  const { locale, location } = getRequestLocaleInfo();
+  const { locale, location } = await getRequestLocaleInfo();
   const localeMessages =
     messagesByLocale[locale] ?? messagesByLocale[defaultLocale];
+  const skipToContentLabel =
+    localeMessages.layout?.common?.skipToContent ||
+    messagesByLocale[defaultLocale].layout?.common?.skipToContent ||
+    "Skip to main content";
 
   return (
     <html lang={locale}>
@@ -115,7 +119,7 @@ export default function RootLayout({
           <LocationProvider location={location}>
             <SessionProvider>
               <a className="skip-to-content" href="#conteudo-principal">
-                Pular para o conteúdo principal
+                {skipToContentLabel}
               </a>
               <script
                 type="application/ld+json"

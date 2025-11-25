@@ -10,10 +10,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import useAnalytics from "@/tracking/useAnalytics";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
+import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
 
 export default function TrainingSheets() {
   const { trackButtonClick, trackSectionView } = useAnalytics();
+  const { trainingSheets } = useHomeMessages();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -38,28 +40,22 @@ export default function TrainingSheets() {
   const handleCTAClick = () => {
     trackButtonClick(
       "training_sheets:main_cta",
-      "Ver Planilhas",
+      trainingSheets.ctaTrackingLabel,
       "/training-sheets"
     );
   };
 
-  const features = [
-    {
-      icon: <FileSpreadsheet className="w-6 h-6" />,
-      title: "Planilhas Profissionais",
-      description: "Treinos estruturados por especialistas em corrida",
-    },
-    {
-      icon: <TrendingUp className="w-6 h-6" />,
-      title: "Progressão Garantida",
-      description: "Evolução gradual e segura do seu desempenho",
-    },
-    {
-      icon: <Star className="w-6 h-6" />,
-      title: "Resultados Comprovados",
-      description: "Mais de 1000 corredores já alcançaram seus objetivos",
-    },
-  ];
+  const features = useMemo(() => {
+    const icons = [FileSpreadsheet, TrendingUp, Star] as const;
+    return trainingSheets.features.map((feature, index) => {
+      const Icon = icons[index] || FileSpreadsheet;
+      return {
+        icon: <Icon className="w-6 h-6" />,
+        title: feature.title,
+        description: feature.description,
+      };
+    });
+  }, [trainingSheets.features]);
 
   return (
     <section
@@ -89,7 +85,7 @@ export default function TrainingSheets() {
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-[#d5fe46]/30 bg-[#d5fe46]/10 backdrop-blur-xl px-6 py-3 text-sm uppercase tracking-widest text-[#d5fe46] font-semibold shadow-[0_0_20px_rgba(213,254,70,0.2)]">
               <Zap className="h-4 w-4" />
-              Acelere seus resultados
+              {trainingSheets.badgeLabel}
             </div>
           </div>
 
@@ -97,14 +93,14 @@ export default function TrainingSheets() {
           <div className="text-center space-y-8 max-w-4xl mx-auto">
             <div className="space-y-6">
               <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-white via-[#d5fe46] to-white bg-clip-text text-transparent leading-tight">
-                Planilhas de Treino
+                {trainingSheets.title}
                 <br />
-                <span className="text-[#d5fe46]">Personalizadas</span>
+                <span className="text-[#d5fe46]">
+                  {trainingSheets.highlight}
+                </span>
               </h2>
               <p className="text-xl md:text-2xl text-white/80 leading-relaxed max-w-3xl mx-auto">
-                Transforme sua corrida com planilhas estruturadas por
-                especialistas. Do iniciante ao avançado, temos o treino ideal
-                para você.
+                {trainingSheets.description}
               </p>
             </div>
 
@@ -160,16 +156,14 @@ export default function TrainingSheets() {
                   className="flex items-center gap-3"
                 >
                   <FileSpreadsheet className="w-14 h-14 group-hover:rotate-12 transition-transform duration-300" />
-                  Ver Planilhas de Treino
+                  {trainingSheets.ctaLabel}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  {/* Glow effect */}
                   <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                 </Link>
               </Button>
 
               <p className="text-white/60 text-sm mt-4">
-                ✨ Acesso vitalício • 🏃‍♂️ Suporte especializado • 📈 Resultados
-                garantidos
+                {trainingSheets.footnote}
               </p>
             </div>
           </div>

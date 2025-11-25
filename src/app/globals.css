@@ -247,6 +247,11 @@
     white-space: pre-wrap;
     word-break: break-word;
   }
+
+  .chat-html a {
+    color: #d5fe46;
+    text-decoration: underline;
+  }
 }
 
 

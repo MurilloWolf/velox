@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui";
 import type { Event } from "../types";
+import { useI18n } from "@/i18n/useI18n";
+import { useCalendarMessages } from "@/i18n/hooks/useCalendarMessages";
 
 interface EventListModalProps {
   isOpen: boolean;
@@ -18,6 +20,8 @@ export default function EventListModal({
   events,
   onEventClick,
 }: EventListModalProps) {
+  const { locale } = useI18n();
+  const { listModal } = useCalendarMessages();
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -33,11 +37,13 @@ export default function EventListModal({
 
   const eventDate = events[0]?.date;
   const formattedDate = eventDate
-    ? eventDate.toLocaleDateString("pt-BR", {
+    ? new Intl.DateTimeFormat(locale, {
         day: "numeric",
         month: "long",
         year: "numeric",
       })
+        .format(eventDate)
+        .replace(/^./, (char) => char.toUpperCase())
     : "";
 
   return (
@@ -51,7 +57,7 @@ export default function EventListModal({
         <div className="sticky top-0 flex items-center justify-between gap-4 border-b border-white/10 bg-gradient-to-r from-primary/30 via-black/40 to-transparent px-8 py-6">
           <div>
             <h2 className="text-2xl font-semibold tracking-tight text-white">
-              Eventos do Dia
+              {listModal.title}
             </h2>
             <p className="mt-1 text-sm text-white/70">{formattedDate}</p>
           </div>

@@ -21,6 +21,7 @@ import {
 import { PurchaseDialog, ProductContent } from "@/components/system";
 import { Product } from "@/types/products";
 import { fetchAvailableProducts } from "@/services/actions/products";
+import { useI18n } from "@/i18n/useI18n";
 
 export type TrainingPlan = Product;
 
@@ -31,7 +32,34 @@ export type TrainingSectionProps = {
   };
 };
 
+const TRAINING_COPY = {
+  "pt-BR": {
+    searchPlaceholder: "Buscar planilha...",
+    selectPlaceholder: "Categoria",
+    selectAll: "Todas as categorias",
+    loading: "Carregando planilhas...",
+    errorPrefix: "Erro",
+    defaultErrorMessage: "Erro ao carregar produtos",
+    noResults: "Nenhum produto encontrado",
+    tableHeaders: ["Produto", "Categorias", "Preço"],
+    freeLabel: "Gratuito",
+  },
+  "en-US": {
+    searchPlaceholder: "Search training plan...",
+    selectPlaceholder: "Category",
+    selectAll: "All categories",
+    loading: "Loading training plans...",
+    errorPrefix: "Error",
+    defaultErrorMessage: "Unable to load products",
+    noResults: "No products found",
+    tableHeaders: ["Product", "Categories", "Price"],
+    freeLabel: "Free",
+  },
+} as const;
+
 export default function TrainingSection({ header }: TrainingSectionProps) {
+  const { locale, isBrazilExperience } = useI18n();
+  const copy = TRAINING_COPY[isBrazilExperience ? "pt-BR" : "en-US"];
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [previewPlan, setPreviewPlan] = useState<TrainingPlan | null>(null);
@@ -87,7 +115,7 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
           setPlans(result.products || []);
         }
       } catch (err) {
-        setError("Erro ao carregar produtos");
+        setError(copy.defaultErrorMessage);
         console.error("Error loading products:", err);
       } finally {
         setLoading(false);
@@ -95,7 +123,7 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
     };
 
     loadProducts();
-  }, []);
+  }, [copy.defaultErrorMessage]);
 
   const categories = useMemo(() => {
     const allCategories = plans.flatMap((plan) => plan.categories || []);
@@ -127,8 +155,8 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
     currency: string,
     isFree: boolean
   ) => {
-    if (isFree) return "Gratuito";
-    return new Intl.NumberFormat("pt-BR", {
+    if (isFree) return copy.freeLabel;
+    return new Intl.NumberFormat(locale, {
       style: "currency",
       currency: currency || "BRL",
     }).format(priceCents / 100);
@@ -147,7 +175,7 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="text-muted-foreground">Carregando planilhas...</div>
+        <div className="text-muted-foreground">{copy.loading}</div>
       </div>
     );
   }
@@ -155,7 +183,9 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
   if (error) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="text-red-400">Erro: {error}</div>
+        <div className="text-red-400">
+          {copy.errorPrefix}: {error}
+        </div>
       </div>
     );
   }
@@ -178,7 +208,7 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
           <div className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Buscar planilha..."
+              placeholder={copy.searchPlaceholder}
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
               className="pl-9"
@@ -187,10 +217,10 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
           <div className="flex gap-3">
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger className="w-[160px]">
-                <SelectValue placeholder="Categoria" />
+                <SelectValue placeholder={copy.selectPlaceholder} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todas as categorias</SelectItem>
+                <SelectItem value="all">{copy.selectAll}</SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category} value={category}>
                     {category}
@@ -205,9 +235,9 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Produto</TableHead>
-                <TableHead>Categorias</TableHead>
-                <TableHead>Preço</TableHead>
+                {copy.tableHeaders.map((headerLabel) => (
+                  <TableHead key={headerLabel}>{headerLabel}</TableHead>
+                ))}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -217,7 +247,7 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
                     colSpan={3}
                     className="text-center text-muted-foreground"
                   >
-                    Nenhum produto encontrado
+                    {copy.noResults}
                   </TableCell>
                 </TableRow>
               ) : (

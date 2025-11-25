@@ -4,16 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Send, Bell, CalendarCheck, Sparkles } from "lucide-react";
 import MashGradiant from "../MashGradiant";
 import useAnalytics from "@/tracking/useAnalytics";
+import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
 
 export default function CTASection() {
   const TELEGRAM_BOT_URL =
     process.env.NEXT_PUBLIC_BOT_URL || "https://web.telegram.org/a/#8475526575";
   const { trackButtonClick } = useAnalytics();
+  const { ctaSection } = useHomeMessages();
 
   const handleTelegramClick = () => {
     trackButtonClick(
       "cta_section:telegram_button",
-      "Acessar bot no Telegram",
+      ctaSection.buttonLabel,
       TELEGRAM_BOT_URL
     );
     window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
@@ -34,7 +36,7 @@ export default function CTASection() {
           <div className="mx-auto flex max-w-5xl flex-col items-center gap-12 text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm uppercase tracking-widest text-white/90 backdrop-blur">
               <Sparkles className="h-4 w-4 text-[#d5fe46]" />
-              Foque nos treinos, deixe o resto com a gente!
+              {ctaSection.badgeText}
             </div>
 
             <div className="space-y-6">
@@ -42,49 +44,42 @@ export default function CTASection() {
                 id="cta-title"
                 className="text-balance font-sans text-3xl font-bold text-white md:text-5xl"
               >
-                O assistente definitivo para corredores
+                {ctaSection.title}
               </h2>
               <p className="mx-auto max-w-2xl text-pretty text-base text-white/80 md:text-lg">
-                O Velox reúne todas as corridas em um só lugar, envia lembretes
-                no Telegram, salva seus eventos favoritos e ainda oferece dicas
-                personalizadas para você melhorar seu desempenho.
+                {ctaSection.description}
               </p>
             </div>
 
             <div className="grid w-full gap-6 md:grid-cols-3">
-              <FeatureCard
-                icon={<CalendarCheck className="h-6 w-6 text-[#d5fe46]" />}
-                title="Calendário vivo"
-                description="Todas as corridas da sua região, atualizadas em tempo real."
-              />
-              <FeatureCard
-                icon={<Bell className="h-6 w-6 text-[#d5fe46]" />}
-                title="Alertas personalizados"
-                description="Salve suas corridas favoritas e receba notificações no Telegram."
-              />
-              <FeatureCard
-                icon={<Sparkles className="h-6 w-6 text-[#d5fe46]" />}
-                title="Insights inteligentes"
-                description="Encontre o local da prova, previsão do tempo, dicas de treino a qualquer hora do dia."
-              />
+              {ctaSection.features.map((feature, index) => {
+                const icons = [CalendarCheck, Bell, Sparkles] as const;
+                const Icon = icons[index] || CalendarCheck;
+                return (
+                  <FeatureCard
+                    key={feature.title}
+                    icon={<Icon className="h-6 w-6 text-[#d5fe46]" />}
+                    title={feature.title}
+                    description={feature.description}
+                  />
+                );
+              })}
             </div>
 
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button
                 size="lg"
                 onClick={handleTelegramClick}
-                aria-label="Acessar o VELOX Bot no Telegram"
+                aria-label={ctaSection.buttonAriaLabel}
                 className="cursor-pointer h-auto w-full bg-[#d5fe46] px-8 py-4 text-base font-semibold uppercase text-black hover:bg-[#d5fe46]/90 sm:w-auto"
               >
                 <Send className="mr-2 h-5 w-5" />
-                Acessar bot no Telegram
+                {ctaSection.buttonLabel}
               </Button>
             </div>
 
             <div className="flex flex-col items-center gap-2 text-sm text-white/70 md:flex-row">
-              <span>Gratuito • Sem cadastro • Respostas imediatas</span>
-              <span className="hidden md:block">·</span>
-              <span>Eventos atualizados</span>
+              <span>{ctaSection.footnote}</span>
             </div>
           </div>
         </div>

@@ -11,6 +11,8 @@ import {
 import { AnalyticsActions } from "@/tracking/types";
 import useAnalytics from "@/tracking/useAnalytics";
 import { Instagram, Mail, Send } from "lucide-react";
+import { useMemo } from "react";
+import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
 
 export default function ContactSection() {
   const instagramUrl = "https://www.instagram.com/runningvelox/";
@@ -18,36 +20,33 @@ export default function ContactSection() {
   const emailAddress = "velox.running.app@gmail.com";
 
   const { trackEvent } = useAnalytics();
+  const { contactSection } = useHomeMessages();
 
-  const contactMethods = [
-    {
-      id: "TELEGRAM",
-      title: "Equipe no Telegram",
-      description: "Suporte em tempo real, dicas e atualizações de corridas.",
-      actionLabel: "Falar no Telegram",
-      href: telegramUrl,
-      icon: Send,
-      ariaLabel: "Abrir conversa com a equipe VELOX no Telegram",
-    },
-    {
-      id: "EMAIL",
-      title: "E-mail",
-      description: "Retorno em até 24h úteis para parcerias e dúvidas gerais.",
-      actionLabel: "Enviar e-mail",
-      href: `mailto:${emailAddress}`,
-      icon: Mail,
-      ariaLabel: "Enviar um e-mail para a equipe VELOX",
-    },
-    {
-      id: "INSTAGRAM",
-      title: "Instagram",
-      description: "Siga-nos para dicas diárias e novidades sobre corridas.",
-      actionLabel: "@RunningVelox",
-      href: instagramUrl,
-      icon: Instagram,
-      ariaLabel: "Abrir o perfil do VELOX no Instagram",
-    },
-  ] as const;
+  const contactMethods = useMemo(
+    () =>
+      contactSection.methods.map((method) => {
+        const iconMap = {
+          TELEGRAM: Send,
+          EMAIL: Mail,
+          INSTAGRAM: Instagram,
+        } as const;
+
+        const hrefMap: Record<string, string> = {
+          TELEGRAM: telegramUrl,
+          EMAIL: `mailto:${emailAddress}`,
+          INSTAGRAM: instagramUrl,
+        };
+
+        const Icon = iconMap[method.id as keyof typeof iconMap] ?? Send;
+
+        return {
+          ...method,
+          icon: Icon,
+          href: hrefMap[method.id] ?? telegramUrl,
+        };
+      }),
+    [contactSection.methods, emailAddress, instagramUrl, telegramUrl]
+  );
 
   const handleTrackSocialMedia = (id: string) => {
     trackEvent({
@@ -82,18 +81,16 @@ export default function ContactSection() {
             <div className="flex flex-col items-start gap-6 text-white md:flex-row md:items-center md:justify-between">
               <div className="space-y-4">
                 <span className="inline-flex items-center gap-2 rounded-full border border-[#d5fe46]/40 bg-[#d5fe46]/15 px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[#d5fe46]">
-                  Estamos online
+                  {contactSection.badgeText}
                 </span>
                 <h2
                   id="contato-title"
                   className="text-balance text-3xl font-semibold text-white md:text-4xl"
                 >
-                  Fale com a equipe VELOX
+                  {contactSection.title}
                 </h2>
                 <p className="max-w-xl text-sm text-white/80 md:text-base">
-                  Compartilhe uma corrida, tire dúvidas sobre o bot no Telegram
-                  ou combine campanhas com a nossa comunidade de corredores.
-                  Escolha o canal mais prático para você.
+                  {contactSection.description}
                 </p>
               </div>
             </div>

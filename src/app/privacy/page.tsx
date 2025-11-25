@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
 
 import { Header, Footer, PageTracker } from "@/components/system";
-import { privacyPageContent } from "@/presentation";
 import { Shield } from "lucide-react";
 import { buildMetadata } from "@/lib/seo";
+import { getRequestLocaleInfo } from "@/i18n/getRequestLocaleInfo";
+import { getPrivacyMetadataContent } from "@/i18n/metadata/privacy";
+import { getPrivacyPageContent } from "@/i18n/pages/privacy";
 
-export const metadata: Metadata = buildMetadata({
-  title: "Política de Privacidade - VELOX Corridas",
-  description:
-    "Saiba como o VELOX Bot trata dados pessoais, solicita consentimento e protege a privacidade da comunidade de corredores.",
-  keywords: ["privacidade velox", "lgpd corridas", "dados pessoais bot"],
-  path: "/privacy",
-  image: "/velox_x.png",
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const { locale } = await getRequestLocaleInfo();
+  return buildMetadata(getPrivacyMetadataContent(locale));
+}
 
-export default function PrivacyPage() {
-  const { hero, lastUpdate, sections, contact, footer } = privacyPageContent;
+export default async function PrivacyPage() {
+  const { locale } = await getRequestLocaleInfo();
+  const { hero, lastUpdate, sections, contact, footer } =
+    getPrivacyPageContent(locale);
+  const formattedDate = new Date(lastUpdate).toLocaleDateString(locale);
 
   return (
     <div className="min-h-screen bg-[#000] ">
@@ -32,8 +33,7 @@ export default function PrivacyPage() {
                 {hero.title}
               </h1>
               <p className="text-lg text-muted-foreground">
-                {hero.subtitleLabel}{" "}
-                {new Date(lastUpdate).toLocaleDateString("pt-BR")}
+                {hero.subtitleLabel} {formattedDate}
               </p>
             </div>
           </div>

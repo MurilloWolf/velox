@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import Link from "next/link";
 import { ExternalLink, Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,8 @@ import useAnalytics from "@/tracking/useAnalytics";
 import type { Event } from "../types";
 import { Badge } from "@/components/ui";
 import EventImagePreview from "./EventImagePreview";
+import { useCalendarMessages } from "@/i18n/hooks/useCalendarMessages";
+import { useI18n } from "@/i18n/useI18n";
 
 interface EventDetailsModalProps {
   isOpen: boolean;
@@ -28,6 +30,8 @@ export default function EventDetailsModal({
 }: EventDetailsModalProps) {
   const { trackRaceView, trackRaceLocationClick, trackRaceRegistrationClick } =
     useAnalytics();
+  const calendarMessages = useCalendarMessages();
+  const { locale } = useI18n();
 
   useEffect(() => {
     if (isOpen && event) {
@@ -60,6 +64,17 @@ export default function EventDetailsModal({
     }
   };
 
+  const dateFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+    [locale]
+  );
+
   if (!event) return null;
 
   const normalizeDate = (date: Date) =>
@@ -68,12 +83,9 @@ export default function EventDetailsModal({
   const eventDate = normalizeDate(event.date);
   const registrationClosed = eventDate <= today || event.status === "CLOSED";
 
-  const formattedDate = event.date.toLocaleDateString("pt-BR", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const formattedDate = dateFormatter
+    .format(event.date)
+    .replace(/^./, (char) => char.toUpperCase());
 
   const fullAddress = [event.location, event.city, event.uf]
     .filter(Boolean)
@@ -81,13 +93,6 @@ export default function EventDetailsModal({
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     fullAddress
   )}`;
-
-  const eventStatusMap = {
-    OPEN: "Aberto",
-    CLOSED: "Encerradas",
-    COMING_SOON: "Em Breve",
-    CANCELLED: "Evento Cancelado",
-  };
 
   const badgeStyles = {
     OPEN: "bg-green-500/20 text-green-400 border-green-400/30",
@@ -97,8 +102,9 @@ export default function EventDetailsModal({
   };
 
   const eventStatus =
-    eventStatusMap[event.status as keyof typeof eventStatusMap] ||
-    "Status Desconhecido";
+    calendarMessages.eventDetail.status[
+      event.status as keyof typeof calendarMessages.eventDetail.status
+    ] ?? calendarMessages.eventDetail.status.UNKNOWN;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -129,7 +135,7 @@ export default function EventDetailsModal({
               <div className="space-y-6">
                 <div className="space-y-3">
                   <p className="text-sm uppercase tracking-wider text-white/70 font-medium">
-                    Inscrições
+                    {calendarMessages.eventDetail.registrationLabel}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <Badge
@@ -145,7 +151,7 @@ export default function EventDetailsModal({
                 {event.distances && event.distances.length > 0 && (
                   <div className="space-y-3">
                     <p className="text-sm uppercase tracking-wider text-white/70 font-medium">
-                      Distâncias
+                      {calendarMessages.eventDetail.distancesLabel}
                     </p>
                     <div className="flex flex-wrap gap-2">
                       {event.distances.map((distance, index) => (
@@ -165,7 +171,7 @@ export default function EventDetailsModal({
             <div className=" ">
               <div className="space-y-3 bg-white/5 border-t border-white/10 px-6 py-4">
                 <p className="text-sm uppercase tracking-wider text-white/70 font-bold">
-                  Endereço
+                  {calendarMessages.eventDetail.addressLabel}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <div className="flex flex-col gap-2 font-medium text-sm rounded-xl text-cyan-400">
@@ -188,7 +194,7 @@ export default function EventDetailsModal({
                     className="inline-flex items-center justify-center gap-2"
                   >
                     <Map className="h-4 w-4" />
-                    Ver no Maps
+                    {calendarMessages.eventDetail.viewOnMaps}
                   </Link>
                 </Button>
               </div>
@@ -202,7 +208,7 @@ export default function EventDetailsModal({
                       disabled
                       className="w-full h-11 rounded-lg bg-white/10 text-white/50 font-semibold cursor-not-allowed"
                     >
-                      Inscrições encerradas
+                      {calendarMessages.eventDetail.registrationClosed}
                     </Button>
                   ) : (
                     <Button
@@ -216,7 +222,7 @@ export default function EventDetailsModal({
                         onClick={handleRegistrationClick}
                         className="inline-flex items-center justify-center gap-2"
                       >
-                        Inscrever-se na Corrida
+                        {calendarMessages.eventDetail.registrationButton}
                         <ExternalLink className="h-4 w-4" />
                       </Link>
                     </Button>

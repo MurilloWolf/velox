@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui";
+import { useI18n } from "@/i18n/useI18n";
 
 export type NutritionTimelineBlock = {
   title: string;
@@ -58,6 +59,35 @@ export type NutritionDistanceGuideProps = {
   alerts?: NutritionAlert[];
 };
 
+const GUIDE_TEXT = {
+  "pt-BR": {
+    timelineKicker: "Estrutura",
+    strategyBadge: "Nutrição estratégica",
+    goalHeading: "Objetivo",
+    rationaleHeading: "Por que funciona",
+    focusHeading: "Focos principais",
+    tableKicker: "Planejamento rápido",
+    supplementsHeading: "Suplementos e ajustes",
+    alertsHeading: "Alertas importantes",
+    watchoutsHeading: "Erros comuns",
+    glossaryHeading: "Siglas e gírias",
+  },
+  "en-US": {
+    timelineKicker: "Framework",
+    strategyBadge: "Strategic fueling",
+    goalHeading: "Objective",
+    rationaleHeading: "Why it works",
+    focusHeading: "Primary focus points",
+    tableKicker: "Quick planning",
+    supplementsHeading: "Supplements & tweaks",
+    alertsHeading: "Important alerts",
+    watchoutsHeading: "Common mistakes",
+    glossaryHeading: "Terms & jargon",
+  },
+} as const;
+
+type GuideCopy = (typeof GUIDE_TEXT)["pt-BR"];
+
 const SectionWrapper = ({
   children,
   className = "",
@@ -74,14 +104,16 @@ const SectionWrapper = ({
 
 const TimelineSection = ({
   section,
+  strings,
 }: {
   section: NutritionTimelineSection;
+  strings: GuideCopy;
 }) => (
   <SectionWrapper>
     <div className="space-y-4">
       <div>
         <p className="text-xs uppercase tracking-[0.35em] text-[#d5fe46]/80">
-          Estrutura
+          {strings.timelineKicker}
         </p>
         <h4 className="text-2xl font-semibold text-white md:text-3xl">
           {section.title}
@@ -137,6 +169,8 @@ export default function NutritionDistanceGuide(
     tables,
     alerts,
   } = props;
+  const { isBrazilExperience } = useI18n();
+  const strings = GUIDE_TEXT[isBrazilExperience ? "pt-BR" : "en-US"];
 
   return (
     <article className="mx-auto flex max-w-5xl flex-col gap-10 rounded-2xl bg-gradient-to-br from-slate-900/60 to-black/60 p-4 text-slate-200 md:gap-12 md:p-8">
@@ -146,7 +180,7 @@ export default function NutritionDistanceGuide(
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant="outline">{distanceTag}</Badge>
               <Badge className="bg-[#d5fe46] text-slate-900">
-                Nutrição estratégica
+                {strings.strategyBadge}
               </Badge>
             </div>
             <h3 className="text-3xl font-bold md:text-4xl">{title}</h3>
@@ -155,13 +189,13 @@ export default function NutritionDistanceGuide(
           <div className="flex flex-col gap-3 md:max-w-xs">
             <SectionWrapper className="border-white/10 bg-black/40 p-5 md:p-6">
               <h4 className="text-sm font-semibold uppercase tracking-wide text-[#d5fe46]">
-                Objetivo
+                {strings.goalHeading}
               </h4>
               <p className="mt-2 text-sm text-white/80 md:text-base">{goal}</p>
             </SectionWrapper>
             <SectionWrapper className="border-white/10 bg-black/40 p-5 md:p-6">
               <h4 className="text-sm font-semibold uppercase tracking-wide text-[#d5fe46]">
-                Por que funciona
+                {strings.rationaleHeading}
               </h4>
               <p className="mt-2 text-sm text-white/80 md:text-base">
                 {rationale}
@@ -174,7 +208,7 @@ export default function NutritionDistanceGuide(
       <SectionWrapper>
         <div className="space-y-4">
           <h4 className="text-2xl font-semibold text-white md:text-3xl">
-            Focos principais
+            {strings.focusHeading}
           </h4>
           <ul className="grid gap-3 md:grid-cols-2">
             {focusPoints.map((focus) => (
@@ -189,9 +223,9 @@ export default function NutritionDistanceGuide(
         </div>
       </SectionWrapper>
 
-      <TimelineSection section={preparation} />
-      <TimelineSection section={raceExecution} />
-      <TimelineSection section={recovery} />
+      <TimelineSection section={preparation} strings={strings} />
+      <TimelineSection section={raceExecution} strings={strings} />
+      <TimelineSection section={recovery} strings={strings} />
 
       {tables?.length ? (
         <SectionWrapper>
@@ -200,7 +234,7 @@ export default function NutritionDistanceGuide(
               <div key={table.title} className="space-y-3">
                 <div>
                   <p className="text-xs uppercase tracking-[0.35em] text-[#d5fe46]/80">
-                    Planejamento rápido
+                    {strings.tableKicker}
                   </p>
                   <h4 className="text-2xl font-semibold text-white md:text-3xl">
                     {table.title}
@@ -247,7 +281,7 @@ export default function NutritionDistanceGuide(
       {supplements?.length ? (
         <SectionWrapper>
           <h4 className="text-2xl font-semibold text-white md:text-3xl">
-            Suplementos e ajustes
+            {strings.supplementsHeading}
           </h4>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-white/80 md:text-base">
             {supplements.map((item) => (
@@ -260,7 +294,7 @@ export default function NutritionDistanceGuide(
       {alerts?.length ? (
         <SectionWrapper className="border border-amber-400/30 bg-amber-400/10">
           <h4 className="text-2xl font-semibold text-amber-50 md:text-3xl">
-            Alertas importantes
+            {strings.alertsHeading}
           </h4>
           <div className="mt-4 space-y-3">
             {alerts.map((alert) => (
@@ -283,7 +317,7 @@ export default function NutritionDistanceGuide(
       {watchouts?.length ? (
         <SectionWrapper className="border border-red-500/20 bg-red-500/10">
           <h4 className="text-2xl font-semibold text-red-50 md:text-3xl">
-            Erros comuns
+            {strings.watchoutsHeading}
           </h4>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-red-50/90 md:text-base">
             {watchouts.map((item) => (
@@ -295,7 +329,7 @@ export default function NutritionDistanceGuide(
 
       <SectionWrapper>
         <h4 className="text-2xl font-semibold text-white md:text-3xl">
-          Siglas e gírias
+          {strings.glossaryHeading}
         </h4>
         <dl className="mt-4 grid gap-3 md:grid-cols-2">
           {glossary.map((entry) => (
