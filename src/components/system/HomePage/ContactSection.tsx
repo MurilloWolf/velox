@@ -16,7 +16,7 @@ import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
 
 export default function ContactSection() {
   const instagramUrl = "https://www.instagram.com/runningvelox/";
-  const telegramUrl = "https://t.me/veloxsupport";
+  const telegramUrl = "https://t.me/+5518997708504";
   const emailAddress = "velox.running.app@gmail.com";
 
   const { trackEvent } = useAnalytics();

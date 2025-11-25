@@ -169,7 +169,7 @@ export default function ChatPanel({
 
       const assistantMessages = Array.isArray(data?.messages)
         ? data.messages
-        : [data?.message ?? ASSISTANT_FALLBACK_MESSAGE];
+        : [data?.message ?? chatCopy.fallback];
 
       const formattedMessages = assistantMessages
         .map((raw) => {

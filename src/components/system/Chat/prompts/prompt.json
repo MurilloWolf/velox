@@ -23,7 +23,7 @@
     "Evite jargões técnicos ou linguagem complexa"
   ],
   "missing_response": [
-    "Desculpe, não encontrei essa informação. Você pode falar com nossa equipe pelo Telegram https://t.me/veloxsupport ou enviar um email para velox.running.app@gmail.com.",
+    "Desculpe, não encontrei essa informação. Você pode falar com nossa equipe pelo Telegram https://t.me/+5518997708504 ou enviar um email para velox.running.app@gmail.com.",
     "Ainda não temos essa resposta documentada. Refaça a pergunta com outro contexto ou consulte o bot no Telegram.",
     "Não posso ajudar com isso, mas estou aqui para outras dúvidas sobre a plataforma VELOX.",
     "Reformule sua pergunta focando em corridas, bot, compras ou suporte para que eu possa ajudar."
@@ -49,7 +49,6 @@
     "base": [
       "Site oficial: https://www.veloxruning.com",
       "Bot no Telegram: https://web.telegram.org/a/#8475526575 (busque por @VeloxBot)",
-      "Suporte rápido: https://t.me/veloxsupport",
       "Email: velox.running.app@gmail.com",
       "Instagram: https://www.instagram.com/runningvelox/ (@runningvelox)",
       "Twitter/X: https://twitter.com/RunningVelox",
@@ -191,7 +190,7 @@
                   {
                     "id": "TELEGRAM",
                     "label": "Falar no Telegram",
-                    "href": "https://t.me/veloxsupport"
+                    "href": "https://t.me/+5518997708504"
                   },
                   {
                     "id": "EMAIL",
@@ -705,7 +704,7 @@
           "source": "src/components/system/HomePage/ContactSection.tsx",
           "fields": ["TELEGRAM", "EMAIL", "INSTAGRAM"],
           "metadata": {
-            "telegram": "https://t.me/veloxsupport",
+            "telegram": "https://t.me/+5518997708504",
             "email": "velox.running.app@gmail.com",
             "instagram": "https://www.instagram.com/runningvelox/"
           }
