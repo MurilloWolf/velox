@@ -347,8 +347,7 @@ export async function sendChatCompletion(
     "pt-BR": "português do Brasil",
     "en-US": "English (United States)",
   };
-  template.language =
-    languageLabels[language] ?? template.language ?? language;
+  template.language = languageLabels[language] ?? template.language ?? language;
   const systemPrompt = buildSystemPrompt(template);
   const userPrompt = buildUserPrompt(template, {
     userName,

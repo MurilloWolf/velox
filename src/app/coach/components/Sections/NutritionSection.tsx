@@ -163,7 +163,9 @@ export default function NutritionSection({
       (level): level is NutritionLevel => Boolean(level)
     ),
     ...Object.entries(levels)
-      .filter(([key]) => !LEVEL_ORDER.includes(key as typeof LEVEL_ORDER[number]))
+      .filter(
+        ([key]) => !LEVEL_ORDER.includes(key as (typeof LEVEL_ORDER)[number])
+      )
       .map(([, level]) => level),
   ];
 
@@ -176,11 +178,12 @@ export default function NutritionSection({
       ): entry is {
         id: (typeof RACE_ORDER)[number];
         guide: NutritionRaceGuide;
-      } =>
-        Boolean(entry)
+      } => Boolean(entry)
     ),
     ...Object.entries(races)
-      .filter(([key]) => !RACE_ORDER.includes(key as typeof RACE_ORDER[number]))
+      .filter(
+        ([key]) => !RACE_ORDER.includes(key as (typeof RACE_ORDER)[number])
+      )
       .map(([id, guide]) => ({ id, guide })),
   ];
 
