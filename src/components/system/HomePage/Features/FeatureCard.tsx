@@ -10,7 +10,7 @@ export interface IFeatureProps {
     img: string;
   };
   index: number;
-  scrollNext: () => void;
+  scrollNext: (currentIndex: number) => void;
   showScroll: boolean;
   onSelect: () => void;
   scrollLabel?: string;
@@ -23,6 +23,7 @@ export default function FeatureCard(props: IFeatureProps) {
   return (
     <Card
       key={index}
+      data-feature-card="true"
       className="hover:scale-110 cursor-pointer gap-0 snap-center flex-shrink-0 w-[calc(100vw-6vw)] sm:w-[calc(80vw)] md:w-1/4 md:min-h-[500px] md:h-[600px] md:min-w-[320px] lg:min-w-[360px] h-[calc(100vh-1rem)] sm:h-[520px] overflow-hidden rounded-3xl transition-all duration-150 border-0 bg-transparent mx-2"
       onClick={onSelect}
       role="button"
@@ -47,13 +48,13 @@ export default function FeatureCard(props: IFeatureProps) {
           tabIndex={0}
           onClick={(event) => {
             event.stopPropagation();
-            scrollNext();
+            scrollNext(index);
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
               e.stopPropagation();
-              scrollNext();
+              scrollNext(index);
             }
           }}
           className={`block sm:hidden absolute right-6 top-1/2 -translate-y-1/2 z-20 transition-opacity duration-500 ${

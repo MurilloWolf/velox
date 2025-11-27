@@ -225,7 +225,6 @@ export default function PlatformFeatures() {
     el.addEventListener("scroll", throttledShowScroll, { passive: true });
     window.addEventListener("resize", throttledShowScroll, { passive: true });
 
-    // Only add wheel event listener on desktop
     if (!isMobile) {
       el.addEventListener("wheel", onWheel, { passive: false });
     }
@@ -242,12 +241,23 @@ export default function PlatformFeatures() {
     };
   }, []);
 
-  const scrollNext = () => {
+  const scrollNext = (currentIndex: number) => {
     const el = containerRef.current;
     if (!el) return;
-    el.scrollBy({
-      left: el.clientWidth * 0.75,
+
+    const cards = Array.from(
+      el.querySelectorAll<HTMLElement>("[data-feature-card='true']")
+    );
+    if (!cards.length) return;
+
+    const targetIndex = Math.min(currentIndex + 1, cards.length - 1);
+    const targetCard = cards[targetIndex];
+    if (!targetCard) return;
+
+    targetCard.scrollIntoView({
       behavior: "smooth",
+      block: "nearest",
+      inline: "center",
     });
   };
 
