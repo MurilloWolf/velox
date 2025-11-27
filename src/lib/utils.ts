@@ -10,7 +10,11 @@ export function cn(...inputs: ClassValue[]) {
  * @param fileId - The Google Drive file ID
  * @param fileName - The name for the downloaded file (optional)
  */
-type GoogleDriveFileType = "drive" | "presentation" | "document" | "spreadsheet";
+type GoogleDriveFileType =
+  | "drive"
+  | "presentation"
+  | "document"
+  | "spreadsheet";
 
 type DownloadGoogleDriveFileOptions = {
   fileType?: GoogleDriveFileType;
