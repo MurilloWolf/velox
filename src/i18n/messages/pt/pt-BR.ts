@@ -3,6 +3,7 @@ import sponsorsPage from "./pages/sponsors";
 import privacyPage from "./pages/privacy";
 import calendarPage from "./pages/calendar";
 import infoPage from "./pages/info";
+import notFoundPage from "./pages/not-found";
 import header from "./layout/header";
 import footer from "./layout/footer";
 import common from "./layout/common";
@@ -15,12 +16,14 @@ const ptBR = {
     privacy: privacyPage,
     calendar: calendarPage,
     info: infoPage,
+    notFound: notFoundPage,
   },
   home: homePage,
   sponsors: sponsorsPage,
   privacy: privacyPage,
   calendar: calendarPage,
   info: infoPage,
+  notFound: notFoundPage,
   layout: {
     header,
     footer,

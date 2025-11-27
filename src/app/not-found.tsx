@@ -1,8 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { Header, Footer, PageTracker } from "@/components/system";
 import { Card, CardContent, Button } from "@/components/ui";
-import { notFoundPageContent } from "@/presentation";
 import { Compass, Home, Sparkles } from "lucide-react";
+import { useNotFoundMessages } from "@/i18n/hooks/useNotFoundMessages";
 
 const suggestionIconMap = {
   compass: Compass,
@@ -10,6 +12,7 @@ const suggestionIconMap = {
 } as const;
 
 export default function NotFound() {
+  const notFoundPageContent = useNotFoundMessages();
   const suggestions = notFoundPageContent.suggestions.map((item) => ({
     ...item,
     icon: suggestionIconMap[item.icon],
