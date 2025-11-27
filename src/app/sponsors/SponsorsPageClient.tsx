@@ -68,7 +68,11 @@ export default function SponsorsPageClient() {
 
     const success = await downloadGoogleDriveFile(
       mediaKit.fileId,
-      mediaKit.fileName
+      mediaKit.fileName,
+      {
+        fileType: mediaKit.fileType,
+        exportFormat: mediaKit.exportFormat,
+      }
     );
 
     if (!success) {
@@ -78,6 +82,8 @@ export default function SponsorsPageClient() {
     hero.secondaryCta.link,
     mediaKit.fileId,
     mediaKit.fileName,
+    mediaKit.fileType,
+    mediaKit.exportFormat,
     trackMediaKitDownload,
   ]);
 

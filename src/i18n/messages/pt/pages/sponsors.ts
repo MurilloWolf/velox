@@ -83,6 +83,8 @@ const sponsorsPage = {
   mediaKit: {
     fileId: "1XgAViZrE26H6zy-xjDWi2y68bGSsH9pa",
     fileName: "Velox_Media_Kit.pdf",
+    fileType: "presentation",
+    exportFormat: "pdf",
   },
 } as const;
 

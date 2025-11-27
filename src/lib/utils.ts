@@ -10,12 +10,49 @@ export function cn(...inputs: ClassValue[]) {
  * @param fileId - The Google Drive file ID
  * @param fileName - The name for the downloaded file (optional)
  */
+type GoogleDriveFileType = "drive" | "presentation" | "document" | "spreadsheet";
+
+type DownloadGoogleDriveFileOptions = {
+  fileType?: GoogleDriveFileType;
+  exportFormat?: string;
+};
+
+function getGoogleDriveDownloadUrl(
+  fileId: string,
+  options?: DownloadGoogleDriveFileOptions
+) {
+  const fileType = options?.fileType ?? "drive";
+  const format = options?.exportFormat;
+
+  switch (fileType) {
+    case "presentation": {
+      return `https://docs.google.com/presentation/d/${fileId}/export/${
+        format ?? "pdf"
+      }`;
+    }
+    case "document": {
+      return `https://docs.google.com/document/d/${fileId}/export?format=${
+        format ?? "pdf"
+      }`;
+    }
+    case "spreadsheet": {
+      return `https://docs.google.com/spreadsheets/d/${fileId}/export?format=${
+        format ?? "xlsx"
+      }`;
+    }
+    default: {
+      return `https://drive.google.com/uc?export=download&id=${fileId}`;
+    }
+  }
+}
+
 export async function downloadGoogleDriveFile(
   fileId: string,
-  fileName?: string
+  fileName?: string,
+  options?: DownloadGoogleDriveFileOptions
 ) {
   try {
-    const url = `https://drive.google.com/uc?export=download&id=${fileId}`;
+    const url = getGoogleDriveDownloadUrl(fileId, options);
 
     const link = document.createElement("a");
     link.href = url;

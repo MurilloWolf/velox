@@ -59,7 +59,8 @@ const sponsorsPage = {
       {
         icon: "trending-up",
         title: "Actionable insights from day one",
-        description: "Clear metrics to assess engagement, interest and conversion.",
+        description:
+          "Clear metrics to assess engagement, interest and conversion.",
         detail:
           "Detailed reports about your event or campaign, allowing quick optimizations to maximize results.",
       },
@@ -81,8 +82,10 @@ const sponsorsPage = {
       "Hi! I'd like to learn more about VELOX sponsorship opportunities.",
   },
   mediaKit: {
-    fileId: "1XgAViZrE26H6zy-xjDWi2y68bGSsH9pa",
+    fileId: "1JAXve1jaC50h5IWDuBe0dRiz1E1hdJlI",
     fileName: "Velox_Media_Kit.pdf",
+    fileType: "presentation",
+    exportFormat: "pdf",
   },
 } as const;
 
