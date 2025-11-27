@@ -43,11 +43,11 @@ export default function ChatInput(props: IChatInputProps) {
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
           maxLength={120}
-          autoFocus
+          autoFocus={variant === "full"}
           placeholder="Digite sua pergunta..."
           className={cn(
-            "flex-1 border border-transparent bg-transparent text-sm text-white placeholder:text-white/60 shadow-none focus:border-transparent focus:outline-none focus:shadow-none focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:shadow-none",
-            isWidget ? "sm:text-base" : "md:text-base lg:text-lg"
+            "flex-1 border border-transparent bg-transparent text-base text-white placeholder:text-white/60 shadow-none focus:border-transparent focus:outline-none focus:shadow-none focus-visible:border-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:shadow-none",
+            isWidget ? undefined : "md:text-lg"
           )}
           disabled={disabled}
         />

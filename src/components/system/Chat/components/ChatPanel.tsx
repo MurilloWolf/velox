@@ -95,14 +95,20 @@ export default function ChatPanel({
   }, [messages]);
 
   useEffect(() => {
+    if (isWidget) {
+      return;
+    }
+
     inputRef.current?.focus();
-  }, []);
+  }, [isWidget]);
 
   useEffect(() => {
-    if (!isSending) {
-      inputRef.current?.focus();
+    if (isWidget || isSending) {
+      return;
     }
-  }, [isSending]);
+
+    inputRef.current?.focus();
+  }, [isWidget, isSending]);
 
   const pushWarning = (warning: string) => {
     const fallback: Message = {
