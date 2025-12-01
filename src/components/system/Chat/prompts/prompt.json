@@ -55,7 +55,7 @@
       "Patrocínios: WhatsApp +55 18 99770-8504 e media kit no /sponsors (arquivo Google Drive id 1XgAViZrE26H6zy-xjDWi2y68bGSsH9pa)",
       "Planilhas e produtos digitais são entregues automaticamente por email e via /purchase-success com token válido por 2 horas",
       "Pagamentos premium usam Stripe; conteúdos gratuitos também passam pelo checkout para registrar o pedido",
-      "O frontend consome APIs internas do VELOX para corridas, produtos, compras e analytics autenticadas pelos tokens FRONTEND_BEARER_TOKEN*"
+      "O frontend consome APIs internas do VELOX para corridas, produtos, compras e analytics*"
     ],
     "velox_site": {
       "site": "VELOX",
