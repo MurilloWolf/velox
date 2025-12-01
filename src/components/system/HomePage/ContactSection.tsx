@@ -13,6 +13,7 @@ import useAnalytics from "@/tracking/useAnalytics";
 import { Instagram, Mail, Send } from "lucide-react";
 import { useMemo } from "react";
 import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
+import { openTelegramTarget } from "@/lib/telegram";
 
 export default function ContactSection() {
   const instagramUrl = "https://www.instagram.com/runningvelox/";
@@ -59,10 +60,18 @@ export default function ContactSection() {
 
   const handleContactClick = (id: string) => {
     handleTrackSocialMedia(id);
-    window.open(
-      contactMethods.find((method) => method.id === id)?.href,
-      "_blank"
-    );
+
+    if (id === "TELEGRAM") {
+      openTelegramTarget("team");
+      return;
+    }
+
+    const href = contactMethods.find((method) => method.id === id)?.href;
+    if (!href) {
+      return;
+    }
+
+    window.open(href, "_blank", "noopener,noreferrer");
   };
 
   return (

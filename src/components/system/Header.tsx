@@ -17,12 +17,9 @@ import { usePathname } from "next/navigation";
 import useAnalytics from "@/tracking/useAnalytics";
 import { useHeaderMessages } from "@/i18n/hooks/useHeaderMessages";
 import { useSmoothScroll } from "./hooks/useSmoothScroll";
+import { TELEGRAM_BOT_WEB_URL, openTelegramTarget } from "@/lib/telegram";
 
 export default function Header() {
-  const TELEGRAM_BOT_URL =
-    `${process.env.NEXT_PUBLIC_BOT_URL}#${process.env.NEXT_PUBLIC_BOT_ID}` ||
-    "https://web.telegram.org/a/#8475526575";
-
   const { trackNavigationClick, trackButtonClick } = useAnalytics();
   const headerMessages = useHeaderMessages();
   const scrollTo = useSmoothScroll();
@@ -47,9 +44,9 @@ export default function Header() {
     trackButtonClick(
       "header:telegram_button",
       headerMessages.telegramButton.fullLabel,
-      TELEGRAM_BOT_URL
+      TELEGRAM_BOT_WEB_URL
     );
-    window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
+    openTelegramTarget("bot");
   };
 
   const MobileNavigation = () => (

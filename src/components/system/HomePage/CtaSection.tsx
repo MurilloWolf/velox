@@ -5,11 +5,9 @@ import { Send, Bell, CalendarCheck, Sparkles } from "lucide-react";
 import MashGradiant from "../MashGradiant";
 import useAnalytics from "@/tracking/useAnalytics";
 import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
+import { TELEGRAM_BOT_WEB_URL, openTelegramTarget } from "@/lib/telegram";
 
 export default function CTASection() {
-  const TELEGRAM_BOT_URL =
-    `${process.env.NEXT_PUBLIC_BOT_URL}#${process.env.NEXT_PUBLIC_BOT_ID}` ||
-    "https://web.telegram.org/a/#8475526575";
   const { trackButtonClick } = useAnalytics();
   const { ctaSection } = useHomeMessages();
 
@@ -17,9 +15,9 @@ export default function CTASection() {
     trackButtonClick(
       "cta_section:telegram_button",
       ctaSection.buttonLabel,
-      TELEGRAM_BOT_URL
+      TELEGRAM_BOT_WEB_URL
     );
-    window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
+    openTelegramTarget("bot");
   };
   return (
     <MashGradiant>

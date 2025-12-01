@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import useAnalytics from "@/tracking/useAnalytics";
 import { useInfoMessages } from "@/i18n/hooks/useInfoMessages";
+import { TELEGRAM_BOT_WEB_URL, openTelegramTarget } from "@/lib/telegram";
 
 const commandIconMap = {
   send: Send,
@@ -32,10 +33,6 @@ const commandIconMap = {
 type CommandIconKey = keyof typeof commandIconMap;
 
 export default function InfoPageClient() {
-  const TELEGRAM_BOT_URL =
-    `${process.env.NEXT_PUBLIC_BOT_URL}#${process.env.NEXT_PUBLIC_BOT_ID}` ||
-    "https://web.telegram.org/a/#8475526575";
-
   const infoMessages = useInfoMessages();
   const { hero, howItWorksCard, howItWorks, commandsSection, categories } =
     infoMessages;
@@ -55,8 +52,12 @@ export default function InfoPageClient() {
   );
 
   const handleTelegramClick = () => {
-    trackButtonClick("bot_showcase:telegram_button", hero.primaryCta, "/info");
-    window.open(TELEGRAM_BOT_URL, "_blank", "noopener,noreferrer");
+    trackButtonClick(
+      "bot_showcase:telegram_button",
+      hero.primaryCta,
+      TELEGRAM_BOT_WEB_URL
+    );
+    openTelegramTarget("bot");
   };
 
   const filteredCommands = useMemo(() => {

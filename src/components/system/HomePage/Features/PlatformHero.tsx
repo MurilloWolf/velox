@@ -8,6 +8,7 @@ import { Calendar, Dumbbell, Droplets, Send } from "lucide-react";
 import { AnalyticsActions } from "@/tracking/types";
 import useAnalytics from "@/tracking/useAnalytics";
 import { useHomeMessages } from "@/i18n/hooks/useHomeMessages";
+import { TELEGRAM_BOT_WEB_URL, openTelegramTarget } from "@/lib/telegram";
 
 import FeatureCard from "./FeatureCard";
 
@@ -38,6 +39,7 @@ function throttle<T extends (this: unknown, ...args: unknown[]) => void>(
 type CoachRootSection = "nutrition" | "training" | "prompts";
 
 type FeatureItem = {
+  id: "calendar" | "bot" | "training" | "nutrition";
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   title: string;
   description: string;
@@ -57,9 +59,7 @@ export default function PlatformFeatures() {
   const { trackEvent } = useAnalytics();
   const { platformFeatures } = useHomeMessages();
 
-  const featureBlueprints: Array<
-    FeatureItem & { id: "calendar" | "bot" | "training" | "nutrition" }
-  > = [
+  const featureBlueprints: FeatureItem[] = [
     {
       id: "calendar",
       icon: Calendar,
@@ -74,7 +74,7 @@ export default function PlatformFeatures() {
       title: "",
       description: "",
       img: `${BASE_S3_URL}/woman-telephone.jpg`,
-      externalUrl: "https://t.me/VeloxBot",
+      externalUrl: TELEGRAM_BOT_WEB_URL,
     },
     {
       id: "training",
@@ -119,6 +119,11 @@ export default function PlatformFeatures() {
 
     if (feature.href) {
       router.push(feature.href);
+      return;
+    }
+
+    if (feature.id === "bot") {
+      openTelegramTarget("bot");
       return;
     }
 
