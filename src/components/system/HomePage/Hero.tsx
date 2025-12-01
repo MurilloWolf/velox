@@ -31,9 +31,9 @@ export default function Hero() {
     window.open("/calendar", "_self");
   };
   return (
-    <section className="min-h-[900px] max-h-[calc(100vh-40vh)] h-full relative overflow-hidden bg-black/40 py-24 md:py-32">
+    <section className="min-h-[900px] h-fit md:max-h-[calc(100vh-40vh)] md:h-full relative overflow-hidden bg-black/40 py-24 md:py-32">
       <div className="container relative z-10 mx-auto px-4">
-        <div className="flex flex-col sm:flex-row justify-evenly items-center text-center">
+        <div className="h-full flex flex-col sm:flex-row justify-evenly items-center text-center">
           <div className="flex flex-col items-center max-w-4xl sm:mr-10">
             <Image
               src="https://velox-images-bucket.s3.sa-east-1.amazonaws.com/public/velox-full-transparent.png"
