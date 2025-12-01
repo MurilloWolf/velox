@@ -138,7 +138,20 @@ export default function TrainingSheets() {
             </div>
 
             {/* CTA Button */}
-            <div
+            <Button
+              asChild
+              size="lg"
+              onClick={() => {}}
+              disabled
+              className="disabled:opacity-50 disabled:cursor-not-allowed group relative overflow-hidden bg-gradient-to-r from-[#d5fe46] to-green-400 hover:from-green-400 hover:to-[#d5fe46] text-black font-bold text-lg px-8 py-6 h-auto rounded-2xl shadow-[0_0_30px_rgba(213,254,70,0.3)] hover:shadow-[0_0_50px_rgba(213,254,70,0.5)] transition-all duration-500 hover:scale-105"
+            >
+              <div>
+                <FileSpreadsheet className="w-14 h-14 group-hover:rotate-12 transition-transform duration-300" />
+                {trainingSheets.comingSoon}
+                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
+              </div>
+            </Button>
+            {/* <div
               className={`mt-12 transition-all duration-1000 delay-500 ${
                 isVisible
                   ? "translate-y-0 opacity-100"
@@ -165,7 +178,7 @@ export default function TrainingSheets() {
               <p className="text-white/60 text-sm mt-4">
                 {trainingSheets.footnote}
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
