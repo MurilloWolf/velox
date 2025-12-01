@@ -16,7 +16,8 @@ const homePage = {
       },
       {
         title: "Notificações Inteligentes",
-        description: "Receba alertas de novas corridas e lembretes personalizados",
+        description:
+          "Receba alertas de novas corridas e lembretes personalizados",
       },
       {
         title: "Favoritos e Histórico",
@@ -70,6 +71,7 @@ const homePage = {
     carouselAriaLabel: "Ver mais recursos",
   },
   trainingSheets: {
+    comingSoon: "Em breve",
     badgeLabel: "Acelere seus resultados",
     title: "Planilhas de Treino",
     highlight: "Personalizadas",
@@ -102,7 +104,8 @@ const homePage = {
     features: [
       {
         title: "Calendário vivo",
-        description: "Todas as corridas da sua região, atualizadas em tempo real.",
+        description:
+          "Todas as corridas da sua região, atualizadas em tempo real.",
       },
       {
         title: "Alertas personalizados",
@@ -117,7 +120,8 @@ const homePage = {
     ],
     buttonLabel: "Acessar bot no Telegram",
     buttonAriaLabel: "Acessar o VELOX Bot no Telegram",
-    footnote: "Gratuito • Sem cadastro • Respostas imediatas · Eventos atualizados",
+    footnote:
+      "Gratuito • Sem cadastro • Respostas imediatas · Eventos atualizados",
   },
   contactSection: {
     badgeText: "Estamos online",
@@ -143,8 +147,7 @@ const homePage = {
       {
         id: "INSTAGRAM",
         title: "Instagram",
-        description:
-          "Siga-nos para dicas diárias e novidades sobre corridas.",
+        description: "Siga-nos para dicas diárias e novidades sobre corridas.",
         actionLabel: "@RunningVelox",
         ariaLabel: "Abrir o perfil do VELOX no Instagram",
       },

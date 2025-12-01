@@ -70,6 +70,7 @@ const homePage = {
     carouselAriaLabel: "View more features",
   },
   trainingSheets: {
+    comingSoon: "Coming Soon",
     badgeLabel: "Accelerate your results",
     title: "Training Plans",
     highlight: "Personalized",
