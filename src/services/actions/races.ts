@@ -8,6 +8,12 @@ import type {
 } from "@/types/race";
 import ENDPOINTS from "../config";
 
+type CountryFilter = "US" | "BR";
+
+type FetchRacesParams = {
+  country?: CountryFilter | null;
+};
+
 const normaliseLocation = (race: RaceApiItem) => {
   if (race.location) {
     return race.location;
@@ -40,9 +46,21 @@ const buildRaceSummary = (race: RaceApiItem): RaceEvent => ({
   distances: race.distances,
 });
 
-export async function fetchRacesAction(): Promise<FetchRacesResult> {
+const buildRacesUrl = (country?: CountryFilter | null) => {
+  const url = new URL(ENDPOINTS.RACES);
+
+  if (country) {
+    url.searchParams.set("country", country);
+  }
+
+  return url.toString();
+};
+
+export async function fetchRacesAction(
+  params: FetchRacesParams = {}
+): Promise<FetchRacesResult> {
   try {
-    const response = await fetch(ENDPOINTS.RACES, {
+    const response = await fetch(buildRacesUrl(params.country), {
       cache: "no-store",
     });
 

@@ -7,6 +7,12 @@ import { fetchRacesAction } from "@/services/actions/races";
 import { buildMetadata } from "@/lib/seo";
 import { getCalendarMetadataContent } from "@/i18n/metadata/calendar";
 import { CalendarPageClient } from "./CalendarPageClient";
+import type { Locale } from "@/i18n/config";
+
+const COUNTRY_BY_LOCALE: Record<Locale, "US" | "BR"> = {
+  "pt-BR": "BR",
+  "en-US": "US",
+};
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +24,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CalendarPage() {
   const { locale } = await getRequestLocaleInfo();
   const calendarPageContent = getCalendarPageContent(locale);
-  const { races, error } = await fetchRacesAction();
+  const country = COUNTRY_BY_LOCALE[locale];
+  const { races, error } = await fetchRacesAction({ country });
 
   return (
     <div className="min-h-screen bg-black/95">
