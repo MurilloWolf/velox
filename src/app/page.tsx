@@ -28,9 +28,9 @@ export default function Home() {
       <Header />
       <main className="min-h-screen" id="conteudo-principal">
         <Hero />
+        <TrainingSheets />
         <BotShowcase />
         <PlatformFeatures />
-        <TrainingSheets />
         <CtaSection />
         <ContactSection />
         <Footer />

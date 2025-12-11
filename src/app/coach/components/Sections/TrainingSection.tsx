@@ -57,7 +57,7 @@ const TRAINING_COPY = {
   },
 } as const;
 
-const TRAINING_SECTION_COMING_SOON = true; // Flip to false to re-enable the full experience.
+const TRAINING_SECTION_COMING_SOON = false; // Set to true to temporarily disable the section.
 
 const COMING_SOON_COPY = {
   "pt-BR": {
@@ -98,9 +98,22 @@ export default function TrainingSection({ header }: TrainingSectionProps) {
         const result = await fetchAvailableProducts();
         if (result.error) {
           setError(result.error);
-        } else {
-          setPlans(result.products || []);
+          return;
         }
+
+        const products = result.products ?? [];
+        const trainingPlans = products.filter((product) =>
+          product.categories?.some((category) => {
+            const normalizedCategory = category.toLowerCase();
+            return (
+              normalizedCategory.includes("training") ||
+              normalizedCategory.includes("treino") ||
+              normalizedCategory.includes("planilha")
+            );
+          })
+        );
+
+        setPlans(trainingPlans.length > 0 ? trainingPlans : products);
       } catch (err) {
         setError(copy.defaultErrorMessage);
         console.error("Error loading products:", err);
